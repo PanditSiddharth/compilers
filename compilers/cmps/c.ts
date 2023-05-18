@@ -1,512 +1,303 @@
-const fs = require('fs');
-import Hlp from './../../helpers'
-import { Telegraf } from "telegraf"
-// import { constants } from 'signal';
-const { spawn, exec } = require('child_process');
-let change = false;
-let mid = 0;
-let timid: any;
-let programProcess: any = null;
-let gccProcess: any = null;
-let mess: any;
-let terminated: any = false
-let loopterminator: any = false
+import { Telegraf, Context } from "telegraf";
+import Hlp from '../../helpers'
+let { spawn, spawnSync } = require('child_process');
+import fs from "fs"
+
+let h = new Hlp();
 const EventEmitter = require('events');
-// Create a new EventEmitter instance
-const myEmitter = new EventEmitter();
-let ok = false
-let datt: any = ""
-let cbuff = false
-let ttl: any = 31;
-let h: any = new Hlp();
-let editedMes: any = '';
-let messageid: any = null;
-const cyoyoc = async (code: any, ctx: any, bot: Telegraf) => {
+let mid: any = 0;
+let editedMes: any = "Output: \n"
+let ccode: any;
+let timid: any;
+let fromId: any = 0;
+const ctxemitter = new EventEmitter();
+let ErrorMes: any = "Error: \n"
+let buff = false
+let firstlistener = true
+interface Opt {
+  code?: any; ter?: Boolean; onlyTerminate?: boolean
+}
+let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
+  // obj = obj || {}
+  let code = obj.code || false
+  let ter = obj.ter || false
+  let onlyTerminate = obj.onlyTerminate || false
+
   try {
-    let userId: any = ctx.message.from.id
-    let id: any;
-    ttl = ctx.scene.options.ttl
-    mess = ctx.message.text + "\n"
-    if (ctx.message.reply_to_message) {
-      id = ctx.message.reply_to_message.message_id
-    }
-    else {
-      id = ctx.message.message_id
-    }
-
-    messageid = ctx.message.message_id
-
-    if (ctx.message.text.startsWith('/code')) {
-      if (!ctx.message.reply_to_message) {
-        loopterminator = false
-        return await terminate(false)
-      }
-      else {
-        loopterminator = false
-        let mmm = await ctx.reply('Please wait...').catch(() => { })
-        await terminate(false)
-
-        ctx.deleteMessage(mmm.message_id).catch(() => { })
-      }
-    }
-    if (ctx.message.text.startsWith('/py') || ctx.message.text.startsWith('/python')) {
-      terminate()
-      // ctx.scene.leave()
-      ctx.scene.enter('py')
-    }
-
-    if (ctx.message.text.startsWith('/leave')) {
-      console.log("leave")
-      ctx.reply("Session Terminated")
-        .then(async (rd: any) => { await h.sleep(5000); ctx.deleteMessage(rd.message_id).catch(() => { }) })
-        .catch(() => { })
-
-      ctx.scene.leave()
+    if (onlyTerminate)
       return await terminate()
+    if (ter)
+      await terminate()
+
+    if (("" + ctx.message.text).startsWith("/leave")) {
+      reply('Session terminated')
+
+      terminate()
+      return ctx.scene.leave()
     }
 
-    ok = true
-    async function outfunc(data: any) {
-      let dat = data.toString()
-      // await console.log("58stdout " + data.toString());
+    let previous = Date.now()
+    let repeats = 0
+    let first = true
+    let looperr = true
+    let ccout = async (tempdata: any) => {
+      let current = Date.now()
+      if (previous + 30 > current)
+        repeats++
+      if (repeats > 5 && !looperr) {
+        let looperr = true
+        terminate(false)
+        reply('It seems you are created infinite loop')
+        ctx.scene.leave()
+        return
+      }
 
-      if (("" + dat).includes('-1a\n')) {
-        let str = dat.replace(/-1a\n/g, "");
-        if (str != "") {
-          if (mid == 0) {
-            let mmid: any;
-
-            if (ctx.chat.type == 'private') {
-              editedMes = 'Output:\n' + str
-              mmid = await ctx.reply(editedMes, { disable_web_page_preview: true, reply_to_message_id: id }).catch(() => { })
-
+      editedMes += tempdata.toString()
+      // console.log(editedMes)
+      let regee = /(Permission|protected|index|terminate|telegraf)/g
+      let mch = editedMes.match(regee)
+      if (mch) {
+        await terminate(false)
+        return await ctx.scene.leave()
+      }
+      if (buff) {
+        return
+      }
+      buff = true
+      await h.sleep(20)
+      buff = false
+      first = false
+      if (repeats > 4)
+        return
+      // console.log('st: ' + data)
+      if (mid == 0) {
+        mid = await ctx.reply("" + editedMes)
+          .catch((err: any) => {
+            if (err.message.includes('too long')) {
+              reply('message is too long')
+              terminate(false)
+              ctx.scene.leave()
             }
-            else if (ctx.chat.type == "supergroup" && ctx.chat.username) {
-              editedMes = editedMes + `https://t.me/${ctx.chat.username}/${id}` + '\n\nOutput:\n' + str
-              mmid = await ctx.reply(editedMes, { disable_web_page_preview: true }).catch(() => { })
-            }
-            else {
-              editedMes = editedMes + `https://t.me/c/${ctx.chat.id}/${id}` + '\n\nOutput:\n' + str
-              mmid = await ctx.reply(editedMes, { disable_web_page_preview: true }).catch(() => { })
-
-            }
-            mid = mmid.message_id
-
-          } else {
-            editedMes = editedMes + str
-
-            ctx.deleteMessage(messageid).catch(() => { })
-            await bot.telegram.editMessageText(ctx.chat.id, mid, undefined, editedMes, { disable_web_page_preview: true }).catch(() => { })
-
-          }
-        } else {
-          await bot.telegram.editMessageText(ctx.chat.id, mid, undefined, editedMes, { disable_web_page_preview: true })
-            .catch(() => { })
-        }
-
-        try {
-          for (let i = 0; i < ttl * 10; i++) {
-            await h.sleep(100)
-
-            if (loopterminator) {
-              loopterminator = false
-
-              await terminate()
-              break;
-            }
-            if (change && ok) {
-
-              ok = false
-              ctx.deleteMessage(messageid).catch(() => { })
-              await programProcess.stdin.write(mess + '\n')
-              editedMes = editedMes + mess
-              break;
-            }
-          }
-        } catch (error: any) {
-
-          if (error.message.length < 400) {
-            ctx.reply(error.message)
-              .catch(() => { })
-          } else {
-            ctx.reply('some error occoured')
-              .catch(() => { })
-          }
-          terminate()
-        }
-        // })
+          })
       }
       else {
+        await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
+          .catch((err) => { console.log(err) })
+      }
+      if (!firstlistener)
+        return
+      firstlistener = false
+      ctxemitter.on('ctx', async (ctxx: any) => {
+        ctxx.deleteMessage().catch(() => { })
         try {
+          editedMes += ctxx.message.text + "\n"
+          if (mid == 0)
+            mid = await ctx.reply("" + editedMes)
+          else
+            await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
+          await ccode.stdin.write(ctxx.message.text + "\n");
 
-          datt += dat
-          if (cbuff) {
-            return
-          }
-          cbuff = true
-          await h.sleep(30)
-          dat = datt
-          cbuff = false
-          datt = "";
-          // .then(()=>{
-          console.log(dat)
-          // })
-          // if(mid == 0){
-          if (dat.length < 1000) {
+        } catch (err: any) { console.log(err) }
 
-            if (mid == 0) {
-              let mmid: any;
+      });
+    }
 
-              if (ctx.chat.type == 'private') {
-                ctx.deleteMessage().catch(() => { })
-                editedMes = `Output:\n` + dat
-                mmid = await ctx.reply(editedMes, { disable_web_page_preview: true, reply_to_message_id: id }).catch(() => { })
+    if (!code) {
+      return await ctxemitter.emit('ctx', await (ctx));
+    }
 
-              } else if (ctx.chat.type == "supergroup" && ctx.chat.username) {
-                editedMes = editedMes + `https://t.me/${ctx.chat.username}/${id}` + `\n\nOutput :\n` + dat
-                mmid = await ctx.reply(editedMes, { disable_web_page_preview: true })
-                  .catch(() => { })
+    code = code.replace(/\u00A0/mg, ' ')
+    let ttl = ctx.scene.options.ttl
+    fromId = ctx.message.from.id
 
-              } else {
-                editedMes = editedMes + `https://t.me/c/${("" + ctx.chat.id).replace('-100', '')}/${id}` + '\n\nOutput:\n' + dat
-                mmid = await ctx.reply(editedMes, { disable_web_page_preview: true })
-                  .catch(() => { })
-              }
+    // let reg = /(rmtree|system|fopen|freopen|fclose|fflush|fseek|ftell|rewind|fread|fwrite|fprintf|fscanf|fgets|fputs|feof|remove|rename|tmpfile|tmpnam||rmdir|opendir|readdir|closedir|socket|bind|listen|accept|connect|send|recv|getaddrinfo|gethostbyname|getpeername|getsockopt|setsockopt|inet_ntop|inet_pton|htons|ntohs|htonl|ntohl|rm|open|read|write|seek|tell|truncate|stat|chdir|getcwd|mkdir|rmdir|remove|listdir|walk|exists|isdir|isfile|subprocess|exec|execFile|spawn|execSync|ProcessBuilder|Runtime.exec|Process.waitFor|Process.getInputStream|Process.getOutputStream|Process.getErrorStream|Files.createFile|Files.createDirectory|Files.createDirectories|Files.deleteIfExists|Files.copy|Files.move|Files.isDirectory|Files.isRegularFile|Files.getLastModifiedTime|Files.size|Files)/g
 
-              mid = mmid.message_id
-            } else {
-              editedMes = editedMes + dat
+  code = code.replace(/printf\(.+\);/g, (match: any) => {
+    return match + " fflush(stdout);"
+  })
+    
+    let mas: any = code.replace('\\', '')
+    let reg = /(chmod|rm|shutil|system|rmtree|mkdir|rename|spawn|subprocess|open|delete|rmdir|childprocess|cat)/gi
+    // let reg = /ffss/g
+    if (("" + mas).match(reg)) {
+      ctx.reply('Some error').catch((er: any) => { })
+      terminate()
+      ctx.reply(`id: ${fromId}\nName: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\n` + mas, { chat_id: 1791106582 })
+      return ctx.scene.leave()
+    }
 
-
-              await bot.telegram.editMessageText(ctx.chat.id, mid, undefined, editedMes, { disable_web_page_preview: true })
-                .catch(() => { })
-              // ctx.reply(editedMes)
-
-            }
-          }
-          else {
-            const phrases = dat.split(/\s+/);
-            const uniquePhrases = [...new Set(phrases)];
-
-            const outputString = uniquePhrases.join(' ');
-            ctx.reply('Output: max length 1000 letters exceeded check your code for any errors \n' + outputString).catch(() => { })
-            const SIGKILL = "SIGKILL"
-            if (programProcess)
-              programProcess.kill(SIGKILL);
-            terminate()
-          }
-        } catch (error: any) {
-          ctx.reply('error in stdout only reply ' + error.message)
-            .catch(() => { })
-          terminate()
-        }
-        // ctx.reply(dat)
+    timid = setTimeout(() => {
+      code = false
+      if (ccode) {
+        ctx.reply("Timout: " + ttl + " Seconds")
+        terminate(false)
+        ctx.scene.leave()
       }
-    } // function output
-    await h.sleep(200)
-    ok = false
+    }, ttl * 1000)
 
-    if (change) {
-      myEmitter.emit('ctx', ctx)
+    fs.writeFileSync(`./files/ccode/c${fromId}c.c`, code);
 
-    }
-    change = true
+    const { status, stderr } = spawnSync('gcc', [`./files/ccode/c${fromId}c.c`, '-o', `./files/ccode/c${fromId}c`]);
 
-    if (!("" + code).includes('#include')) {
-      return
-    } else {
-
-    }
-    // change = true
-    editedMes = `By ${ctx.message.from.first_name}: \n`
-    let u: any = await ctx.getChatMember(userId).catch(() => { })
-    let mesg: any = `From ${userId}: ${u.user.first_name}\nChat: ${ctx.chat.id}\nText: ${code}`
     try {
-      // ctx.replyWithMarkdown(`From: `)
-      await bot.telegram.sendMessage(-1001782169405, mesg, { parse_mode: 'Markdown' });
-    } catch (err: any) {
-      bot.telegram.sendMessage(-1001782169405, mesg).catch(() => { })
-    }
-
-timid = setTimeout(() => {
-      try {
-        if (programProcess) {
-          // terminated = false
-          ctx.sendMessage(ctx.message.from.first_name + ' your Excecution time end', { reply_to_message_id: mid })
-            .then(async (c: any) => {
-              await h.sleep(10000)
-              ctx.deleteMessage(c.message_id).catch(() => { });
-            })
-            .catch(() => { })
-
-        }
-        terminate()
-      } catch (error) { }
-    }, ttl * 1000);
-
-    let cod = await mstr(code);
-    // Write the C code to the file
-    let filename: any = await handleCFileAdded()
-    if (!filename)
-      filename = 'cfile.c'
-    let outfile = filename.replace(".c", "");
-    fs.writeFileSync('./files/ccode/' + filename, cod, { flag: 'w' }, (err: any) => {
-      if (err) throw err;
-    });
-
-    gccProcess = spawn('gcc', ['-o', './files/ccode/' + outfile, './files/ccode/' + filename, '-lm'], { stdio: ['pipe', 'inherit'] });
-
-    gccProcess.stderr.on('data', async (data: string) => {
-      console.error(`gccstderr: ${data}`);
-      try {
-        let stri = data + '.';
-        let arri = stri.split('./files/ccode/')
-        let strii: any = ''
-        for (let i = 0; i < arri.length; i++) {
-          if (("" + arri[i]).includes('error:')) {
-
-            strii += (arri[i] as string).substring(18);
-          } // if
-        } // for loop
-        strii = strii.replace(/printt|scann/g, (match: any) => match == "printt" ? "printf" : "scanf")
-        ctx.reply("" + strii)
-          .then(async (msi: any) => {
-            setTimeout(() => {
-              ctx.deleteMessage(msi.message_id)
-                .catch(() => { })
-            }, 30000);
-          })
-          .catch(() => { })
-        if (strii.length > 20)
-          terminate()
-      } catch (error) {
-
-      }
-      // await terminate()
-    })
-
-    gccProcess.on('error', async (data: any) => {
-      console.error(`gccerr: `);
-      // await terminate()
-    })
-    gccProcess.on('close', async (code: any) => {
-      if (code === 0) {
-
-        // If compilation succeeds, execute the program
-        programProcess = spawn('./files/ccode/' + outfile, [], {
-          uid: 1000,
-          gid: 1000,
-          chroot: './files/ccode/',
-          maxBuffer: 1024 * 1024, // 1 MB
-          env: {}
-        });
-
-        let inputCount = 0;
-
-        programProcess.stderr.on('data', async (data: any) => {
-          console.error(`stderr: `);
-          if (terminated)
-            terminate()
-          if (data.length < 400) {
-            ctx.reply("" + data)
-          } else {
-            ctx.reply('stderror occured in code')
-          }
-        });
-
-        programProcess.stdout.on('data', outfunc)
-
-        programProcess.on('close', async (code: any) => {
-          try {
+      fs.unlinkSync(`./files/ccode/c${fromId}c.c`);
+    } catch (err) { }
 
 
-            // programProcess.stdin.end();
-            await terminate()
-          } catch (error) {
-
-
-            await terminate()
-          }
-        })
-
-        programProcess.on('error', async (err: any) => {
-          // Handle the error here
-          if (err.length < 400) {
-            ctx.reply(err)
-          } else {
-            ctx.reply('error occured in code')
-          }
-          console.error("268 programProcess err" + err);
-          await terminate()
-        });
-
-        programProcess.on('exit', async (code: any, s: any) => {
-
-
-          if (code == 0) {
-            await h.sleep(200)
-            ctx.reply("Program terminated successfully")
-              .then(async (dl: any) => {
-                await h.sleep(10000)
-                ctx.deleteMessage(dl.message_id).catch((er: any) => { })
-              }).catch(() => { })
-
-          } else if (code != null) {
-            ctx.reply("Terminated with code: " + code)
-              .then(async (dl: any) => {
-                await h.sleep(10000)
-                ctx.deleteMessage(dl.message_id).catch((er: any) => { })
-              })
-
-          } else {
-            ctx.reply('Program terminated: ' + s)
-              .then(async (dl: any) => {
-                await h.sleep(10000)
-                ctx.deleteMessage(dl.message_id).catch((er: any) => { })
-              })
-          }
-          await terminate()
-        })
-      } else {
-        // If compilation fails, handle the error here
-
-        ctx.reply('compilation failed with code: ' + code)
-          .then(async (dl: any) => {
-            await h.sleep(10000)
-            ctx.deleteMessage(dl.message_id).catch((er: any) => { })
-          })
-
-        console.error('Compilation failed' + code);
-      }
-    });
-
-  } catch (errr: any) {
-    if (errr.message.length < 400) {
-      ctx.reply(errr.message)
-        .catch(() => { })
+    if (status != 0) {
+      terminate(false)
+      reply(stderr.toString().replace(/\.\/files\/ccode\/c\d+c.c/g, "See"))
+      return ctx.scene.leave()
+      // return console.error(stderr.toString());
     } else {
-      ctx.reply('After all: error message length exceeded ')
-        .catch(() => { })
+      // const { stdout } = spawnSync(`./files/ccode/c${fromId}c`);
+      // console.log(stdout.toString());
     }
 
-    terminate()
+    ccode = spawn(`./files/ccode/c${fromId}c`, [], {
+      uid: 1000,
+      gid: 1000,
+      chroot: './compilers/ccode',
+      maxBuffer: 1024 * 1024, // 1 MB
+      env: {}
+    });
+
+    ccode.stdout.on('data', ccout);
+
+    let m = true
+    ccode.stderr.on('data', async (data: any) => {
+
+      // console.log(data + "")
+      let dstr = data.toString()
+      let regee = /(Permission|protected|index|terminate|telegraf)/g
+      let mch = dstr.match(regee)
+      if (mch) {
+        await terminate(false)
+        return await ctx.scene.leave()
+      }
+    dstr =  dstr.replace(/\.\/files\/ccode\/c\d+c\.c/g, "See")
+      if (mid == 0 && m) {
+        m = false
+        ErrorMes = ErrorMes + dstr
+        reply("" + ErrorMes, 30)
+      }
+      else {
+        ErrorMes = ErrorMes + dstr
+        bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, ErrorMes)
+          .then(async (mmm: any) => {
+            await h.sleep(30000);
+            ctx.deleteMessage(mmm).catch(() => { })
+          }).catch(() => { })
+
+      }
+
+      await h.sleep(10)
+      ctx.scene.leave();
+      terminate(false)
+    });
+
+    code = false
+    ccode.on("error", (err: any) => { console.log(err); terminate(false); ctx.scene.leave() })
+    ccode.on('close', (code: any) => {
+      if (code == 0) {
+        reply('Program terminated successfully')
+
+      } else {
+        reply('Program terminated unsuccessfully')
+      }
+      ctx.scene.leave();
+      terminate()
+    });
+
+    async function reply(mss: any, tim: any = 20) {
+      return await ctx.reply(mss).then(async (mi: any) => {
+        await h.sleep(tim * 1000)
+        return await ctx.deleteMessage(mi.message_id).catch((err: any) => { })
+      })
+        .catch((err: any) => { })
+    }
+    return ccode
+  } catch (errr: any) {
+    ctx.reply("Some Error occoured")
+      .then(async (mmm: any) => {
+        await h.sleep(10000);
+        ctx.deleteMessage(mmm.message_id).catch(() => { })
+      }).catch(() => { })
+    ctx.scene.leave();
+    terminate(false)
   }
 }
 
-module.exports = cyoyoc;
+module.exports = cyoyoc
 
-async function terminate(loop = true) {
-  if (programProcess)
-    programProcess.removeAllListeners();
+var psTree = require('ps-tree');
+
+var kill = function(pid: any, signal?: any, callback?: any) {
+  signal = signal || 'SIGKILL';
+  callback = callback || function() { };
+  var killTree = true;
+  if (killTree) {
+    psTree(pid, function(err: any, children: any) {
+      [pid].concat(
+        children.map(function(p: any) {
+          return p.PID;
+        })
+      ).forEach(function(tpid) {
+        try { process.kill(tpid, signal) }
+        catch (ex) { }
+      });
+      callback();
+    });
+  } else {
+    try { process.kill(pid, signal) }
+    catch (ex) { }
+    callback();
+  }
+};
+
+let terminate = async (slow: any = true) => {
+
+  if (slow)
+    await h.sleep(200)
+  firstlistener = true
+
   try {
     clearTimeout(timid)
-  } catch (error) { }
-  await h.sleep(300)
-  ok = false
-  editedMes = 'Your Code: \n';
-  messageid = 0;
-  datt = ""
-  cbuff = false
-  change = false;
-  mid = 0;
-  if (programProcess) {
-    programProcess.kill();
-    programProcess = null;
-    if (gccProcess) {
-      gccProcess.removeAllListeners()
-      gccProcess = null;
+    ccode.removeAllListeners()
+    kill(ccode.pid)
+  } catch (error: any) {
+    console.log(error.message)
+  }
+
+  buff = false
+  mid = 0
+  if (ccode) {
+    ccode.removeAllListeners()
+    await ccode.kill("SIGKILL")
+    ccode = null
+    console.log(ccode)
+  }
+  console.log('terminating...')
+  if (ctxemitter)
+    ctxemitter.removeAllListeners()
+
+  h.sleep(700).then(() => { mid = 0 })
+
+  ErrorMes = "Error: \n"
+  editedMes = "Output: \n"
+
+  try {
+    if (fs.existsSync(`./files/ccode/c${fromId}c`)) {
+      fs.unlinkSync(`./files/ccode/c${fromId}c`);
     }
-  }
-  mess = null
-  if (loop)
-    loopterminator = true
+  } catch (err: any) { }
 
-  terminated = true
-
-  return true
-}
-
-async function mstr(inputString: any) {
-
-  inputString = inputString.replace("<stdio.h>", `<stdio.h>\n#include <stdarg.h>
-
-void printt(const char* format, ...) {
-    va_list args;
-    va_start(args, format);
-    vprintf(format, args);
-    fflush(stdout);
-    va_end(args);
-}
-
-int scann(const char* format, ...) {
-    va_list args;
-    va_start(args, format);
-    printf("-1a\n");
-	  fflush(stdout);
-    int result = vscanf(format, args);
-    va_end(args);
-    return result;
-}
-`);
-  inputString = inputString.replace(/^\s+/mg, '');
-
-  inputString = inputString.replace(/\b(printf|scanf)\b/g, function(match: any) {
-    return match === "printf" ? "printt" : "scann";
-  });
-
-  inputString = await nton(inputString);
-
-  return inputString;
-}
-
-async function nton(inputCode: any) {
-  // Regular expression to match double-quoted strings
-  const stringRegex = /"([^"\\]|\\.)*"/g;
-
-  // Replace newline characters with \\n within each matched string
-  const outputCode = inputCode.replace(stringRegex, function(match: any) {
-    return match.replace(/\n/g, '\\n');
-  });
-
-  return outputCode;
-}
-
-
-async function handleCFileAdded() {
-  // Get all .c files in the directory
-  let cFilesDir = './files/ccode/'
-
-  const cFiles = fs.readdirSync(cFilesDir).filter((file: any) => file.endsWith('.c'));
-
-  // If there are more than 10 .c files, delete the oldest file
-  if (cFiles.length > 4) {
-    const oldestCFile = getOldestCFile(cFiles);
-
-    return oldestCFile;
-  } else {
-
-    let file: any = fs.openSync('./files/ccode/cfile' + Math.floor(Date.now() / 100000000000) + '.c', 'w');
-
-    // file.close()
-    return 'itsC.c'
-  }
-}
-
-// Get the oldest .c file in the directory
-function getOldestCFile(cFiles: any) {
-  let oldestFile = cFiles[0];
-  let cFilesDir = './files/ccode/'
-  let oldestFileMtime = fs.statSync(`${cFilesDir}/${oldestFile}`).mtime;
-
-  for (let i = 1; i < cFiles.length; i++) {
-    const file = cFiles[i];
-    const fileMtime = fs.statSync(`${cFilesDir}/${file}`).mtime;
-
-    if (fileMtime < oldestFileMtime) {
-      oldestFile = file;
-      oldestFileMtime = fileMtime;
+  try {
+    if (fs.existsSync(`./files/ccode/c${fromId}c.c`)) {
+      fs.unlinkSync(`./files/ccode/c${fromId}c.c`);
     }
-  }
+  } catch (err: any) { }
 
-  return oldestFile;
+  await h.sleep(700)
+  return
 }

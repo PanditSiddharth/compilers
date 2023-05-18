@@ -4,13 +4,14 @@ import axios from "axios"
 import mdb from "./db";
 import Hlp from './helpers'
 let h = new Hlp()
-let version = `𝐕𝐞𝐫𝐬𝐢𝐨𝐧: 0.4.3\n𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐧𝐨.: 10`
-let langcmds = `/code to excecute your c code
-/py 𝗼𝗿 /𝗽𝘆𝘁𝗵𝗼𝗻 to execute your python code
-/js 𝗼𝗿 /𝗻𝗼𝗱𝗲 to execute your javascript code
-/cpp 𝗼𝗿 /𝗰𝗽𝗹𝘂𝘀 to execute your cplus code
-/jv 𝗼𝗿 /𝗷𝗮𝘃𝗮 to execute your java code
-/go to execute golang code`
+let version = `𝐕𝐞𝐫𝐬𝐢𝐨𝐧: 0.5.0\n𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐧𝐨.: 11`
+let langcmds = `/code or /cc for c
+/py or /python
+/js or /node
+/cpp or /cplus
+/jv or /java
+/go for golang `
+
 const bt = (bot: any) => {
   const fs = require('fs');
   const filePath = './data.txt';
