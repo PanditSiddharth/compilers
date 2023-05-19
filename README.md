@@ -26,12 +26,11 @@ Just follow steps bellow -->
      Replit gives free some storage and Ram you can use it
      
 ==> clone this repo in your own server  
-or install it by 
 
 ```sh
 # You must required to install nodejs
 # installation command
-npm install iocompiler
+git clone
 
 # entering in iocompiler directiory
 cd iocompiler
