@@ -26,6 +26,30 @@ Just follow steps bellow -->
      Replit gives free some storage and Ram you can use it
      
 ==> clone this repo in your own server  
+or install it by 
+
+```sh
+# You must required to install nodejs
+# installation command
+npm install iocompiler
+
+# entering in iocompiler directiory
+cd iocompiler
+
+# create .env file 
+touch .env
+
+# add telegram bot TOKEN var in .env file (reqiured)
+echo 'TOKEN="paste your token here"'>> .env
+
+# install all node dependencies
+npm install
+
+# Run your bot
+node index
+
+# Any query ? see this readme to join support group
+```
 
 ==> ## Now set environment variables  
 

@@ -3,7 +3,7 @@ import axios from "axios"
 
 import Hlp from './helpers'
 let h = new Hlp()
-let version = `𝐕𝐞𝐫𝐬𝐢𝐨𝐧: 1.0.0\n𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐧𝐨.: 12`
+let version = `𝐕𝐞𝐫𝐬𝐢𝐨𝐧: 1.0.1\n𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐧𝐨.: 13`
 let langcmds = `/code or /cc for c
 /py or /python
 /js or /node
