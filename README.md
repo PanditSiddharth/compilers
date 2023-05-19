@@ -30,13 +30,17 @@ Just follow steps bellow -->
 ==> ## Now set environment variables  
 
 ### Required enviroment var:  
-`TOKEN` - Paste your telegram bot token in this 
+`TOKEN` = "Paste your telegram bot token in this" 
+
+if you have in local system make 
+.env file and add vars
+
+if you have installed gcc, g++ c/c++ compiler on your local system you can run c programs in telegram without adding these both c/c++ in env variables
 
 ### Optional environment var:
 
 `PYTHON` - Paste python full path in value     (find it by running command  `which python` or `which python3`)  
 `NODE` - Paste node js full path in value      (find it by running command  `which node`)  
-`CPLUS` - Paste c++ full path in value         (find it by running command  `which g++`)  
 `JAVA` - Paste java full path in value         (find it by running command  `which java`)  
 `JAVAC` - Paste javac full path in value       (find it by running command  `which javac`)  
 `GO` - Paste go full path in value             (find it by running command  `which go`)  

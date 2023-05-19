@@ -82,7 +82,7 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
       else {
         await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
-          .catch((err) => { console.log(err) })
+          .catch((err: any) => { console.log(err) })
       }
       if (!firstlistener)
         return

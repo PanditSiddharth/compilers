@@ -1,10 +1,9 @@
 import { Telegraf, Context } from "telegraf";
 import axios from "axios"
 
-import mdb from "./db";
 import Hlp from './helpers'
 let h = new Hlp()
-let version = `𝐕𝐞𝐫𝐬𝐢𝐨𝐧: 0.5.0\n𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐧𝐨.: 11`
+let version = `𝐕𝐞𝐫𝐬𝐢𝐨𝐧: 1.0.0\n𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐧𝐨.: 12`
 let langcmds = `/code or /cc for c
 /py or /python
 /js or /node

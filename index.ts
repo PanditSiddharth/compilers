@@ -7,6 +7,7 @@ import jsStarter from './starters/jsstarter'
 import cppStarter from './starters/cppstarter'
 import jvStarter from './starters/jvstarter'
 import goStarter from './starters/gostarter'
+require("dotenv").config()
 // let c = require('./compilers/c');
 
 keep_alive()
@@ -70,6 +71,10 @@ bot.hears(/^\/(code|py|python|js|node|cc|cpp|cplus|go|jv|java|c\+\+)/i, async (c
     ctx.scene.enter("jv")
   else if ((/^\/go/i).test(compiler))
     ctx.scene.enter("go")
+
+  // let wait = await ctx.reply("Please wait...").catch((err: Error)=> {})
+  // await h.sleep(200);
+  // ctx.deleteMessage(wait.message_id).catch((err: Error)=> {})
 })
 
 bot.launch({ dropPendingUpdates: true });

@@ -48,7 +48,7 @@ let goyoyogo = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       let current = Date.now()
       if (previous + 30 > current)
         repeats++
-       if (repeats > 5 && !looperr) {
+        if (repeats > 5 && !looperr) {
         terminate(false)
         reply('It seems you are created infinite loop')
         ctx.scene.leave()
@@ -172,7 +172,6 @@ let goyoyogo = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
             await h.sleep(30000);
             ctx.deleteMessage(mmm).catch(() => { })
           }).catch(() => { })
-
       }
 
       await h.sleep(10)
@@ -240,8 +239,6 @@ var kill = function (pid: any, signal?: any, callback?: any) {
     }
 };
 
-
-
 let terminate = async (slow: any = true) => {
   if(slow)
   await h.sleep(200)
@@ -277,8 +274,7 @@ firstlistener = true
 
   try{
   fs.rmSync(`./files/golang/go${fromId}go/`, { recursive: true });
-  } catch (err){}
-  
+  } catch (err){}                                                         
   if (fs.existsSync(`./compilers/golang/go${fromId}go.ts`)) {
     try {
       fs.unlinkSync(`./compilers/golang/go${fromId}go.ts`)

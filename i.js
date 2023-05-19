@@ -11,7 +11,7 @@ const { spawn, exec } = require('child_process');
 //     return console.log(stderr)
 //   conosle.log(std)
 // });
-// let commands = 'which node && which python && which java && which javac && which g++ && which go'
+let commands = 'which node && which python && which java && which javac && which go'
 let installer = exec(commands, (err, std, stderr) => {
   if (stderr)
     return console.log(stderr)
@@ -23,7 +23,6 @@ let installer = exec(commands, (err, std, stderr) => {
     "PYTHON": arr[1],
     "JAVA": arr[2],
     "JAVAC": arr[3],
-    "CPLUS": arr[4],
     "GO": arr[5]
   }
   let fs = require('fs')
