@@ -30,7 +30,7 @@ Just follow steps bellow -->
 ```sh
 # You must required to install nodejs
 # installation command
-git clone
+git clone "https://github.com/PanditSiddharth/compilers"
 
 # entering in iocompiler directiory
 cd iocompiler
