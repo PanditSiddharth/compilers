@@ -119,7 +119,7 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     let fromId = ctx.message.from.id
     
     let mas: any = code.replace('\\', '')
-    let reg = /(chmod|rm|shutil|rmtree|mkdir|rename|spawn|system|subprocess|open|delete|rmdir|cat)/gi
+    let reg = /(chmod|rm|shutil|rmtree|mkdir|rename|spawn|system|subprocess|open|delete|rmdir)/gi
     if (("" + mas).match(reg)) {
       ctx.reply('Some error').catch((er:any)=> {})
       terminate()

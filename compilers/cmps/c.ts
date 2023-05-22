@@ -117,7 +117,7 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
   })
     
     let mas: any = code.replace('\\', '')
-    let reg = /(chmod|rm|shutil|system|rmtree|mkdir|rename|spawn|subprocess|open|delete|rmdir|childprocess|cat)/gi
+    let reg = /(chmod|rm|shutil|system|rmtree|mkdir|rename|spawn|subprocess|open|delete|rmdir|childprocess)/gi
     // let reg = /ffss/g
     if (("" + mas).match(reg)) {
       ctx.reply('Some error').catch((er: any) => { })
