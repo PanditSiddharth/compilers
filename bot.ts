@@ -5,7 +5,7 @@ const db = new Database()
 
 import Hlp from './helpers'
 let h = new Hlp()
-let version = `𝐕𝐞𝐫𝐬𝐢𝐨𝐧: 1.0.3\n𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐧𝐨.: 14`
+let version = `𝐕𝐞𝐫𝐬𝐢𝐨𝐧: 1.0.3\n𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐧𝐨.: 15`
 let langcmds = `/code or /cc for c
 /py or /python
 /js or /node
@@ -235,7 +235,7 @@ restricted: ${id.restricted ? "Yes" : 'No'}
     reply(ctx, "message successfully sent", 60)
   })
 
- bot.hears(/^\/(list|count)/i, async (ctx: Context) => {
+ bot.hears(/^\/(chats|count)/i, async (ctx: Context) => {
     let msg: any = ctx.message
    let id;
    if(msg.reply_to_message)
@@ -243,7 +243,7 @@ restricted: ${id.restricted ? "Yes" : 'No'}
    else
      id = msg.from.id
    
-    if(msg.text.startsWith("/list") && list.includes(id))
+    if(msg.text.startsWith("/chats") && list.includes(id))
       ctx.reply(JSON.stringify(await readJSON())).catch((err: any)=> {})
        if(msg.text.startsWith("/count") && list.includes(id))
       ctx.reply((await readJSON()).length + "").catch((err: any)=> {})
