@@ -1,9 +1,11 @@
 import { Telegraf, Context } from "telegraf";
 import axios from "axios"
+const Database = require("@replit/database")
+const db = new Database()
 
 import Hlp from './helpers'
 let h = new Hlp()
-let version = `𝐕𝐞𝐫𝐬𝐢𝐨𝐧: 1.0.2\n𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐧𝐨.: 14`
+let version = `𝐕𝐞𝐫𝐬𝐢𝐨𝐧: 1.0.3\n𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐧𝐨.: 14`
 let langcmds = `/code or /cc for c
 /py or /python
 /js or /node
@@ -17,12 +19,14 @@ const bt = (bot: any) => {
   // mdb(bot as any)
 
   bot.on('my_chat_member', async (ctx: any) => {
-
     let chat: any = ctx.chat
+  if(!(chat.id + "").startsWith("-100"))
+      return
     let status: any = ctx.update.my_chat_member.new_chat_member.status
     console.log(status)
     let ostatus: any = ctx.update.my_chat_member.old_chat_member.status
 
+    
     if (status != 'left' && !['member', 'administrator'].includes(ostatus)) {
       updateJSON(chat.id)
       return ctx.reply(`#NewChat
@@ -231,83 +235,29 @@ restricted: ${id.restricted ? "Yes" : 'No'}
     reply(ctx, "message successfully sent", 60)
   })
 
-  // bot.command('auths', async (ctx: any) => {
-  // try {
-  //   let mess = 'Auth Users\n'
-  //   // let jso : any = [];
-  //   let arr: any = readJSON()
-
-  //   for (const idd of arr) {
-  //     try {
-  //       // let u: any = await ctx.getChatMember(id)
-  //       mess += await `[${idd.id}]: [${idd.name}](tg://user?id=${idd.id})\n`
-  //       // await jso.push({id, "name": u.user.first_name})
-  //     } catch (err: any) { }
-  //   }
-
-  //   ctx.replyWithMarkdown(mess)
-  //   // writeJSON(jso)
-  // } catch (error: any) {
-  //   ctx.reply('Error: ' + error.message)
-  // }
-  // });
-
-  // bot.command('auth', async (ctx: any) => {
-  //   try {
-  //     if (ctx.message && !list.includes(ctx.message.from.id))
-  //       return ctx.reply('You are not allowed to add more users')
-  //     let value: any;
-  //     let id: any;
-  //     if (ctx.message && ctx.message.reply_to_message) {
-  //       id = ctx.message.reply_to_message.from.id;
-  //     } else {
-  //       value = ctx.message.text;
-  //       var match = value.match(/\/auth\s+(\d+)/);
-  //       id = match ? match[1] : null;
-  //       // id = 12345674
-  //     }
-  //     if (await updateJSON(id, ctx)) {
-  //       ctx.reply(`${(await ctx.getChatMember(id)).user.first_name} is successfully added to access this bot`)
-  //     }
-  //     else ctx.reply(`Can't add null id !!`)
-  //   } catch (error: any) {
-  //     ctx.reply('Error: ' + error);
-  //   }
-  // });
-
-  // bot.command('unauth', async (ctx: any) => {
-  //   try {
-  //     if (ctx.message && !list.includes(ctx.message.from.id))
-  //       return ctx.reply('You are not allowed to remove users')
-  //     let value: any;
-  //     let id: any;
-  //     if (ctx.message && ctx.message.reply_to_message) {
-  //       id = ctx.message.reply_to_message.from.id;
-  //     } else {
-  //       value = ctx.message.text;
-  //       let match = value.match(/\/unauth\s+(\d+)/);
-  //       id = match ? match[1] : null;
-  //       // console.log(id)
-  //     }
-  //     if (removeId(id))
-  //       ctx.reply(`${(await ctx.getChatMember(id)).user.first_name} is removed to access the bot`)
-  //     else ctx.reply(`Id null i can't remove`)
-  //   } catch (error: any) {
-  //     ctx.reply('Error: ' + error);
-  //   }
-  // });
-
+ bot.hears(/^\/(list|count)/i, async (ctx: Context) => {
+    let msg: any = ctx.message
+   let id;
+   if(msg.reply_to_message)
+   id = msg.reply_to_message.from.id
+   else
+     id = msg.from.id
+   
+    if(msg.text.startsWith("/list") && list.includes(id))
+      ctx.reply(JSON.stringify(await readJSON())).catch((err: any)=> {})
+       if(msg.text.startsWith("/count") && list.includes(id))
+      ctx.reply((await readJSON()).length + "").catch((err: any)=> {})
+  })
+  
   let list: any = [1791106582, 1942730863, 1580821417, 1643271211]
   // Function to write a new JSON object to the file
   function writeJSON(data: any) {
-    const jsonString = JSON.stringify(data);
-    fs.writeFileSync(filePath, jsonString);
+  db.set("ids", data)
+    .then((d: any)=> {console.log(d)})
   }
 
-  // Function to read the current JSON objects from the file
   async function readJSON() {
-    const jsonString = fs.readFileSync(filePath);
-    return JSON.parse(jsonString);
+    return await db.get("ids")
   }
 
   // Function to update an existing JSON object in the file
@@ -325,6 +275,8 @@ restricted: ${id.restricted ? "Yes" : 'No'}
     return false
   }
 
+ 
+  
   async function removeId(id: any) {
     let data = readJSON();
     if (!isNaN(parseInt(id))) {
