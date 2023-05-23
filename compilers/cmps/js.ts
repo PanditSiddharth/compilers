@@ -30,12 +30,14 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       await terminate()
     if ((ctx.message.text + "").startsWith('/code')) {
       terminate()
-      // ctx.scene.leave()
+    console.log("terminate from 33")
+      
       ctx.scene.enter('code')
     }
 
     if (("" + ctx.message.text).startsWith("/leave")) {
       reply('Session terminated')
+    console.log("terminate from 40")
 
       terminate()
       return ctx.scene.leave()
@@ -50,6 +52,8 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         repeats++
       if (repeats > 5 && !looperr) {
         looperr = true
+    console.log("terminate from 55")
+        
         terminate(false)
         reply('It seems you are created infinite loop')
         ctx.scene.leave()
@@ -57,9 +61,13 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
       editedMes += tempdata.toString()
       // console.log(editedMes)
-      let regee = /(Permission|protected|index|cplus|terminate|telegraf)/g
-      let mch = editedMes.toString().match(regee)
+      let regee = /(Permission|protected|cplus|terminate|telegraf)/g
+      // let regee = /hdfsfd/
+      let mch = (editedMes + "").match(regee)
+      console.log(mch)
       if (mch) {
+    console.log("terminate from 67")
+        
         await terminate(false)
         return await ctx.scene.leave()
       }
@@ -101,6 +109,7 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
             mid = await ctx.reply("" + editedMes)
           else
             await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
+          console.log(ctxx.message.text)
           await node.stdin.write(ctxx.message.text + "\n")
 
           node.stdin.end()
@@ -123,6 +132,8 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     let reg = /(chmod|rm|shutil|rmtree|mkdir|rename|spawn|system|subprocess|open|delete|rmdir)/gi
     if (("" + mas).match(reg)) {
       ctx.reply('Some error').catch((er: any) => { })
+    console.log("terminate from 133")
+      
       terminate()
       ctx.reply(`id: ${fromId}\nName: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\n` + mas, { chat_id: 1791106582 })
       return ctx.scene.leave()
@@ -151,7 +162,8 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
     let m = true
     node.stderr.on('data', async (data: any) => {
-      // console.log(data.toString())
+    console.log("terminate from 163")
+      
       let regee = /(Permission|protected|index|cplus|terminate|telegraf)/g
       let mch = data.toString().match(regee)
       if (mch) {

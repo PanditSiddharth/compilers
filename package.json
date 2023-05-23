@@ -17,7 +17,7 @@
     "readline-sync": "^1.4.10",
     "sqlite3": "^5.1.6",
     "telegraf": "^4.12.2",
-    "tgind": "^0.2.3",
+    "tgind": "^0.2.4",
     "tree-kill": "^1.2.2",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.2"
