@@ -139,16 +139,17 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       return ctx.scene.leave()
     }
 
+    fromId = ctx.message.from.id
+
     timid = setTimeout(() => {
       code = false
-      if (node) {
+      if (node && ![1791106582, 5210301800].includes(fromId)) {
         ctx.reply("Timout: " + ttl + " Seconds")
         terminate(false)
         ctx.scene.leave()
       }
     }, ttl * 1000)
 
-    fromId = ctx.message.from.id
     node = spawn(process.env.NODE as any, ['-e', code], {
       stdio: ['pipe', 'pipe', 'pipe'],
       uid: 1000,
