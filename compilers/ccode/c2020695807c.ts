@@ -17,7 +17,7 @@ let firstlistener = true
 interface Opt {
   code?: any; ter?: Boolean; onlyTerminate?: boolean
 }
-let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
+let c2020695807c = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
   // obj = obj || {}
   let code = obj.code || false
   let ter = obj.ter || false
@@ -228,7 +228,7 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
   }
 }
 
-module.exports = cyoyoc
+module.exports = c2020695807c
 
 var psTree = require('ps-tree');
 
