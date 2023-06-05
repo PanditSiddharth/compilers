@@ -4,6 +4,7 @@ import bt from './bot';
 import pyStarter from './starters/pystarter'
 import cStarter from './starters/cstarter'
 import jsStarter from './starters/jsstarter'
+import tsStarter from './starters/tsstarter'
 import cppStarter from './starters/cppstarter'
 import jvStarter from './starters/jvstarter'
 import goStarter from './starters/gostarter'
@@ -40,17 +41,21 @@ let jsScene = new Scenes.BaseScene<Scenes.SceneContext>("js");
 jsScene.enter(async (ctx: any) => { await jsStarter(bot, ctx) });
 jsScene.on("message", async (ctx: any) => { await jsStarter(bot, ctx) });
 
+let tsScene = new Scenes.BaseScene<Scenes.SceneContext>("ts");
+tsScene.enter(async (ctx: any) => { await tsStarter(bot, ctx) });
+tsScene.on("message", async (ctx: any) => { await tsStarter(bot, ctx) });
+
 let goScene = new Scenes.BaseScene<Scenes.SceneContext>("go");
 goScene.enter(async (ctx: any) => { await goStarter(bot, ctx) });
 goScene.on("message", async (ctx: any) => { await goStarter(bot, ctx) });
 
 let bot = new Telegraf<Scenes.SceneContext>(process.env.TOKEN as any);
-let stage = new Scenes.Stage<Scenes.SceneContext>([cScene, pyScene, jsScene, cppScene, jvScene, goScene], { ttl: 40 });
+let stage = new Scenes.Stage<Scenes.SceneContext>([cScene, pyScene, jsScene, cppScene, jvScene, goScene, tsScene], { ttl: 40 });
 bt(bot)
 bot.use(session());
 bot.use(stage.middleware());
 
-bot.hears(/^\/(code|py|python|js|node|cc|cpp|cplus|go|jv|java|c\+\+)/i, async (ctx: any) => {
+bot.hears(/^\/(code|py|python|ts|type|js|node|cc|cpp|cplus|go|jv|java|c\+\+)/i, async (ctx: any) => {
   let compiler: any = ctx.message.text + "";
   let memb = await ctx.getChatMember(ctx.botInfo.id)
 
@@ -65,6 +70,8 @@ bot.hears(/^\/(code|py|python|js|node|cc|cpp|cplus|go|jv|java|c\+\+)/i, async (c
     ctx.scene.enter("code")
   else if ((/^\/(js|node)/i).test(compiler))
     ctx.scene.enter("js")
+  else if ((/^\/(ts|type)/i).test(compiler))
+    ctx.scene.enter("ts")
   else if ((/^\/(cpp|cplus)/i).test(compiler))
     ctx.scene.enter("cpp")
   else if ((/^\/(jv|java)/i).test(compiler))

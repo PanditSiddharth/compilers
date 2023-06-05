@@ -5,7 +5,7 @@ const db = new Database()
 
 import Hlp from './helpers'
 let h = new Hlp()
-let version = `𝐕𝐞𝐫𝐬𝐢𝐨𝐧: 1.0.3\n𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐧𝐨.: 15`
+let version = `𝐕𝐞𝐫𝐬𝐢𝐨𝐧: 1.1.0\n𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐧𝐨.: 16`
 let langcmds = `/code or /cc for c
 /py or /python
 /js or /node
