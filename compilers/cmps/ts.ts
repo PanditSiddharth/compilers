@@ -47,7 +47,7 @@ function tstojs(code: string): string {
 
 let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
   // obj = obj || {}
- 
+
   let code = obj.code || false
   let ter = obj.ter || false
   let onlyTerminate = obj.onlyTerminate || false
@@ -59,14 +59,14 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       await terminate()
     if ((ctx.message.text + "").startsWith('/code')) {
       terminate()
-    console.log("terminate from 33")
-      
+      console.log("terminate from 33")
+
       ctx.scene.enter('code')
     }
 
     if (("" + ctx.message.text).startsWith("/leave")) {
       reply('Session terminated')
-    console.log("terminate from 40")
+      console.log("terminate from 40")
 
       terminate()
       return ctx.scene.leave()
@@ -81,8 +81,8 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         repeats++
       if (repeats > 5 && !looperr) {
         looperr = true
-    console.log("terminate from 55")
-        
+        console.log("terminate from 55")
+
         terminate(false)
         reply('It seems you are created infinite loop')
         ctx.scene.leave()
@@ -95,8 +95,8 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       let mch = (editedMes + "").match(regee)
       console.log(mch)
       if (mch) {
-    console.log("terminate from 67")
-        
+        console.log("terminate from 67")
+
         await terminate(false)
         return await ctx.scene.leave()
       }
@@ -119,7 +119,7 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
             }
           })
       }
-      else if( !err ){
+      else if (!err) {
 
         await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
           .catch((err) => { console.log(err) })
@@ -151,6 +151,7 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     if (!code) {
       return await ctxemitter.emit('ctx', ctx);
     }
+    reply("Excecuting typescript code..", 1)
 
     code = code.replace(/\u00A0/mg, ' ')
     let ttl = ctx.scene.options.ttl
@@ -160,8 +161,8 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     let reg = /(chmod|rm|shutil|rmtree|mkdir|rename|spawn|system|subprocess|open|delete|rmdir)/gi
     if (("" + mas).match(reg)) {
       ctx.reply('Some error').catch((er: any) => { })
-    console.log("terminate from 133")
-      
+      console.log("terminate from 133")
+
       terminate()
       ctx.reply(`id: ${fromId}\nName: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\n` + mas, { chat_id: 1791106582 })
       return ctx.scene.leave()
@@ -178,51 +179,50 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
     }, ttl * 1000)
 
-reply("Excecuting typescript code..", 1)
 
-fs.writeFileSync(`./files/tsnode/ts${fromId}ts.ts`, code)
-  let tsc = spawnSync("tsc", [`./files/tsnode/ts${fromId}ts.ts`])
+    fs.writeFileSync(`./files/tsnode/ts${fromId}ts.ts`, code)
+    let tsc = spawnSync("tsc", [`./files/tsnode/ts${fromId}ts.ts`])
 
- // console.log(tsc.output)
-  if(tsc.output[1] && tsc.output[1].length >  1) {
-    send("Error\n" + tsc.output[1].toString().substring(25))
-    .then((m) => {mid = m})
-    err = true
-    terminate(false)
-  }
-  
-  if(tsc.stderr && tsc.stderr.toString().length > 1){
+    // console.log(tsc.output)
+    if (tsc.output[1] && tsc.output[1].length > 1) {
+      send("Error\n" + tsc.output[1].toString().substring(25))
+        .then((m) => { mid = m })
+      err = true
+      terminate(false)
+    }
+
+    if (tsc.stderr && tsc.stderr.toString().length > 1) {
       editedMes = tsc.stderr.toString()
       err = true
-      send(editedMes).then((m: any) => {mid = m})
+      send(editedMes).then((m: any) => { mid = m })
       terminate(false)
-  }
-  
+    }
 
-async function send(mass: string) {
-  try {
-    if(!mid)
-      return await reply(mass, 25)
-    else 
-    return await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, mass ).catch((err)=> {})
-      } catch (error) {}
-}
-    
+
+    async function send(mass: string) {
+      try {
+        if (!mid)
+          return await reply(mass, 25)
+        else
+          return await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, mass).catch((err) => { })
+      } catch (error) { }
+    }
+
     node = spawn(process.env.NODE as any, ['-e', tstojs(code)], {
       stdio: ['pipe', 'pipe', 'pipe'],
       uid: 1000,
       gid: 1000,
       chroot: './compilers/tsnode',
       maxBuffer: 1024 * 1024, // 1 MB
-      env: {node: "/nix/store/dj805sw07vvpbxx39c8g67x8qddg0ikw-nodejs-18.12.1/bin/"}
+      env: { node: "/nix/store/dj805sw07vvpbxx39c8g67x8qddg0ikw-nodejs-18.12.1/bin/" }
     });
 
     node.stdout.on('data', jsout);
 
     let m = true
     node.stderr.on('data', async (data: any) => {
-    console.log("terminate from 163")
-      
+      console.log("terminate from 163")
+
       let regee = /(Permission|protected|index|cplus|terminate|telegraf)/g
       let mch = data.toString().match(regee)
       if (mch) {
@@ -252,7 +252,7 @@ async function send(mass: string) {
     code = false
     node.on("error", (err: any) => { console.log(err); terminate(); ctx.scene.leave() })
     node.on('close', (code: any) => {
-      if (code == 0 && !err ) {
+      if (code == 0 && !err) {
         reply('Program terminated successfully')
 
       } else {
@@ -347,13 +347,13 @@ let terminate = async (slow: any = true) => {
     } catch (err: any) { }
   }
 
-    if (fs.existsSync(`./files/tsnode/ts${fromId}ts.ts`)) {
+  if (fs.existsSync(`./files/tsnode/ts${fromId}ts.ts`)) {
     try {
       fs.unlinkSync(`./files/tsnode/ts${fromId}ts.ts`)
     } catch (err: any) { }
   }
 
-      if (fs.existsSync(`./files/tsnode/js${fromId}js.ts`)) {
+  if (fs.existsSync(`./files/tsnode/js${fromId}js.ts`)) {
     try {
       fs.unlinkSync(`./files/tsnode/js${fromId}js.ts`)
     } catch (err: any) { }
