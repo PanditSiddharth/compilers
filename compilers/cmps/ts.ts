@@ -1,6 +1,6 @@
 import { Telegraf, Context } from "telegraf";
 import Hlp from '../../helpers'
-let { spawn, exec } = require('child_process');
+let { spawn, exec, spawnSync } = require('child_process');
 import fs from "fs"
 
 let h = new Hlp();
@@ -14,6 +14,7 @@ const ctxemitter = new EventEmitter();
 let ErrorMes: any = "Error: \n"
 let buff = false
 let firstlistener = true
+let err: any;
 interface Opt {
   code?: any; ter?: Boolean; onlyTerminate?: boolean
 }
@@ -108,7 +109,7 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       if (repeats > 10)
         return
 
-      if (mid == 0) {
+      if (mid == 0 && !err) {
         mid = await ctx.reply("" + editedMes)
           .catch((err: any) => {
             if (err.message.includes('too long')) {
@@ -118,7 +119,7 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
             }
           })
       }
-      else {
+      else if( !err ){
 
         await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
           .catch((err) => { console.log(err) })
@@ -148,7 +149,6 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     }
 
     if (!code) {
-
       return await ctxemitter.emit('ctx', ctx);
     }
 
@@ -178,6 +178,36 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
     }, ttl * 1000)
 
+reply("Excecuting typescript code..", 1)
+
+fs.writeFileSync(`./files/tsnode/ts${fromId}ts.ts`, code)
+  let tsc = spawnSync("tsc", [`./files/tsnode/ts${fromId}ts.ts`])
+
+ // console.log(tsc.output)
+  if(tsc.output[1] && tsc.output[1].length >  1) {
+    send("Error\n" + tsc.output[1].toString().substring(25))
+    .then((m) => {mid = m})
+    err = true
+    terminate(false)
+  }
+  
+  if(tsc.stderr && tsc.stderr.toString().length > 1){
+      editedMes = tsc.stderr.toString()
+      err = true
+      send(editedMes).then((m: any) => {mid = m})
+      terminate(false)
+  }
+  
+
+async function send(mass: string) {
+  try {
+    if(!mid)
+      return await reply(mass, 25)
+    else 
+    return await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, mass ).catch((err)=> {})
+      } catch (error) {}
+}
+    
     node = spawn(process.env.NODE as any, ['-e', tstojs(code)], {
       stdio: ['pipe', 'pipe', 'pipe'],
       uid: 1000,
@@ -222,7 +252,7 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     code = false
     node.on("error", (err: any) => { console.log(err); terminate(); ctx.scene.leave() })
     node.on('close', (code: any) => {
-      if (code == 0) {
+      if (code == 0 && !err ) {
         reply('Program terminated successfully')
 
       } else {
@@ -306,7 +336,7 @@ let terminate = async (slow: any = true) => {
   if (ctxemitter)
     ctxemitter.removeAllListeners()
 
-  h.sleep(500).then(() => { mid = 0 })
+  h.sleep(500).then(() => { mid = 0; err = false })
 
   ErrorMes = "Error: \n"
   editedMes = "Output: \n"
@@ -314,6 +344,18 @@ let terminate = async (slow: any = true) => {
   if (fs.existsSync(`./compilers/tsnode/ts${fromId}ts.ts`)) {
     try {
       fs.unlinkSync(`./compilers/tsnode/ts${fromId}ts.ts`)
+    } catch (err: any) { }
+  }
+
+    if (fs.existsSync(`./files/tsnode/ts${fromId}ts.ts`)) {
+    try {
+      fs.unlinkSync(`./files/tsnode/ts${fromId}ts.ts`)
+    } catch (err: any) { }
+  }
+
+      if (fs.existsSync(`./files/tsnode/js${fromId}js.ts`)) {
+    try {
+      fs.unlinkSync(`./files/tsnode/js${fromId}js.ts`)
     } catch (err: any) { }
   }
   await h.sleep(500)
