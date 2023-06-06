@@ -151,7 +151,6 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     if (!code) {
       return await ctxemitter.emit('ctx', ctx);
     }
-
     code = code.replace(/\u00A0/mg, ' ')
     let ttl = ctx.scene.options.ttl
     let fromId = ctx.message.from.id

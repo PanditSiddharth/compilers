@@ -70,8 +70,15 @@ bot.hears(/^\/(code|py|python|ts|type|js|node|cc|cpp|cplus|go|jv|java|c\+\+)/i, 
     ctx.scene.enter("code")
   else if ((/^\/(js|node)/i).test(compiler))
     ctx.scene.enter("js")
-  else if ((/^\/(ts|type)/i).test(compiler))
+  else if ((/^\/(ts|type)/i).test(compiler)){
+     ctx.reply("Excecuting typescript code..")
+    .then(async (m:any)=> {await h.sleep(3000); return m.message_id})
+    .then((m:any)=> {ctx.deleteMessage(m)})
+    .catch((err:any)=>{})
+
+    await h.sleep(300)
     ctx.scene.enter("ts")
+  }
   else if ((/^\/(cpp|cplus)/i).test(compiler))
     ctx.scene.enter("cpp")
   else if ((/^\/(jv|java)/i).test(compiler))

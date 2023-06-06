@@ -11,7 +11,8 @@ let langcmds = `/code or /cc for c
 /js or /node
 /cpp or /cplus
 /jv or /java
-/go for golang `
+/go for golang
+/ts or /type for typescript`
 
 const bt = (bot: any) => {
   const fs = require('fs');

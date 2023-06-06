@@ -1,11 +1,16 @@
 import Hlp from './../helpers';
 import fs from 'fs'
 // let flag: any;
+let h = new Hlp()
 let flag: any = {};
 let func: any = {};
 
 async function jsStarter(bot: any, ctx: any) {
   try {
+    //  ctx.reply("Excecuting typescript code..")
+    // .then(async (m:any)=> {await h.sleep(1000); return m.message_id})
+    // .then((m:any)=> {ctx.deleteMessage(m)})
+    // .catch((err:any)=>{})
 
     let id: any = ctx.message.from.id
     let cmp: any = "ts"
