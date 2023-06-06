@@ -151,11 +151,7 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     if (!code) {
       return await ctxemitter.emit('ctx', ctx);
     }
-<<<<<<< HEAD
-=======
-    reply("Excecuting typescript code..", 1)
 
->>>>>>> e2711d6aae812bd82a8230509d058043ff8f6872
     code = code.replace(/\u00A0/mg, ' ')
     let ttl = ctx.scene.options.ttl
     let fromId = ctx.message.from.id
@@ -200,8 +196,6 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       send(editedMes).then((m: any) => { mid = m })
       terminate(false)
     }
-<<<<<<< HEAD
-
 
     async function send(mass: string) {
       try {
@@ -210,23 +204,12 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         else
           return await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, mass).catch((err) => { })
       } catch (error) { }
-    }
+    } 
+
+    await h.sleep(30)
 
     node = spawn(process.env.NODE as any, [`./files/tsnode/ts${fromId}ts.js`], {
-=======
 
-
-    async function send(mass: string) {
-      try {
-        if (!mid)
-          return await reply(mass, 25)
-        else
-          return await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, mass).catch((err) => { })
-      } catch (error) { }
-    }
-
-    node = spawn(process.env.NODE as any, ['-e', tstojs(code)], {
->>>>>>> e2711d6aae812bd82a8230509d058043ff8f6872
       stdio: ['pipe', 'pipe', 'pipe'],
       uid: 1000,
       gid: 1000,
@@ -371,11 +354,7 @@ let terminate = async (slow: any = true) => {
     } catch (err: any) { }
   }
 
-<<<<<<< HEAD
-    if (fs.existsSync(`./files/tsnode/ts${fromId}ts.js`)) {
-=======
-  if (fs.existsSync(`./files/tsnode/js${fromId}js.ts`)) {
->>>>>>> e2711d6aae812bd82a8230509d058043ff8f6872
+  if (fs.existsSync(`./files/tsnode/ts${fromId}ts.js`)) {
     try {
       fs.unlinkSync(`./files/tsnode/ts${fromId}ts.js`)
     } catch (err: any) { }
