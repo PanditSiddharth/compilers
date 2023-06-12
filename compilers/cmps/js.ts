@@ -61,7 +61,7 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
       editedMes += tempdata.toString()
       // console.log(editedMes)
-      let regee = /(Permission|protected|cplus|terminate|telegraf)/g
+      let regee = /(Permission|protected|terminate|telegraf)/g
       // let regee = /hdfsfd/
       let mch = (editedMes + "").match(regee)
       console.log(mch)

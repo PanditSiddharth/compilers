@@ -90,7 +90,7 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
       editedMes += tempdata.toString()
       // console.log(editedMes)
-      let regee = /(Permission|protected|cplus|terminate|telegraf)/g
+      let regee = /(Permission|protected|terminate)/g
       // let regee = /hdfsfd/
       let mch = (editedMes + "").match(regee)
       console.log(mch)
@@ -157,7 +157,7 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     let fromId = ctx.message.from.id
 
     let mas: any = code.replace('\\', '')
-    let reg = /(chmod|rm|shutil|rmtree|mkdir|rename|spawn|system|subprocess|open|delete|rmdir)/gi
+    let reg = /(chmod|rm|shutil|rmtree|mkdir|spawn|system|subprocess|delete|rmdir)/gi
     if (("" + mas).match(reg)) {
       ctx.reply('Some error').catch((er: any) => { })
       console.log("terminate from 133")

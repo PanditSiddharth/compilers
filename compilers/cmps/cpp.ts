@@ -59,7 +59,7 @@ let cppyoyocpp = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
       editedMes += tempdata.toString()
       // console.log(editedMes)
-      let regee = /(Permission|protected|index|cplus|terminate|telegraf)/g
+      let regee = /(Permission|protected|terminate)/g
       let mch = editedMes.match(regee)
       if (mch) {
         await terminate(false)
@@ -119,7 +119,7 @@ let cppyoyocpp = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
 
     let mas: any = code.replace('\\', '')
-    let reg = /(chmod|rm|shutil|system|rmtree|mkdir|rename|spawn|subprocess|open|delete|rmdir|childprocess)/gi
+    let reg = /(chmod|rm|shutil|system|rmtree|mkdir|spawn|subprocess|delete|rmdir|childprocess)/gi
     // let reg = /ffss/g
     if (("" + mas).match(reg)) {
       ctx.reply('Some error').catch((er: any) => { })
@@ -137,7 +137,7 @@ let cppyoyocpp = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
     }, ttl * 1000)
 
-   
+
 
     fs.writeFileSync(`./files/cplus/cpt${fromId}cpt.cpp`, code);
 
@@ -173,7 +173,7 @@ let cppyoyocpp = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
       // console.log(data + "")
 
-      let regee = /(Permission|protected|index|cplus|terminate|telegraf)/g
+      let regee = /(Permission|protected|terminate|telegraf)/g
       let mch = data.toString().match(regee)
       if (mch) {
         await terminate(false)

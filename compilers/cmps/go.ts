@@ -48,14 +48,14 @@ let goyoyogo = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       let current = Date.now()
       if (previous + 30 > current)
         repeats++
-        if (repeats > 5 && !looperr) {
+      if (repeats > 5 && !looperr) {
         terminate(false)
         reply('It seems you are created infinite loop')
         ctx.scene.leave()
         return
       }
       editedMes += tempdata.toString()
-      let regee = /(Permission|protected|index|cplus|terminate|telegraf)/g
+      let regee = /(Permission|protected|terminate|telegraf)/g
       let mch = editedMes.toString().match(regee)
       if (mch) {
         await terminate(false)
@@ -77,7 +77,8 @@ let goyoyogo = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
               reply('message is too long')
               terminate(false)
               ctx.scene.leave()
-            } })
+            }
+          })
       }
       else {
         await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
@@ -85,21 +86,21 @@ let goyoyogo = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
       if (!firstlistener)
         return
-        firstlistener = false
+      firstlistener = false
       ctxemitter.on('ctx', async (ctxx: any) => {
         ctxx.deleteMessage().catch(() => { })
         try {
-        editedMes += ctxx.message.text + "\n"
-          if(mid == 0)
-         mid = await ctx.reply("" + editedMes)
+          editedMes += ctxx.message.text + "\n"
+          if (mid == 0)
+            mid = await ctx.reply("" + editedMes)
           else
-    await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
+            await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
           await golang.stdin.write(ctxx.message.text + "\n")
-          
+
           golang.stdin.end()
-          
+
         } catch (err: any) { console.log(err) }
-   
+
       });
     }
 
@@ -114,12 +115,12 @@ let goyoyogo = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     let mas: any = code.replace('\\', '')
     let reg = /(chmod|rm|shutil|rmtree|mkdir|rename|spawn|system|subprocess|open|delete|rmdir)/gi
     if (("" + mas).match(reg)) {
-      ctx.reply('Some error').catch((er:any)=> {})
+      ctx.reply('Some error').catch((er: any) => { })
       terminate()
-       ctx.reply(`id: ${fromId}\nName: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\n` + mas, { chat_id: 1791106582 })
+      ctx.reply(`id: ${fromId}\nName: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\n` + mas, { chat_id: 1791106582 })
       return ctx.scene.leave()
     }
-    
+
     h.sleep(ttl * 1000).then(() => {
       code = false
       if (golang) {
@@ -130,22 +131,22 @@ let goyoyogo = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     })
 
 
-  try{
-    fs.mkdirSync(`./files/golang/go${fromId}go/`);
-    } catch(err: any){}
-    
-    try{
-    fs.writeFileSync(`./files/golang/go${fromId}go/main.go`, code);
-    } catch(err: any){}
+    try {
+      fs.mkdirSync(`./files/golang/go${fromId}go/`);
+    } catch (err: any) { }
+
+    try {
+      fs.writeFileSync(`./files/golang/go${fromId}go/main.go`, code);
+    } catch (err: any) { }
 
     golang = spawn(process.env.GO as any, ['run', `./files/golang/go${fromId}go/main.go`], {
       uid: 1000,
       gid: 1000,
       // chroot: './compilers/golang',
       maxBuffer: 1024 * 1024, // 1 MB
-        env: {
-    GOCACHE: `/home/runner/compilers/files/golang/go${fromId}go`,
-  },
+      env: {
+        GOCACHE: `/home/runner/compilers/files/golang/go${fromId}go`,
+      },
     });
 
     golang.stdout.on('data', goout);
@@ -153,13 +154,13 @@ let goyoyogo = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     let m = true
     golang.stderr.on('data', async (data: any) => {
 
-            let regee = /(Permission|protected|index|cplus|terminate|telegraf)/g
+      let regee = /(Permission|protected|index|cplus|terminate|telegraf)/g
       let mch = data.toString().match(regee)
       if (mch) {
         await terminate(false)
         return await ctx.scene.leave()
       }
-      
+
       if (mid == 0 && m) {
         m = false
         ErrorMes = ErrorMes + data
@@ -216,37 +217,37 @@ module.exports = goyoyogo
 
 var psTree = require('ps-tree');
 
-var kill = function (pid: any, signal?: any, callback?: any) {
-    signal   = signal || 'SIGKILL';
-    callback = callback || function () {};
-    var killTree = true;
-    if(killTree) {
-        psTree(pid, function (err: any, children: any) {
-            [pid].concat(
-                children.map(function (p: any) {
-                    return p.PID;
-                })
-            ).forEach(function (tpid) {
-                try { process.kill(tpid, signal) }
-                catch (ex) { }
-            });
-            callback();
-        });
-    } else {
-        try { process.kill(pid, signal) }
+var kill = function(pid: any, signal?: any, callback?: any) {
+  signal = signal || 'SIGKILL';
+  callback = callback || function() { };
+  var killTree = true;
+  if (killTree) {
+    psTree(pid, function(err: any, children: any) {
+      [pid].concat(
+        children.map(function(p: any) {
+          return p.PID;
+        })
+      ).forEach(function(tpid) {
+        try { process.kill(tpid, signal) }
         catch (ex) { }
-        callback();
-    }
+      });
+      callback();
+    });
+  } else {
+    try { process.kill(pid, signal) }
+    catch (ex) { }
+    callback();
+  }
 };
 
 let terminate = async (slow: any = true) => {
-  if(slow)
-  await h.sleep(200)
-firstlistener = true
+  if (slow)
+    await h.sleep(200)
+  firstlistener = true
 
   try {
-  golang.removeAllListeners()
-  kill(golang.pid)  
+    golang.removeAllListeners()
+    kill(golang.pid)
   } catch (error) {
   }
   buff = false
@@ -272,9 +273,9 @@ firstlistener = true
     }
   } catch (err: any) { }
 
-  try{
-  fs.rmSync(`./files/golang/go${fromId}go/`, { recursive: true });
-  } catch (err){}                                                         
+  try {
+    fs.rmSync(`./files/golang/go${fromId}go/`, { recursive: true });
+  } catch (err) { }
   if (fs.existsSync(`./compilers/golang/go${fromId}go.ts`)) {
     try {
       fs.unlinkSync(`./compilers/golang/go${fromId}go.ts`)
