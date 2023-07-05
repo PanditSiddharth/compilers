@@ -1,0 +1,1 @@
+{"NODE":"/nix/store/dj805sw07vvpbxx39c8g67x8qddg0ikw-nodejs-18.12.1/bin/node","PYTHON":"/nix/store/hd4cc9rh83j291r5539hkf6qd8lgiikb-python3-3.10.8/bin/python","JAVA":"/nix/store/ca5zjmdcha9wa4gfvw7vhmz5wkr1ra66-openjdk-17.0.4+8/bin/java","JAVAC":"/nix/store/ca5zjmdcha9wa4gfvw7vhmz5wkr1ra66-openjdk-17.0.4+8/bin/javac","GO":""}
