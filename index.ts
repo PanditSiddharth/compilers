@@ -20,34 +20,87 @@ require('dotenv').config()
 // Handler factories
 const { enter, leave } = Scenes.Stage;
 let func: any = {};
+function cmdd(ctx: any) {
+  ctx.message.text = ctx.message.text.replace(new RegExp("^\\/[a-zA-Z0-9]{2,9}@" + ctx.botInfo.username, 'i'), (match: any) => match.replace("@" + ctx.botInfo.username, ""))
+}
 
 let pyScene = new Scenes.BaseScene<Scenes.SceneContext>("py");
-pyScene.enter(async (ctx: any) => { await pyStarter(bot, ctx) });
-pyScene.on("message", async (ctx: any) => { await pyStarter(bot, ctx) });
+pyScene.enter(async (ctx: any) => {
+  cmdd(ctx);
+  await pyStarter(bot, ctx)
+});
+
+pyScene.on("message", async (ctx: any) => {
+  cmdd(ctx);
+  await pyStarter(bot, ctx)
+});
 
 let cppScene = new Scenes.BaseScene<Scenes.SceneContext>("cpp");
-cppScene.enter(async (ctx: any) => { await cppStarter(bot, ctx) });
-cppScene.on("message", async (ctx: any) => { await cppStarter(bot, ctx) });
+
+cppScene.enter(async (ctx: any) => {
+  cmdd(ctx)
+  await cppStarter(bot, ctx)
+});
+
+cppScene.on("message", async (ctx: any) => {
+  cmdd(ctx)
+  await cppStarter(bot, ctx)
+});
 
 let cScene = new Scenes.BaseScene<Scenes.SceneContext>("code");
-cScene.enter(async (ctx: any) => { await cStarter(bot, ctx); });
-cScene.on("message", async (ctx: any) => { await cStarter(bot, ctx) });
+cScene.enter(async (ctx: any) => {
+  cmdd(ctx)
+  await cStarter(bot, ctx);
+});
+
+cScene.on("message", async (ctx: any) => {
+  cmdd(ctx)
+  await cStarter(bot, ctx)
+});
 
 let jvScene = new Scenes.BaseScene<Scenes.SceneContext>("jv");
-jvScene.enter(async (ctx: any) => { await jvStarter(bot, ctx) });
-jvScene.on("message", async (ctx: any) => { await jvStarter(bot, ctx) });
+jvScene.enter(async (ctx: any) => {
+  cmdd(ctx)
+  await jvStarter(bot, ctx)
+});
+
+jvScene.on("message", async (ctx: any) => {
+  cmdd(ctx)
+  await jvStarter(bot, ctx)
+});
 
 let jsScene = new Scenes.BaseScene<Scenes.SceneContext>("js");
-jsScene.enter(async (ctx: any) => { await jsStarter(bot, ctx) });
-jsScene.on("message", async (ctx: any) => { await jsStarter(bot, ctx) });
+jsScene.enter(async (ctx: any) => {
+  cmdd(ctx)
+  await jsStarter(bot, ctx)
+});
+
+jsScene.on("message", async (ctx: any) => {
+  cmdd(ctx)
+  await jsStarter(bot, ctx)
+});
 
 let tsScene = new Scenes.BaseScene<Scenes.SceneContext>("ts");
-tsScene.enter(async (ctx: any) => { await tsStarter(bot, ctx) });
-tsScene.on("message", async (ctx: any) => { await tsStarter(bot, ctx) });
+tsScene.enter(async (ctx: any) => {
+  cmdd(ctx)
+  await tsStarter(bot, ctx)
+});
+
+tsScene.on("message", async (ctx: any) => {
+  cmdd(ctx)
+  await tsStarter(bot, ctx)
+});
 
 let goScene = new Scenes.BaseScene<Scenes.SceneContext>("go");
-goScene.enter(async (ctx: any) => { await goStarter(bot, ctx) });
-goScene.on("message", async (ctx: any) => { await goStarter(bot, ctx) });
+goScene.enter(async (ctx: any) => {
+  cmdd(ctx)
+  await goStarter(bot, ctx)
+});
+
+goScene.on("message", async (ctx: any) => {
+  cmdd(ctx)
+  await goStarter(bot, ctx)
+});
 
 let bot = new Telegraf<Scenes.SceneContext>(process.env.TOKEN as any);
 let stage = new Scenes.Stage<Scenes.SceneContext>([cScene, pyScene, jsScene, cppScene, jvScene, goScene, tsScene], { ttl: 40 });
@@ -56,39 +109,46 @@ bot.use(session());
 bot.use(stage.middleware());
 
 bot.hears(/^\/(code|py|python|ts|type|js|node|cc|cpp|cplus|go|jv|java|c\+\+)/i, async (ctx: any) => {
-  let compiler: any = ctx.message.text + "";
-  let memb = await ctx.getChatMember(ctx.botInfo.id)
+  try {
+    let compiler: any = ctx.message.text + "";
+    let memb = await ctx.getChatMember(ctx.botInfo.id)
 
-  if (!memb.can_delete_messages) {
-    if ((ctx.chat.id + "").startsWith("-100"))
-      return ctx.reply('I must be admin with delete message permission')
+    if (!memb.can_delete_messages) {
+      if ((ctx.chat.id + "").startsWith("-100"))
+        return ctx.reply('I must be admin with delete message permission')
+    }
+
+    // ctx.message.text = compiler.replace(new RegExp("^\\/[a-zA-Z0-9]{2,9}@" + ctx.botInfo.username, 'i'), (match: any) => match.replace("@" + ctx.botInfo.username, ""))
+    // console.log(ctx.message.text)
+
+    if ((/^\/(py|python)/i).test(compiler))
+      ctx.scene.enter("py")
+    else if ((/^\/(cc|code)/i).test(compiler))
+      ctx.scene.enter("code")
+    else if ((/^\/(js|node)/i).test(compiler))
+      ctx.scene.enter("js")
+    else if ((/^\/(ts|type)/i).test(compiler)) {
+      ctx.reply("Excecuting typescript code..")
+        .then(async (m: any) => { await h.sleep(3000); return m.message_id })
+        .then((m: any) => { ctx.deleteMessage(m) })
+        .catch((err: any) => { })
+
+      await h.sleep(300)
+      ctx.scene.enter("ts")
+    }
+    else if ((/^\/(cpp|cplus)/i).test(compiler))
+      ctx.scene.enter("cpp")
+    else if ((/^\/(jv|java)/i).test(compiler))
+      ctx.scene.enter("jv")
+    else if ((/^\/go/i).test(compiler))
+      ctx.scene.enter("go")
+
+    // let wait = await ctx.reply("Please wait...").catch((err: Error)=> {})
+    // await h.sleep(200);
+    // ctx.deleteMessage(wait.message_id).catch((err: Error)=> {})
+  } catch (err: any) {
+
   }
-
-  if ((/^\/(py|python)/i).test(compiler))
-    ctx.scene.enter("py")
-  else if ((/^\/(cc|code)/i).test(compiler))
-    ctx.scene.enter("code")
-  else if ((/^\/(js|node)/i).test(compiler))
-    ctx.scene.enter("js")
-  else if ((/^\/(ts|type)/i).test(compiler)){
-     ctx.reply("Excecuting typescript code..")
-    .then(async (m:any)=> {await h.sleep(3000); return m.message_id})
-    .then((m:any)=> {ctx.deleteMessage(m)})
-    .catch((err:any)=>{})
-
-    await h.sleep(300)
-    ctx.scene.enter("ts")
-  }
-  else if ((/^\/(cpp|cplus)/i).test(compiler))
-    ctx.scene.enter("cpp")
-  else if ((/^\/(jv|java)/i).test(compiler))
-    ctx.scene.enter("jv")
-  else if ((/^\/go/i).test(compiler))
-    ctx.scene.enter("go")
-
-  // let wait = await ctx.reply("Please wait...").catch((err: Error)=> {})
-  // await h.sleep(200);
-  // ctx.deleteMessage(wait.message_id).catch((err: Error)=> {})
 })
 
 bot.launch({ dropPendingUpdates: true });
