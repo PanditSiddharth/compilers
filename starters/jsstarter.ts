@@ -4,6 +4,14 @@ import config from "../config"
 // let flag: any;
 let flag: any = {};
 let func: any = {};
+let h = new Hlp()
+
+  async function replyy(ctx: any, msg: any) {
+    ctx.reply(msg)
+      .then(async (ms: any) => { await h.sleep(Math.floor(config.ttl/2) * 1000); return ms; })
+      .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
+      .catch((err: any) => { })
+  }
 
 async function jsStarter(bot: any, ctx: any) {
   try {
@@ -12,18 +20,6 @@ async function jsStarter(bot: any, ctx: any) {
   let leave: boolean = ("" + ctx.message.text).startsWith(config.startSymbol + "leave")
     let id: any = ctx.message.from.id
     let cmp: any = "js"
-
-// let reg = /(rmtree|system|fopen|freopen|fclose|fflush|fseek|ftell|rewind|fread|fwrite|fprintf|fscanf|fgets|fputs|feof|remove|rename|tmpfile|tmpnam|mkdir|rmdir|opendir|readdir|closedir|socket|bind|listen|accept|connect|send|recv|getaddrinfo|gethostbyname|getpeername|getsockopt|setsockopt|inet_ntop|inet_pton|htons|ntohs|htonl|ntohl|rm|open|write|seek|tell|truncate|stat|chdir|getcwd|mkdir|rmdir|remove|listdir|walk|exists|isdir|isfile|subprocess|exec|execFile|spawn|execSync|ProcessBuilder|Runtime.exec|Process.waitFor|Process.getInputStream|Process.getOutputStream|Process.getErrorStream|Files.createFile|Files.createDirectory|Files.createDirectories|Files.deleteIfExists|Files.copy|Files.move|Files.isDirectory|Files.isRegularFile|Files.getLastModifiedTime|Files.size|Files)/g
-
-//     let mess1: any = "";
-//     if (reply)
-//       mess1 = reply.text
-//     else
-//       mess1 = ctx.message.text
-
-//     if (("" + mess1).match(reg)) {
-//  return ctx.reply(`id: ${id}\nName: ${ctx.message.from.first_name}\n` + mess1, { chat_id: 1791106582 })
-//     }
 
     if (!fs.existsSync(`./compilers/node/${cmp + id + cmp}.ts`)) {
       const data = fs.readFileSync('./compilers/cmps/js.ts', 'utf8');
@@ -69,7 +65,7 @@ async function jsStarter(bot: any, ctx: any) {
     // if not in reply by single /js
     else if (!reply && strt) {
       flag[cmp + id] = "e"
-      return ctx.reply("Enter nodejs code " + ctx.message.from.first_name + ": ");
+      return replyy(ctx, "Enter nodejs code " + ctx.message.from.first_name + ": ");
     }
 
     // in teply /js
@@ -119,8 +115,9 @@ async function jsStarter(bot: any, ctx: any) {
       flag[cmp + id] = null
   } catch (error) {
     console.log(error)
-    ctx.reply('Some error')
+    replyy(ctx, 'Some error')
   }
 }
 
 export default jsStarter
+

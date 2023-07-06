@@ -4,6 +4,7 @@ import config from "../config"
 // let flag: any;
 let flag: any = {};
 let func: any = {};
+let h = new Hlp()
 
 async function pyStarter(bot: any, ctx: any) {
   try {
@@ -67,9 +68,9 @@ async function pyStarter(bot: any, ctx: any) {
       });
     }
     // if not in reply by single /py
-    else if (!ctx.message.reply_to_message && (/^\/(py|python)/i).test(ctx.message.text)) {
+    else if (!ctx.message.reply_to_message && strt) {
       flag[cmp + id] = "e"
-      return ctx.reply("Enter python code " + ctx.message.from.first_name + ": ");
+      return replyy(ctx, "Enter python code " + ctx.message.from.first_name + ": ");
     }
 
     // in teply /py
@@ -121,8 +122,15 @@ async function pyStarter(bot: any, ctx: any) {
       flag[cmp + id] = null
   } catch (error) {
     console.log(error)
-    ctx.reply('Some error')
+    replyy(ctx, 'Some error')
   }
 }
 
 export default pyStarter
+
+  async function replyy(ctx: any, msg: any) {
+    ctx.reply(msg)
+      .then(async (ms: any) => { await h.sleep(Math.floor(config.ttl/2) * 1000); return ms; })
+      .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
+      .catch((err: any) => { })
+  }

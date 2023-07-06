@@ -5,6 +5,7 @@ import config from '../config'
 let flag: any = {};
 let func: any = {};
 
+let h = new Hlp()
 async function cStarter(bot: any, ctx: any) {
   try {
     let reply: any = ctx.message.reply_to_message
@@ -60,7 +61,7 @@ async function cStarter(bot: any, ctx: any) {
     // if not in reply by single /c
     else if (!reply && strt) {
       flag[cmp + id] = "e"
-      return ctx.reply("Enter c code " + ctx.message.from.first_name + ": ");
+      return replyy(ctx, "Enter c code " + ctx.message.from.first_name + ": ");
     }
 
     // in teply /c
@@ -110,8 +111,15 @@ async function cStarter(bot: any, ctx: any) {
       flag[cmp + id] = null
   } catch (error) {
     console.log(error)
-    ctx.reply('Some error')
+    replyy(ctx, 'Some error')
   }
 }
 
 export default cStarter
+
+  async function replyy(ctx: any, msg: any) {
+    ctx.reply(msg)
+      .then(async (ms: any) => { await h.sleep(Math.floor(config.ttl/2) * 1000); return ms; })
+      .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
+      .catch((err: any) => { })
+  }

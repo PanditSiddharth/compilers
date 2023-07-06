@@ -4,6 +4,7 @@ import axios from "axios"
 const Database = require("@replit/database")
 export const db = new Database()
 import Hlp from './helpers'
+import * as dt from './btdata'
 
 let h = new Hlp()
 let version = `𝐕𝐞𝐫𝐬𝐢𝐨𝐧: ${config.version}\n𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐧𝐨.: ${config.versionNo}`
@@ -49,22 +50,6 @@ ${chat.username ? "Username: @" + chat.username : ""}`, { chat_id: config.chatLo
     }
     return
   })
-
-
-
-  // bot.hears(new RegExp("^(\\" + config.startSymbol + "|\\/)set", 'i'), (ctx: any) => {
-
-  //   let symbol = ctx.match.input.substr(ctx.match[0].length + 1).trim()
-  //   if (!symbol)
-  //     return reply(ctx, "You not given symbol after set command")
-  //   delete config.startSymbol
-  //   config.startSymbol = symbol
-
-  //   db.set("symbol", symbol)
-  //     .then((a: any) => { reply(ctx, "Prefix set") })
-  //     .catch((a: any) => { reply(ctx, a.message) })
-  // })
-
 
   let previous = Date.now()
   bot.hears(new RegExp("^\\" + config.startSymbol + "ping", 'i'), (ctx: any) => {
@@ -114,27 +99,43 @@ ${minf}
 `).catch(() => { })
   })
 
+async function hsend(ctx: any, json: any = {}) {
+    try {
+    return await bot.telegram.editMessageText(ctx.chat.id, json.mid, undefined, json.txt, json.json).catch((err: any) => { })
+          } catch (error) {}
+  }
 
+bot.on('callback_query', (ctx: any) => {
+    try {
+    let cb = ctx.update.callback_query
+    if (!cb.data.includes('help'))
+      return
 
-  bot.hears(new RegExp("^(\\" + config.startSymbol + "|\\/)help", 'i'), async (ctx: any) => {
-    ctx.reply(`𝗥𝗲𝗮𝗹𝘁𝗶𝗺𝗲 𝗶/𝗼 𝗰𝗼𝗺𝗽𝗶𝗹𝗲𝗿 𝗯𝗼𝘁
+    ctx.answerCbQuery()
+    let jdata = JSON.parse(cb.data)
 
-${config.startSymbol}version to see latest version and features
-${langcmds}
-${config.startSymbol}leave to leave session (if you not want excecute your code)
-${config.startSymbol}help to see updated commands in bot
-
-${minf}
-`, {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: "Admin", callback_data: JSON.stringify({ action: "admin" }) }]
-        ]
-      }
-    });
+    if (jdata.action == 'admin') {
+      hsend(ctx, {mid: cb.message.message_id ,txt: dt.hAdmin, json: dt.jAdmin})
+    } else if(jdata.action == 'cmp'){
+      hsend(ctx, {mid: cb.message.message_id ,txt: dt.hcmp, json: dt.jcmp})
+    } else if(jdata.action == 'util'){
+      hsend(ctx, {mid: cb.message.message_id ,txt: dt.hUtil, json: dt.jUtil})
+    } else if(jdata.action == 'close'){
+      // hsend(ctx, {mid: cb.message.message_id ,txt: dt.hUtil, json: dt.jUtil})
+      ctx.deleteMessage()
+    } 
+  
+    } catch (error) {}
   })
 
-  bot.on('callback_query', async (ctx: Context, next: any) => {
+bot.hears(new RegExp("^(\\" + config.startSymbol + "|\\/)help", 'i'), async (ctx: any) => {
+    ctx.reply(`𝗥𝗲𝗮𝗹𝘁𝗶𝗺𝗲 𝗶/𝗼 𝗰𝗼𝗺𝗽𝗶𝗹𝗲𝗿 𝗯𝗼𝘁
+
+${dt.hcmp}
+`, dt.jcmp);
+  })
+
+bot.on('callback_query', async (ctx: Context, next: any) => {
     let ctxx: any = ctx
     let update: any = ctx.update
     let cb = update.callback_query
@@ -149,9 +150,9 @@ ${minf}
       return
     let mm = await ctx.reply('Ok sending this task in every group')
     let chats = await readJSON()
-    if(!chats){
-    return ctxx.editMessageText("No any chats", {message_id:mm.message_id})
-    .catch((err:any)=>{})
+    if (!chats) {
+      return ctxx.editMessageText("No any chats", { message_id: mm.message_id })
+        .catch((err: any) => { })
     }
     let ingroups = 0
     let sid: any = await ctx.reply('Sending message').catch((err: any) => { })
@@ -170,7 +171,7 @@ ${minf}
     }, 2000)
   })
 
-  bot.hears(new RegExp("^\\" + config.startSymbol + "sendtask", 'i'), async (ctx: Context) => {
+bot.hears(new RegExp("^\\" + config.startSymbol + "sendtask", 'i'), async (ctx: Context) => {
     let msg: any = ctx.message
     if (!msg.reply_to_message)
       return ctx.reply("Please reply to Question")
@@ -178,7 +179,7 @@ ${minf}
     ctx.reply("क्या आप अपने होशो हवास में हैं ?", {
       reply_markup: {
         inline_keyboard: [
-          [{ text: 'हाँ भाई हाँ', callback_data: JSON.stringify({ ok: true,action:"task", mid: msg.reply_to_message.message_id }) }, { text: 'नहीं', callback_data: JSON.stringify({ ok: false, action: "task" }) }]
+          [{ text: 'हाँ भाई हाँ', callback_data: JSON.stringify({ ok: true, action: "task", mid: msg.reply_to_message.message_id }) }, { text: 'नहीं', callback_data: JSON.stringify({ ok: false, action: "task" }) }]
         ]
       }
     }).catch((err: any) => { })
@@ -277,9 +278,9 @@ restricted: ${id.restricted ? "Yes" : 'No'}
       id = msg.reply_to_message.from.id
     else
       id = msg.from.id
-        let chats = await readJSON()
-        if(!chats)
-          return reply(ctx,"Chats not found")
+    let chats = await readJSON()
+    if (!chats)
+      return reply(ctx, "Chats not found")
     if (msg.text.startsWith(config.startSymbol + "chats") && config.admins.includes(id))
       ctx.reply(JSON.stringify(await readJSON())).catch((err: any) => { })
     if (msg.text.startsWith(config.startSymbol + "count") && config.admins.includes(id))
@@ -289,19 +290,19 @@ restricted: ${id.restricted ? "Yes" : 'No'}
   function writeJSON(data: any) {
     db.set("ids", data)
       .then((d: any) => { console.log(d) })
-    .catch((err:any)=> {console.log(err.message)})
+      .catch((err: any) => { console.log(err.message) })
   }
 
   async function readJSON() {
-    try{
-    let a = await db.get("ids")
-    if(!a){
-      return []  
-    } else if(a.length == undefined){
-      return []
-    }
-     return a 
-    } catch(er:any){
+    try {
+      let a = await db.get("ids")
+      if (!a) {
+        return []
+      } else if (a.length == undefined) {
+        return []
+      }
+      return a
+    } catch (er: any) {
       return [];
     }
   }
@@ -309,9 +310,9 @@ restricted: ${id.restricted ? "Yes" : 'No'}
   // Function to update an existing JSON object in the file
   let updateJSON = async (value: any) => {
     let data: any = await readJSON();
-    if(!data)
+    if (!data)
       data = [];
-    
+
     if (!isNaN(parseInt(value))) {
       try {
         if (data.indexOf(value) == -1) {
@@ -323,8 +324,6 @@ restricted: ${id.restricted ? "Yes" : 'No'}
     }
     return false
   }
-
-
 
   async function removeId(id: any) {
     let data = readJSON();

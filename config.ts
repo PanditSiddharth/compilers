@@ -7,8 +7,8 @@ let config: Config = {
   errorLogs: ownerId, // chat or persion id
   ownerId,
   admins: [ownerId, 1942730863, 1580821417, 1643271211],
-  version: "1.2.0",
-  versionNo: 17,
+  version: "1.3.0",
+  versionNo: 18,
   ttl: 60,
   startSymbol: ".",
   owner: "", // You can give here your @username
@@ -43,7 +43,7 @@ interface Config {
   admins: UserId[];
   version: string;
   versionNo: number | string;
-  startSymbol?: string;
+  startSymbol: string;
   owner: string;
   group: Username;
   channel: Username;

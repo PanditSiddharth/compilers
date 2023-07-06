@@ -4,11 +4,13 @@ import config from "../config"
 // let flag: any;
 let flag: any = {};
 let func: any = {};
+let h = new Hlp()
 
 async function jvStarter(bot: any, ctx: any) {
   try {
         let reply: any = ctx.message.reply_to_message
     let strt: boolean = new RegExp("^\\" + config.startSymbol + "(jv|java)", "i").test(ctx.message.text)
+    
   let leave: boolean = ("" + ctx.message.text).startsWith(config.startSymbol + "leave")
     let id: any = ctx.message.from.id
     let cmp: any = "jv"
@@ -74,7 +76,7 @@ async function jvStarter(bot: any, ctx: any) {
     // if not in reply by single /jv
     else if (!reply && strt) {
       flag[cmp + id] = "e"
-      return ctx.reply("Enter java code " + ctx.message.from.first_name + ": ");
+      return replyy(ctx, "Enter java code " + ctx.message.from.first_name + ": ");
     }
 
     // in teply /jv
@@ -124,8 +126,15 @@ async function jvStarter(bot: any, ctx: any) {
       flag[cmp + id] = null
   } catch (error) {
     console.log(error)
-    ctx.reply('Some error')
+    replyy(ctx, 'Some error')
   }
 }
 
 export default jvStarter
+
+  async function replyy(ctx: any, msg: any) {
+    ctx.reply(msg)
+      .then(async (ms: any) => { await h.sleep(Math.floor(config.ttl/2) * 1000); return ms; })
+      .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
+      .catch((err: any) => { })
+  }
