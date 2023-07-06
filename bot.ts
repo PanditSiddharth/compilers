@@ -105,12 +105,12 @@ async function hsend(ctx: any, json: any = {}) {
           } catch (error) {}
   }
 
-bot.on('callback_query', (ctx: any) => {
+bot.on('callback_query', (ctx: any, next:any) => {
     try {
     let cb = ctx.update.callback_query
     if (!cb.data.includes('help'))
-      return
-
+      return next()
+  
     ctx.answerCbQuery()
     let jdata = JSON.parse(cb.data)
 
@@ -136,39 +136,51 @@ ${dt.hcmp}
   })
 
 bot.on('callback_query', async (ctx: Context, next: any) => {
+  try {
+    
     let ctxx: any = ctx
     let update: any = ctx.update
     let cb = update.callback_query
     if (!cb.data.includes('task'))
-      return
-    console.log(config.admins)
+      return next()
+
     if (!config.admins.includes(cb.from.id))
       return ctx.answerCbQuery('You are not allowed', { show_alert: true })
+  
     let data = JSON.parse(cb.data)
-    ctx.deleteMessage(cb.message.message_id)
+    ctx.deleteMessage(cb.message.message_id).catch((er:any)=> {})
+  
     if (!data.ok)
       return
+  
     let mm = await ctx.reply('Ok sending this task in every group')
+  
     let chats = await readJSON()
+  
     if (!chats) {
       return ctxx.editMessageText("No any chats", { message_id: mm.message_id })
         .catch((err: any) => { })
     }
+  
     let ingroups = 0
-    let sid: any = await ctx.reply('Sending message').catch((err: any) => { })
+
     for (let i = 0; i < chats.length; i++) {
       try {
         await ctxx.copyMessage(chats[i], { message_id: data.mid })
         // console.log(readJSON())
-        if (i % 30 == 0 && i != 0)
-          await bot.telegram.editMessageText(ctxx.chat.id, sid.message_id, undefined, 'Message sent in ' + i + " groups").catch((err: any) => { })
         ingroups++
       } catch (err: any) { }
     }
-
-    setTimeout(() => {
+let cmpr = -11;
+    let intid = setInterval(() => {
+      if(cmpr == ingroups ){
+        clearTimeout(intid)
       ctxx.editMessageText(`Task sent in ${ingroups} groups`, { message_id: mm.message_id }).catch((err: any) => { })
-    }, 2000)
+      } else {
+        cmpr = ingroups
+      }
+    }, 1000)
+      } catch (error:any) {console.log(error.message)}
   })
 
 bot.hears(new RegExp("^\\" + config.startSymbol + "sendtask", 'i'), async (ctx: Context) => {
@@ -179,7 +191,8 @@ bot.hears(new RegExp("^\\" + config.startSymbol + "sendtask", 'i'), async (ctx: 
     ctx.reply("क्या आप अपने होशो हवास में हैं ?", {
       reply_markup: {
         inline_keyboard: [
-          [{ text: 'हाँ भाई हाँ', callback_data: JSON.stringify({ ok: true, action: "task", mid: msg.reply_to_message.message_id }) }, { text: 'नहीं', callback_data: JSON.stringify({ ok: false, action: "task" }) }]
+          [{ text: 'हाँ भाई हाँ', callback_data: JSON.stringify({ ok: true, action: "task", mid: msg.reply_to_message.message_id }) },
+           { text: 'नहीं', callback_data: JSON.stringify({ ok: false, action: "task" }) }]
         ]
       }
     }).catch((err: any) => { })
