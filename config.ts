@@ -10,7 +10,7 @@ let config: Config = {
   version: "1.3.0",
   versionNo: 18,
   ttl: 60,
-  startSymbol: ".",
+  startSymbol: "/",
   owner: "", // You can give here your @username
   group: "@Logicb_support",
   channel: "@LogicBots",

@@ -128,7 +128,7 @@ bot.on('callback_query', (ctx: any, next:any) => {
     } catch (error) {}
   })
 
-bot.hears(new RegExp("^(\\" + config.startSymbol + "|\\/)help", 'i'), async (ctx: any) => {
+bot.hears(new RegExp("^(\\" + config.startSymbol + "|\\/|@)help", 'i'), async (ctx: any) => {
     ctx.reply(`𝗥𝗲𝗮𝗹𝘁𝗶𝗺𝗲 𝗶/𝗼 𝗰𝗼𝗺𝗽𝗶𝗹𝗲𝗿 𝗯𝗼𝘁
 
 ${dt.hcmp}
