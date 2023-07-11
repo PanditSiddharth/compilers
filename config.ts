@@ -1,3 +1,5 @@
+require("dotenv").config()
+
 // Configure Your own bot free bot source code for helping students 
 
 let ownerId = 1791106582
@@ -7,8 +9,8 @@ let config: Config = {
   errorLogs: ownerId, // chat or persion id
   ownerId,
   admins: [ownerId, 1942730863, 1580821417, 1643271211],
-  version: "1.3.0",
-  versionNo: 18,
+  version: "1.3.1",
+  versionNo: 19,
   ttl: 60,
   startSymbol: "/",
   owner: "", // You can give here your @username
@@ -17,6 +19,8 @@ let config: Config = {
 
   // set your bot token string in env
   token: process.env.TOKEN as string,
+
+  // Write full path of these write here or in env vars
   python: process.env.PYTHON as string,
   java: process.env.JAVA as string,
   javac: process.env.JAVAC as string,

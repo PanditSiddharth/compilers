@@ -1,6 +1,6 @@
 {
   "name": "iocompiler",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Realtime i/o compiler bot",
   "dependencies": {
     "@replit/database": "^2.0.3",
@@ -33,8 +33,17 @@
     "IO compiler",
     "Pandit Siddharth"
   ],
-  "author": "",
-  "license": "ISC",
+    "author": {
+    "name": "Siddharth Sharma",
+    "email": "mynmss3@gmail.com",
+    "url": "https://telegram.me/PanditSiddharth"
+  },
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/sidhelpbot/compilers/issues"
   },

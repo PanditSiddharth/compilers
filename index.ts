@@ -1,6 +1,14 @@
+// import files from project
 import keep_alive from './keep_alive'
 import fs from 'fs';
 import bt from './bot';
+import Hlp from './helpers';
+import config from './config'
+
+// 2 global dependencies
+import { Scenes, session, Telegraf } from "telegraf";
+
+// importig all starters file which is starting point after this file
 import pyStarter from './starters/pystarter'
 import cStarter from './starters/cstarter'
 import jsStarter from './starters/jsstarter'
@@ -8,26 +16,29 @@ import tsStarter from './starters/tsstarter'
 import cppStarter from './starters/cppstarter'
 import jvStarter from './starters/jvstarter'
 import goStarter from './starters/gostarter'
-import config from './config'
-require("dotenv").config()
-// let c = require('./compilers/c');
 
+// this will run web server and always make it alive
 keep_alive()
-import Hlp from './helpers';
-// let py = require('./compilers/py');
-let h = new Hlp()
-import { Scenes, session, Telegraf } from "telegraf";
+
+// env variable 
 require('dotenv').config()
-// Handler factories ha
+
+// Helper class object where sleep function etc listed
+let h = new Hlp()
+
+// for entering and leaving Scene
 const { enter, leave } = Scenes.Stage;
+
+// global object for all updates
 let func: any = {};
 
+// Helper function which replace bot username if exists in command
 function cmdd(ctx:any){
     ctx.message.text = ctx.message.text.replace(new RegExp("^\\"+ config.startSymbol + "[a-zA-Z0-9]{2,9}@" + ctx.botInfo.username, 'i'), 
   (match: any) => match.replace("@" + ctx.botInfo.username, ""))
 }
 
-
+// All scenes 
 let pyScene = new Scenes.BaseScene<Scenes.SceneContext>("py");
 pyScene.enter(async (ctx: any) => { 
   cmdd(ctx);
@@ -108,14 +119,20 @@ goScene.on("message", async (ctx: any) => {
     await startcheck(ctx, 'go')
   await goStarter(bot, ctx) });
 
+// making instance of Telegraf class
 let bot = new Telegraf<Scenes.SceneContext>(config.token);
+
+// regestering all scenes
 let stage = new Scenes.Stage<Scenes.SceneContext>([cScene, pyScene, jsScene, cppScene, jvScene, goScene, tsScene], { ttl: config.ttl });
+
+// passing bot instance in bot.ts file by call those function
 bt(bot)
+
+// Some global telegraf uses for help
 bot.use(session());
 bot.use(stage.middleware());
 
-
-
+// Main Program starts from here it listens /js /py all commands and codes 
 bot.hears(new RegExp("^\\" + config.startSymbol + "(code|py|python|ts|type|js|node|cc|cpp|cplus|go|jv|java|c\\+\\+)", "i"), async (ctx: any) => {
   try {
     
@@ -125,6 +142,7 @@ bot.hears(new RegExp("^\\" + config.startSymbol + "(code|py|python|ts|type|js|no
     if ((ctx.chat.id + "").startsWith("-100"))
       return ctx.reply('I must be admin with delete message permission')
   }
+    
   function cmp(a:string){
 return (new RegExp("^\\" + config.startSymbol + a, "i")).test(compiler)}
   
@@ -151,16 +169,14 @@ return (new RegExp("^\\" + config.startSymbol + a, "i")).test(compiler)}
   else if (cmp("go"))
     ctx.scene.enter("go")
 
-  // let wait = await ctx.reply("Please wait...").catch((err: Error)=> {})
-  // await h.sleep(200);
-  // ctx.deleteMessage(wait.message_id).catch((err: Error)=> {})
       } catch (error) {
   }
 })
 
+// launching bot in polling mode
 bot.launch({ dropPendingUpdates: true });
 
-// it checks that if any compiler command change then it changes session; Example : js to py
+// This function checks that if any compiler command change then it changes session; Example : js to py
 async function startcheck(ctx:any, y:any, json:any ={}) {
   try {
     

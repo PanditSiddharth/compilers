@@ -31,7 +31,7 @@ ${config.startSymbol}leave to stop excecution
 ${config.startSymbol}ping to see bot's running status
 ${config.startSymbol}version to see version and features
 ${config.startSymbol}start for basic info
-${config.startSymbol}help for this help list
+@help for this help list
 
 ${config.channel + " " + config.group}
 ${config.owner ? "Owner: " + config.owner : "𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫: @PanditSiddharth"}
