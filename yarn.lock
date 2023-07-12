@@ -2781,10 +2781,10 @@ text-table@~0.2.0:
   resolved "https://registry.npmjs.org/text-table/-/text-table-0.2.0.tgz"
   integrity sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==
 
-tgind@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.npmjs.org/tgind/-/tgind-1.2.0.tgz"
-  integrity sha512-k3LgXJYCx/odF7ClvDpvJX/ae57KOA0LxO4Yjn8bglQkafAkusjl9LWY0OtEVjGdFYfs6t21cRDLdzyY4CR9PA==
+tgind@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/tgind/-/tgind-2.0.1.tgz"
+  integrity sha512-6nL+aBGsU83dhjkfNuP9zl2qPQsLzelQoMhWihOrUq6f1gRTPsCxGSvwaaBI5VPAIntZ/EIchEy012qVm7ZTkg==
   dependencies:
     axios "^1.4.0"
     form-data "^4.0.0"
