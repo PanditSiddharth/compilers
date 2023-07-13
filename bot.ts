@@ -7,14 +7,6 @@ import Hlp from './helpers'
 import * as dt from './btdata'
 
 let h = new Hlp()
-let version = `𝐕𝐞𝐫𝐬𝐢𝐨𝐧: ${config.version}\n𝐕𝐞𝐫𝐬𝐢𝐨𝐧 𝐧𝐨.: ${config.versionNo}`
-let langcmds = `${config.startSymbol}code or ${config.startSymbol}cc for c
-${config.startSymbol}py or ${config.startSymbol}python
-${config.startSymbol}js or ${config.startSymbol}node
-${config.startSymbol}cpp or ${config.startSymbol}cplus
-${config.startSymbol}jv or ${config.startSymbol}java
-${config.startSymbol}go for golang
-${config.startSymbol}ts or ${config.startSymbol}type for typescript`
 
 const bt = async (bot: any) => {
 
@@ -29,7 +21,6 @@ const bt = async (bot: any) => {
     let status: any = ctx.update.my_chat_member.new_chat_member.status
     console.log(status)
     let ostatus: any = ctx.update.my_chat_member.old_chat_member.status
-
 
     if (status != 'left' && !['member', 'administrator'].includes(ostatus)) {
       updateJSON(chat.id)
@@ -62,7 +53,7 @@ ${chat.username ? "Username: @" + chat.username : ""}`, { chat_id: config.chatLo
 𝗥𝗲𝗮𝗹𝘁𝗶𝗺𝗲 𝗶/𝗼 𝗰𝗼𝗺𝗽𝗶𝗹𝗲𝗿 𝗯𝗼𝘁
 =========================
 
-${version}
+${dt.version}
 Uptime: ${hr} : ${min} : ${sec}
 `).catch(() => { })
   })
@@ -72,7 +63,7 @@ Uptime: ${hr} : ${min} : ${sec}
 𝗥𝗲𝗮𝗹𝘁𝗶𝗺𝗲 𝗶/𝗼 𝗰𝗼𝗺𝗽𝗶𝗹𝗲𝗿 𝗯𝗼𝘁
 =========================
 
-${version}
+${dt.version}
 ${config.owner ? "Owner: " + config.owner : "𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫: @PanditSiddharth"}
 
 𝗙𝗲𝗮𝘁𝘂𝗿𝗲𝘀:
@@ -87,103 +78,91 @@ ${config.owner ? "Owner: " + config.owner : "𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞�
 `).catch(() => { })
   })
 
-  bot.start(async (ctx: any) => {
-    ctx.reply(`𝗥𝗲𝗮𝗹𝘁𝗶𝗺𝗲 𝗶/𝗼 𝗰𝗼𝗺𝗽𝗶𝗹𝗲𝗿 𝗯𝗼𝘁
-Its 100% free made for helping to students
-
-${langcmds}
-${config.startSymbol}𝗹𝗲𝗮𝘃𝗲 to leave session (if you not want excecute your code)
-${config.startSymbol}help to see full help config.admins
-
-${minf}
-`).catch(() => { })
-  })
-
-async function hsend(ctx: any, json: any = {}) {
+  async function hsend(ctx: any, json: any = {}) {
     try {
-    return await bot.telegram.editMessageText(ctx.chat.id, json.mid, undefined, json.txt, json.json).catch((err: any) => { })
-          } catch (error) {}
+      return await bot.telegram.editMessageText(ctx.chat.id, json.mid, undefined, json.txt, json.json).catch((err: any) => { })
+    } catch (error) { }
   }
 
-bot.on('callback_query', (ctx: any, next:any) => {
+  bot.on('callback_query', (ctx: any, next: any) => {
     try {
-    let cb = ctx.update.callback_query
-    if (!cb.data.includes('help'))
-      return next()
-  
-    ctx.answerCbQuery()
-    let jdata = JSON.parse(cb.data)
+      let cb = ctx.update.callback_query
+      if (!cb.data.includes('help'))
+        return next()
 
-    if (jdata.action == 'admin') {
-      hsend(ctx, {mid: cb.message.message_id ,txt: dt.hAdmin, json: dt.jAdmin})
-    } else if(jdata.action == 'cmp'){
-      hsend(ctx, {mid: cb.message.message_id ,txt: dt.hcmp, json: dt.jcmp})
-    } else if(jdata.action == 'util'){
-      hsend(ctx, {mid: cb.message.message_id ,txt: dt.hUtil, json: dt.jUtil})
-    } else if(jdata.action == 'close'){
-      // hsend(ctx, {mid: cb.message.message_id ,txt: dt.hUtil, json: dt.jUtil})
-      ctx.deleteMessage()
-    } 
-  
-    } catch (error) {}
+      ctx.answerCbQuery()
+      let jdata = JSON.parse(cb.data)
+
+      if (jdata.action == 'admin') {
+        hsend(ctx, { mid: cb.message.message_id, txt: dt.hAdmin, json: dt.jAdmin })
+      } else if (jdata.action == 'cmp') {
+        hsend(ctx, { mid: cb.message.message_id, txt: dt.hcmp, json: dt.jcmp })
+      } else if (jdata.action == 'util') {
+        hsend(ctx, { mid: cb.message.message_id, txt: dt.hUtil, json: dt.jUtil })
+      } else if (jdata.action == 'close') {
+        // hsend(ctx, {mid: cb.message.message_id ,txt: dt.hUtil, json: dt.jUtil})
+        ctx.deleteMessage()
+      }
+
+    } catch (error) { }
   })
 
-bot.hears(new RegExp("^(\\" + config.startSymbol + "|\\/|@)help", 'i'), async (ctx: any) => {
+  bot.hears(new RegExp("^(\\" + config.startSymbol + "|\\/|@)(help|start)", 'i'), async (ctx: any) => {
     ctx.reply(`𝗥𝗲𝗮𝗹𝘁𝗶𝗺𝗲 𝗶/𝗼 𝗰𝗼𝗺𝗽𝗶𝗹𝗲𝗿 𝗯𝗼𝘁
 
 ${dt.hcmp}
 `, dt.jcmp);
   })
 
-bot.on('callback_query', async (ctx: Context, next: any) => {
-  try {
-    
-    let ctxx: any = ctx
-    let update: any = ctx.update
-    let cb = update.callback_query
-    if (!cb.data.includes('task'))
-      return next()
+  bot.on('callback_query', async (ctx: Context, next: any) => {
+    try {
 
-    if (!config.admins.includes(cb.from.id))
-      return ctx.answerCbQuery('You are not allowed', { show_alert: true })
-  
-    let data = JSON.parse(cb.data)
-    ctx.deleteMessage(cb.message.message_id).catch((er:any)=> {})
-  
-    if (!data.ok)
-      return
-  
-    let mm = await ctx.reply('Ok sending this task in every group')
-  
-    let chats = await readJSON()
-  
-    if (!chats) {
-      return ctxx.editMessageText("No any chats", { message_id: mm.message_id })
-        .catch((err: any) => { })
-    }
-  
-    let ingroups = 0
+      let ctxx: any = ctx
+      let update: any = ctx.update
+      let cb = update.callback_query
+      if (!cb.data.includes('task'))
+        return next()
 
-    for (let i = 0; i < chats.length; i++) {
-      try {
-        await ctxx.copyMessage(chats[i], { message_id: data.mid })
-        // console.log(readJSON())
-        ingroups++
-      } catch (err: any) { }
-    }
-let cmpr = -11;
-    let intid = setInterval(() => {
-      if(cmpr == ingroups ){
-        clearTimeout(intid)
-      ctxx.editMessageText(`Task sent in ${ingroups} groups`, { message_id: mm.message_id }).catch((err: any) => { })
-      } else {
-        cmpr = ingroups
+      if (!config.admins.includes(cb.from.id))
+        return ctx.answerCbQuery('You are not allowed', { show_alert: true })
+
+      let data = JSON.parse(cb.data)
+      ctx.deleteMessage(cb.message.message_id).catch((er: any) => { })
+
+      if (!data.ok)
+        return
+
+      let mm = await ctx.reply('Ok sending this task in every group')
+
+      let chats = await readJSON()
+
+      if (!chats) {
+        return ctxx.editMessageText("No any chats", { message_id: mm.message_id })
+          .catch((err: any) => { })
       }
-    }, 1000)
-      } catch (error:any) {console.log(error.message)}
+
+      let ingroups = 0
+
+      for (let i = 0; i < chats.length; i++) {
+        try {
+          await ctxx.copyMessage(chats[i], { message_id: data.mid })
+          // console.log(readJSON())
+          ingroups++
+        } catch (err: any) { }
+      }
+      let cmpr = -11;
+      let intid = setInterval(() => {
+        if (cmpr == ingroups) {
+          clearTimeout(intid)
+          ctxx.editMessageText(`Task sent in ${ingroups} groups`, { message_id: mm.message_id }).catch((err: any) => { })
+        } else {
+          cmpr = ingroups
+        }
+      }, 1000)
+    } catch (error: any) { console.log(error.message) }
   })
 
-bot.hears(new RegExp("^\\" + config.startSymbol + "sendtask", 'i'), async (ctx: Context) => {
+  bot.hears(new RegExp("^\\" + config.startSymbol + "sendtask", 'i'), async (ctx: Context) => {
     let msg: any = ctx.message
     if (!msg.reply_to_message)
       return ctx.reply("Please reply to Question")
@@ -192,7 +171,7 @@ bot.hears(new RegExp("^\\" + config.startSymbol + "sendtask", 'i'), async (ctx: 
       reply_markup: {
         inline_keyboard: [
           [{ text: 'हाँ भाई हाँ', callback_data: JSON.stringify({ ok: true, action: "task", mid: msg.reply_to_message.message_id }) },
-           { text: 'नहीं', callback_data: JSON.stringify({ ok: false, action: "task" }) }]
+          { text: 'नहीं', callback_data: JSON.stringify({ ok: false, action: "task" }) }]
         ]
       }
     }).catch((err: any) => { })
