@@ -9,10 +9,10 @@ let config: Config = {
   errorLogs: ownerId, // chat or persion id
   ownerId,
   admins: [ownerId, 1942730863, 1580821417, 1643271211],
-  version: "1.3.1",
-  versionNo: 19,
+  version: "1.3.2",
+  versionNo: 20,
   ttl: 60,
-  startSymbol: ".",
+  startSymbol: "/",
   owner: "", // You can give here your @username
   group: "@Logicb_support",
   channel: "@LogicBots",
