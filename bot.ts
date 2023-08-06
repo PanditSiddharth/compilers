@@ -107,7 +107,10 @@ ${config.owner ? "Owner: " + config.owner : "𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞�
     } catch (error) { }
   })
 
-  bot.hears(new RegExp("^(\\" + config.startSymbol + "|\\/|@)(help|start)", 'i'), async (ctx: any) => {
+  bot.hears(new RegExp("^(\\" + config.startSymbol + "|\\/|@)(help|start)", 'i'), async (ctx: any, next: any) => {
+    if (ctx.message.text.includes("run"))
+      return next()
+    console.log(ctx.message.text)
     ctx.reply(`𝗥𝗲𝗮𝗹𝘁𝗶𝗺𝗲 𝗶/𝗼 𝗰𝗼𝗺𝗽𝗶𝗹𝗲𝗿 𝗯𝗼𝘁
 
 ${dt.hcmp}
