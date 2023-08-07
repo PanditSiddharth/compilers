@@ -31,13 +31,13 @@ let jvyoyojv = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       return await terminate()
     if (ter)
       await terminate()
-    if (ctx.message.text.startsWith(config.startSymbol +'code')) {
+    if (ctx.message.text.startsWith(config.startSymbol + 'code')) {
       terminate()
       // ctx.scene.leave()
       ctx.scene.enter('code')
     }
 
-    if (("" + ctx.message.text).startsWith(config.startSymbol +'leave')) {
+    if (("" + ctx.message.text).startsWith(config.startSymbol + 'leave')) {
       reply('Session terminated')
 
       terminate()
@@ -134,7 +134,8 @@ let jvyoyojv = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
     }, ttl * 1000)
 
-    const regex = /(?<=class\s*)\w+(?<=[.\n]*)/g;
+    // regex
+    const regex = /(?<=class\s*)\w+(?=\s*\{?\s*[\n\s]{0,3}public\s*static\s*void\s*main)/g;
 
     const match = code.match(regex)
     console.log(match[0])
