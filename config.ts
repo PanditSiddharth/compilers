@@ -8,6 +8,7 @@ let config: Config = {
   chatLogs: -1001988408261, // chat id
   errorLogs: ownerId, // chat or persion id
   ownerId,
+  postSymbol: "/",
   admins: [ownerId, 1942730863, 1580821417, 1643271211],
   version: "1.3.2",
   versionNo: 20,
@@ -44,6 +45,7 @@ interface Config {
   errorLogs: UserId;
   ttl: number;
   ownerId: UserId;
+  postSymbol: string;
   admins: UserId[];
   version: string;
   versionNo: number | string;

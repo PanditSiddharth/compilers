@@ -4,14 +4,19 @@ export let version = `𝐕𝐞𝐫𝐬𝐢𝐨𝐧: ${config.version}\n𝐕𝐞�
 export let hcmp = `=========================
 Compilation commands
 =========================
+Add this bot in your channel 
+Now add this any compiler command and your post text after it
 
-${config.startSymbol}code or ${config.startSymbol}cc for c
-${config.startSymbol}py or ${config.startSymbol}python
-${config.startSymbol}js or ${config.startSymbol}node
-${config.startSymbol}cpp or ${config.startSymbol}cplus
-${config.startSymbol}jv or ${config.startSymbol}java
-${config.startSymbol}go for golang
-${config.startSymbol}ts or ${config.startSymbol}type for typescript`
+Example:
+${config.postSymbol}js console.log('hi')
+
+${config.postSymbol}cc for c
+${config.postSymbol}py python
+${config.postSymbol}js node
+${config.postSymbol}cpp cplus
+${config.postSymbol}jv java
+${config.postSymbol}go for golang
+${config.postSymbol}ts for typescript`
 
 export let hAdmin = `=========================
 Bot admin commands
@@ -20,14 +25,11 @@ Bot admin commands
 ${config.startSymbol}chats in which bot joined
 ${config.startSymbol}count chats count
 ${config.startSymbol}inf info of chat id with link
-${config.startSymbol}sendTask broadcast message
-${config.startSymbol}sendto send to any chat by bot
 `
 export let hUtil = `=========================
 Control and info commands
 =========================
 
-${config.startSymbol}leave to stop excecution
 ${config.startSymbol}ping to see bot's running status
 ${config.startSymbol}version to see version and features
 ${config.startSymbol}start for basic info

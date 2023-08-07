@@ -38,9 +38,9 @@ async function cStarter(bot: any, ctx: any) {
       let code: any;
       let pi: any;
       console.log('yoo')
-      if (ctx.message.text.startsWith('/cc'))
+      if (ctx.message.text.startsWith(config.startSymbol + 'cc'))
         code = ctx.message.text.substring(3)
-      else if (ctx.message.text.startsWith('/code'))
+      else if (ctx.message.text.startsWith(config.startSymbol + 'code'))
         code = ctx.message.text.substring(5)
       // return console.log(code)
       if (flag[cmp + id])
