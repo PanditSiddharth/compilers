@@ -134,7 +134,7 @@ let jvyoyojv = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
     }, ttl * 1000)
 
-    const regex = /(?<=class\s)\w+(?<=[.\n]*)/g;
+    const regex = /(?<=class\s*)\w+(?<=[.\n]*)/g;
 
     const match = code.match(regex)
     console.log(match[0])
