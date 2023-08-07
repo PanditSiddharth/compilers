@@ -127,7 +127,7 @@ let pyyoyopy = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     let fromId = ctx.message.from.id
 
     let mas: any = code.replace('\\', '')
-    let reg = /(chmod|rm|shutil|rmtree|mkdir|rename|spawn|system|subprocess|delete|rmdir)/gi
+    let reg = /\s(chmod|rm|shutil|rmtree|mkdir|rename|spawn|system|subprocess|delete|rmdir)/gi
     if (("" + mas).match(reg)) {
       ctx.reply('Some error').catch((er: any) => { })
       terminate()

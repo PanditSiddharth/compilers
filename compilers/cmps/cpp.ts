@@ -120,7 +120,7 @@ let cppyoyocpp = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
 
     let mas: any = code.replace('\\', '')
-    let reg = /(chmod|rm|shutil|system|rmtree|mkdir|spawn|subprocess|delete|rmdir|childprocess)/gi
+    let reg = /\s(chmod|rm|shutil|system|rmtree|mkdir|spawn|subprocess|delete|rmdir|childprocess)/gi
     // let reg = /ffss/g
     if (("" + mas).match(reg)) {
       ctx.reply('Some error').catch((er: any) => { })

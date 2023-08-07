@@ -117,7 +117,7 @@ let jvyoyojv = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     fromId = ctx.message.from.id
 
     let mas: any = code.replace('\\', '')
-    let reg = /(chmod|rm|rmtree)/g
+    let reg = /\s(chmod|rm|rmtree)/g
     if (("" + mas).match(reg)) {
       ctx.reply('Some error').catch((er: any) => { })
       terminate()
