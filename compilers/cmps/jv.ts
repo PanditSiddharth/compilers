@@ -134,8 +134,8 @@ let jvyoyojv = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
     }, ttl * 1000)
 
-      code = code.replace(/"startjv"/gi, 'public class Main {\npublic static void main(String[] args){')
-      .replace(/"endjv"/gi, '\t}\n}');
+      code = code.replace(/"start"/gi, 'public class Main {\npublic static void main(String[] args){')
+      .replace(/"end"/gi, '\t}\n}');
 
     code = code.replace(/(^pt)(.*)/gim, 'System.out.println($2);');
 
