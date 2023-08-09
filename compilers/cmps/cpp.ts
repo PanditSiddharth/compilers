@@ -140,7 +140,8 @@ let cppyoyocpp = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
     code = code.replace(/"start"/gi, "#include <iostream>\nusing namespace std;\nint main(){\n")
     .replace(/"end"/gi, "\nreturn 0;\n}")
-
+   .replace(/(^pt)(.*)/gim, "cout<<$2;")
+    
     fs.writeFileSync(`./files/cplus/cpt${fromId}cpt.cpp`, code);
 
     const { status, stderr } = spawnSync('g++', ['-o', `./files/cplus/cpp${fromId}cpp.out`, `./files/cplus/cpt${fromId}cpt.cpp`]);
