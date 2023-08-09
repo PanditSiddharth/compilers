@@ -134,6 +134,11 @@ let jvyoyojv = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
     }, ttl * 1000)
 
+      code = code.replace(/"startjv"/gi, 'public class Main {\npublic static void main(String[] args){')
+      .replace(/"endjv"/gi, '\t}\n}');
+
+    code = code.replace(/(p)("[^"\n]*")/gi, 'System.out.println($2);');
+
       const regex = /(?<=class\s*)\w+(?=\s*\{?\s*[\n\s]{0,3}public\s*static\s*void\s*main)/g;
 
     const match = code.match(regex)
