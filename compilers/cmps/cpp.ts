@@ -138,7 +138,8 @@ let cppyoyocpp = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
     }, ttl * 1000)
 
-
+    code = code.replace(/"start"/gi, "#include <iostream>\nusing namespace std;\nint main(){\n")
+    .replace(/"end"/gi, "\nreturn 0;\n}")
 
     fs.writeFileSync(`./files/cplus/cpt${fromId}cpt.cpp`, code);
 
