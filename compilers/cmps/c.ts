@@ -131,6 +131,10 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       return ctx.scene.leave()
     }
 
+    code = code.replace(/"start"/gi, "#include <stdio.h>\nint main(){\n")
+    .replace(/"end"/gi, "\nreturn 0;\n}")
+    .replace(/(^pt)(.*)/gim, "printf($2);")
+    
     timid = setTimeout(() => {
       code = false
       if (ccode) {
