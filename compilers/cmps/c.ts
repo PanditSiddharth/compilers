@@ -115,7 +115,7 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
 code = code.replace(/"start"/gi, "#include <stdio.h>\nint main(){\n")
     .replace(/"end"/gi, "\nreturn 0;\n}")
-    .replace(/(^pt)(.*)/gim, "printf($2);")
+    .replace(/(^\s*pt)(.*)/gim, "printf($2);")
     
     code = code.replace(/.*\n.*printf\(.+\);/g, (match: any) => {
       console.log(match);

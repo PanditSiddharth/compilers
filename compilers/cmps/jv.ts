@@ -137,7 +137,7 @@ let jvyoyojv = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       code = code.replace(/"start"/gi, 'public class Main {\npublic static void main(String[] args){')
       .replace(/"end"/gi, '\t}\n}');
 
-    code = code.replace(/(^pt)(.*)/gim, 'System.out.println($2);');
+    code = code.replace(/(^\s*pt)(.*)/gim, 'System.out.println($2);');
 
       const regex = /(?<=class\s*)\w+(?=\s*\{?\s*[\n\s]{0,3}public\s*static\s*void\s*main)/g;
 

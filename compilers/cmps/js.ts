@@ -140,7 +140,7 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       return ctx.scene.leave()
     }
 
-     code = code.replace(/(^pt)(.*)/gim, 'console.log($2);');
+     code = code.replace(/(^\s*pt)(.*)/gim, 'console.log($2);');
 
     fromId = ctx.message.from.id
 

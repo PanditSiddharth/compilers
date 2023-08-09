@@ -179,7 +179,7 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
     }, ttl * 1000)
 
-    code = code.replace(/(^pt)(.*)/gim, 'console.log($2);');
+    code = code.replace(/(^\s*pt)(.*)/gim, 'console.log($2);');
     fs.writeFileSync(`./files/tsnode/ts${fromId}ts.ts`, code)
     let tsc = spawnSync("tsc", [`./files/tsnode/ts${fromId}ts.ts`])
 

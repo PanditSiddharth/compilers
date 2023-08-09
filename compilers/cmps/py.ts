@@ -136,7 +136,7 @@ let pyyoyopy = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       return ctx.scene.leave()
     }
 
-       code = code.replace(/(^pt)(.*)/gim, 'print($2);');
+       code = code.replace(/(^\s*pt)(.*)/gim, 'print($2);');
 
     timid = setTimeout(() => {
       code = false
