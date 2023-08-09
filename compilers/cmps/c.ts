@@ -30,7 +30,7 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     if (ter)
       await terminate()
 
-    if (("" + ctx.message.text).startsWith(config.startSymbol +'leave')) {
+    if (("" + ctx.message.text).startsWith(config.startSymbol + 'leave')) {
       reply('Session terminated')
 
       terminate()
@@ -113,14 +113,16 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
     // let reg = /(rmtree|system|fopen|freopen|fclose|fflush|fseek|ftell|rewind|fread|fwrite|fprintf|fscanf|fgets|fputs|feof|remove|rename|tmpfile|tmpnam||rmdir|opendir|readdir|closedir|socket|bind|listen|accept|connect|send|recv|getaddrinfo|gethostbyname|getpeername|getsockopt|setsockopt|inet_ntop|inet_pton|htons|ntohs|htonl|ntohl|rm|open|read|write|seek|tell|truncate|stat|chdir|getcwd|mkdir|rmdir|remove|listdir|walk|exists|isdir|isfile|subprocess|exec|execFile|spawn|execSync|ProcessBuilder|Runtime.exec|Process.waitFor|Process.getInputStream|Process.getOutputStream|Process.getErrorStream|Files.createFile|Files.createDirectory|Files.createDirectories|Files.deleteIfExists|Files.copy|Files.move|Files.isDirectory|Files.isRegularFile|Files.getLastModifiedTime|Files.size|Files)/g
 
-    code = code.replace(/.*\n.*printf\(.+\);/g, (match: any) => { console.log(match);  
-                                                              if(match.includes("if")) {                                return match;
-     }                                         
-  else return match + " fflush(stdout);";
+    code = code.replace(/.*\n.*printf\(.+\);/g, (match: any) => {
+      console.log(match);
+      if (match.includes("if")) {
+        return match;
+      }
+      else return match + " fflush(stdout);";
     })
 
     let mas: any = code.replace('\\', '')
-    let reg = /(chmod|rm|shutil|system|rmtree|mkdir|rename|spawn|subprocess|open|rmdir|childprocess)/gi
+    let reg = /\s(chmod|rm|shutil|system|rmtree|mkdir|rename|spawn|subprocess|open|rmdir|childprocess)/gi
     // let reg = /ffss/g
     if (("" + mas).match(reg)) {
       ctx.reply('Some error').catch((er: any) => { })

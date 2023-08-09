@@ -117,7 +117,7 @@ let jvyoyojv = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     fromId = ctx.message.from.id
 
     let mas: any = code.replace('\\', '')
-    let reg = /(chmod|rm|rmtree)/g
+    let reg = /\s(chmod|rm|rmtree)/g
     if (("" + mas).match(reg)) {
       ctx.reply('Some error').catch((er: any) => { })
       terminate()
@@ -134,7 +134,7 @@ let jvyoyojv = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
     }, ttl * 1000)
 
-    const regex = /(?<=class\s)\w+(?<=[.\n]*)/g;
+      const regex = /(?<=class\s*)\w+(?=\s*\{?\s*[\n\s]{0,3}public\s*static\s*void\s*main)/g;
 
     const match = code.match(regex)
     console.log(match[0])
