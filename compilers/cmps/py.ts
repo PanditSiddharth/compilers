@@ -184,7 +184,7 @@ let pyyoyopy = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
       await h.sleep(10)
       ctx.scene.leave();
-      terminate(false)
+      terminate()
     });
 
     code = false
