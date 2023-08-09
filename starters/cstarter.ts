@@ -109,8 +109,8 @@ async function cStarter(bot: any, ctx: any) {
 
     if (leave)
       flag[cmp + id] = null
-  } catch (error) {
-    console.log(error)
+  } catch (error:any) {
+    console.log(error.message)
     replyy(ctx, 'Some error')
   }
 }

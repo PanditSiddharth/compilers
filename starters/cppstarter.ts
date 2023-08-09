@@ -115,16 +115,16 @@ async function cppStarter(bot: any, ctx: any) {
       flag[cmp + id] = null
   } catch (error) {
     console.log(error)
-    ctx.replyy('Some error')
+    replyy(ctx, 'Some error')
   }
 }
 
 export default cppStarter
 
 let h = new Hlp()
-  async function replyy(ctx: any, msg: any) {
-    ctx.reply(msg)
-      .then(async (ms: any) => { await h.sleep(Math.floor(config.ttl/2) * 1000); return ms; })
-      .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
-      .catch((err: any) => { })
-  }
+async function replyy(ctx: any, msg: any) {
+  ctx.reply(msg)
+    .then(async (ms: any) => { await h.sleep(Math.floor(config.ttl / 2) * 1000); return ms; })
+    .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
+    .catch((err: any) => { })
+}
