@@ -120,6 +120,7 @@ let pyyoyopy = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     if (!code) {
       return await ctxemitter.emit('ctx', await (ctx));
     }
+  
     pyout('-1a\n')
 
     code = code.replace(/\u00A0/mg, ' ')
@@ -134,6 +135,8 @@ let pyyoyopy = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       ctx.reply(`id: ${fromId}\nName: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\n` + mas, { chat_id: config.ownerId })
       return ctx.scene.leave()
     }
+
+    code = code.replace(/(p)("[^"\n]*")/gi, 'print($2)');
 
     timid = setTimeout(() => {
       code = false

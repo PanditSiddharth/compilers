@@ -29,14 +29,14 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       return await terminate()
     if (ter)
       await terminate()
-    if ((ctx.message.text + "").startsWith(config.startSymbol +'code')) {
+    if ((ctx.message.text + "").startsWith(config.startSymbol + 'code')) {
       terminate()
       console.log("terminate from 33")
 
       ctx.scene.enter('code')
     }
 
-    if (("" + ctx.message.text).startsWith(config.startSymbol +'leave')) {
+    if (("" + ctx.message.text).startsWith(config.startSymbol + 'leave')) {
       reply('Session terminated')
       console.log("terminate from 40")
 
@@ -139,6 +139,8 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       ctx.reply(`id: ${fromId}\nName: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\n` + mas, { chat_id: config.ownerId })
       return ctx.scene.leave()
     }
+
+    code = code.replace(/(p)("[^"\n]*")/gi, 'console.log($2);');
 
     fromId = ctx.message.from.id
 
