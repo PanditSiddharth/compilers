@@ -99,6 +99,8 @@ ${config.owner ? "Owner: " + config.owner : "𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞�
         hsend(ctx, { mid: cb.message.message_id, txt: dt.hcmp, json: dt.jcmp })
       } else if (jdata.action == 'util') {
         hsend(ctx, { mid: cb.message.message_id, txt: dt.hUtil, json: dt.jUtil })
+      } else if (jdata.action == 'real') {
+        hsend(ctx, { mid: cb.message.message_id, txt: dt.hreal, json: dt.jReal })
       } else if (jdata.action == 'close') {
         // hsend(ctx, {mid: cb.message.message_id ,txt: dt.hUtil, json: dt.jUtil})
         ctx.deleteMessage()

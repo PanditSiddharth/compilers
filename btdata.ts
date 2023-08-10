@@ -13,6 +13,30 @@ ${config.startSymbol}jv or ${config.startSymbol}java
 ${config.startSymbol}go for golang
 ${config.startSymbol}ts or ${config.startSymbol}type for typescript`
 
+export let hreal = `=========================
+Compilation commands
+=========================
+convert short codes to real code
+example
+short code for js:
+pt "Hi its short code" + (4 + 3)
+
+Real code: 
+console.log( "Hi its short code" + (4 + 3))
+
+${config.startSymbol}rcc for c
+${config.startSymbol}rpy for python
+${config.startSymbol}rjs for node js
+${config.startSymbol}rcpp for c++
+${config.startSymbol}rjv for java
+${config.startSymbol}rgo for golang
+${config.startSymbol}rts for typescript
+
+Reply to short code with these commands to convert them in real code
+For more ${config.channel}
+For queries ${config.group}
+`
+
 export let hAdmin = `=========================
 Bot admin commands
 =========================
@@ -36,33 +60,43 @@ ${config.startSymbol}start for basic info
 ${config.channel + " " + config.group}
 ${config.owner ? "Owner: " + config.owner : "𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫: @PanditSiddharth"}
 `
+
+function ob(text: any, action: any) {
+  return { text, callback_data: JSON.stringify({ ok: "help", action }) }
+}
+
 export let jUtil = {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: "Admin", callback_data: JSON.stringify({ ok: "help", action: "admin" }) },
-          { text: "Compiler", callback_data: JSON.stringify({ ok: "help", action: "cmp" }) }
-          ]
-        ]
-      }
-    }
+  reply_markup: {
+    inline_keyboard:
+      [[ob("Admin", "admin"), ob("Compiler", "cmp"), ob("toReal", "real")], [
+        ob("Close", "close")
+      ]]
+  }
+}
+
+export let jReal = {
+  reply_markup: {
+    inline_keyboard:
+      [[ob("Admin", "admin"), ob("Compiler", "cmp"), ob("Utility", "util")], [
+        ob("Close", "close")
+      ]]
+  }
+}
 
 export let jAdmin = {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: "Utility", callback_data: JSON.stringify({ ok: "help", action: "util" }) },
-          { text: "Compiler", callback_data: JSON.stringify({ ok: "help", action: "cmp" }) }
-          ]
-        ]
-      }
-    }
+  reply_markup: {
+    inline_keyboard:
+      [[ob("Utility", "util"), ob("Compiler", "cmp"), ob("toReal", "real")], [
+        ob("Close", "close")
+      ]]
+  }
+}
 
 export let jcmp = {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: "Utility", callback_data: JSON.stringify({ ok: "help", action: "util" }) },
-          { text: "Admin", callback_data: JSON.stringify({ ok: "help", action: "admin" }) },
-          { text: "Close", callback_data: JSON.stringify({ ok: "help", action: "close" }) }
-          ]
-        ]
-      }
-    }
+  reply_markup: {
+    inline_keyboard:
+      [[ob("Utility", "util"), ob("Admin", "admin"), ob("toReal", "real")], [
+        ob("Close", "close")
+      ]]
+  }
+}
