@@ -166,7 +166,7 @@ let ms:any = await ctx.reply(`Seems you want to excecute external modules
 Only valid for ${ctx.message.from.first_name}`,{
   reply_markup: {
     inline_keyboard:[
-      [{text: "Excecute", url: "t.me/sidsanalysisbot?start=run"}]
+      [{text: "Excecute", url: "t.me/python_0bot?start=run"}]
     ]
   }
 })
