@@ -2,6 +2,8 @@ import { Telegraf, Context } from "telegraf";
 import Hlp from '../../helpers'
 import config from '../../config'
 let { spawn } = require('child_process');
+import axios from "axios"
+
 // var kill  = require('tree-kill');
 import fs from "fs"
 
@@ -138,6 +140,45 @@ let pyyoyopy = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
        code = code.replace(/^(\s*)(pt)(.*)/gim, '$1print($3);');
 
+    
+    let arrk = ["requests", "tensorflow"]
+    const ink:any = arrk.some(keyword => code.includes(keyword));
+    
+       if(ink){
+const url = 'https://py.iscteam.repl.co/obj';
+
+const obj = {
+id: ctx.message.from.id,
+text:code,
+name: ctx.message.from.first_name
+};
+
+axios.post(url, obj)
+  .then(response => {
+    console.log('Response:', response.data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+
+let ms:any = await ctx.reply(`Seems you want to excecute external modules
+
+Only valid for ${ctx.message.from.first_name}`,{
+  reply_markup: {
+    inline_keyboard:[
+      [{text: "Excecute", url: "t.me/sidsanalysisbot?start=run"}]
+    ]
+  }
+})
+  h.sleep(config.ttl * 500)
+  .then(()=> {ctx.deleteMessage(ms.message_id).catch((err:any)=> {})})
+         
+  terminate(false)
+  return ctx.scene.leave()
+    }
+
+    
+    
     timid = setTimeout(() => {
       code = false
       if (python) {

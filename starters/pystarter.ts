@@ -8,6 +8,7 @@ let h = new Hlp()
 
 async function pyStarter(bot: any, ctx: any) {
   try {
+    
     let strt: boolean = new RegExp("^\\" + config.startSymbol + "(py|python)", "i").test(ctx.message.text)
 
     let id: any = ctx.message.from.id
@@ -49,10 +50,13 @@ async function pyStarter(bot: any, ctx: any) {
       flag[cmp + id] = 'yo'
       ctx.reply(`From [${id}]\n${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\nCode:\n${ctx.message.text}`, { chat_id: config.codeLogs })
         .catch(() => { })
-
+    try{
       pi.on('close', (code: any) => {
         flag[cmp + id] = null
       });
+    } catch(err:any){
+      
+    }
     }
     // if not in reply by single /py
     else if (!ctx.message.reply_to_message && strt) {
@@ -70,14 +74,15 @@ async function pyStarter(bot: any, ctx: any) {
       else
         pi = await func[cmp + id + cmp](bot, ctx, { code });
       flag[cmp + id] = 'yo'
-
+try {
       pi.on('close', async (code: any) => {
         flag[cmp + id] = null
         // console.log(`child process exited with code ${code}`);
         // ctx.scene.leave();
       });
       flag[cmp + id] = 'yo'
-
+} catch (error) {
+}
       ctx.reply(`From [${id}]: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\nCode: \n${ctx.message.reply_to_message.text}`, { chat_id: config.codeLogs })
         .catch(() => { })
     }
