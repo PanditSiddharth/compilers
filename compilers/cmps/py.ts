@@ -141,7 +141,25 @@ let pyyoyopy = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
        code = code.replace(/^(\s*)(pt)(.*)/gim, '$1print($3);');
 
     
-    let arrk = ["requests", "tensorflow"]
+    let arrk = ["requests", "tensorflow",
+"beautifulsoup4",
+"beautifulsoup",
+"numpy",
+"pandas",
+"matplotlib",
+"scikit-learn",
+"django",
+"flask",
+"pygame",
+"pillow",
+"opencv-python",
+"seaborn",
+"sqlalchemy",
+"tensorflow",
+"torch",
+"pyrogram",
+"python-telegram-bot"
+]
     const ink:any = arrk.some(keyword => code.includes(keyword));
     
        if(ink){
