@@ -1,23 +1,38 @@
 import Hlp from './../helpers';
 import fs from 'fs'
 import config from "../config"
+import sql from "../help/sql"
 // let flag: any;
-let flag: any = {};
+let flag:any = {};
 let func: any = {};
 let h = new Hlp()
 
-  async function replyy(ctx: any, msg: any) {
-    ctx.reply(msg)
-      .then(async (ms: any) => { await h.sleep(Math.floor(config.ttl/2) * 1000); return ms; })
-      .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
-      .catch((err: any) => { })
-  }
+async function replyy(ctx: any, msg: any) {
+  ctx.reply(msg)
+    .then(async (ms: any) => { await h.sleep(Math.floor(config.ttl / 2) * 1000); return ms; })
+    .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
+    .catch((err: any) => { })
+}
 
 async function jsStarter(bot: any, ctx: any) {
   try {
-        let reply: any = ctx.message.reply_to_message
+    let reply: any = ctx.message.reply_to_message
+    let ss: any = ctx.message.text
+
+    if (ss.match(/\/sql/i)) {
+    if (reply) {
+     ctx.message.text = ss.replace(/\/sql/i, "/js")
+     reply.text = sql(reply.text + "")
+       
+      } else if (ss.length < 6) {
+        return replyy(ctx, "Please reply to sql code")
+      } else {
+      ctx.message.text = "/js " + sql(ss)
+      }
+    }
+    
     let strt: boolean = new RegExp("^\\" + config.startSymbol + "(js|node)", "i").test(ctx.message.text)
-  let leave: boolean = ("" + ctx.message.text).startsWith(config.startSymbol + "leave")
+    let leave: boolean = ("" + ctx.message.text).startsWith(config.startSymbol + "leave")
     let id: any = ctx.message.from.id
     let cmp: any = "js"
 
@@ -44,7 +59,7 @@ async function jsStarter(bot: any, ctx: any) {
     if (strt && ctx.message.text.length > 8) {
       let code: any;
       let pi: any;
-      console.log('yoo')
+
       if (ctx.message.text.startsWith(config.startSymbol + 'js'))
         code = ctx.message.text.substring(4)
       else if (ctx.message.text.startsWith(config.startSymbol + 'node'))
@@ -69,7 +84,7 @@ async function jsStarter(bot: any, ctx: any) {
     }
 
     // in teply /js
-    else if (reply && strt){
+    else if (reply && strt) {
       // console.log("yes")
       let pi: any;
       let code: any = reply.text

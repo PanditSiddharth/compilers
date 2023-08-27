@@ -1,7 +1,5 @@
 function sql(code:any) {
-let sq: any = code.match(/\"sql\"/i)
-        if (sq) {
-          code = code.replace(sq[0], "")
+          code = code.replace(/\/sql/i, "")
             .replace(/\/\/.*/g, "")
           let arr = code.split(";")
           let ele;
@@ -48,7 +46,6 @@ db.serialize(() => {\n`
 
           code = strat + code + endd
 
-        }
 return code
 }
 export default sql

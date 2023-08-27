@@ -5,6 +5,7 @@ import bt from './bot';
 import Hlp from './helpers';
 import config from './config'
 import real from "./help/real"
+import sql from "./help/sql"
 // 2 global dependencies
 import { Scenes, session, Telegraf } from "telegraf";
 
@@ -97,13 +98,15 @@ jvScene.on("message", async (ctx: any) => {
 let jsScene = new Scenes.BaseScene<Scenes.SceneContext>("js");
 jsScene.enter(async (ctx: any) => {
   cmdd(ctx)
-  if (await startcheck(ctx, 'js node')) return;
+
+  if (await startcheck(ctx, 'js node sql')) return;
+  
   await jsStarter(bot, ctx)
 });
 
 jsScene.on("message", async (ctx: any) => {
   cmdd(ctx)
-  if (await startcheck(ctx, 'js node')) return;
+  if (await startcheck(ctx, 'js node sql')) return;
   await jsStarter(bot, ctx)
 });
 
@@ -148,7 +151,7 @@ bot.use(session());
 bot.use(stage.middleware());
 
 // Main Program starts from here it listens /js /py all commands and codes 
-bot.hears(new RegExp("^\\" + config.startSymbol + "(code|py|python|ts|type|js|node|cc|cpp|cplus|go|jv|java|c\\+\\+)", "i"), async (ctx: any) => {
+bot.hears(new RegExp("^\\" + config.startSymbol + "(code|py|python|ts|type|js|node|sql|cc|cpp|cplus|go|jv|java|c\\+\\+)", "i"), async (ctx: any) => {
   try {
 
     let compiler: any = ctx.message.text + "";
@@ -166,7 +169,7 @@ bot.hears(new RegExp("^\\" + config.startSymbol + "(code|py|python|ts|type|js|no
       ctx.scene.enter("py")
     else if (cmp("cc|code"))
       ctx.scene.enter("code")
-    else if (cmp("js|node"))
+    else if (cmp("js|node|sql"))
       ctx.scene.enter("js")
     else if (cmp("ts|type")) {
       ctx.reply("Excecuting typescript code..")
@@ -221,7 +224,7 @@ async function startcheck(ctx: any, y: any, json: any = {}) {
       ctx.scene.enter("code")
       return true
     }
-    else if (("js node").includes(cst)) {
+    else if (("js node sql").includes(cst)) {
       ctx.scene.enter("js")
       return true
     }

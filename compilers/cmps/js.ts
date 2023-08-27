@@ -3,7 +3,6 @@ import config from '../../config'
 import Hlp from '../../helpers'
 let { spawn, exec } = require('child_process');
 import fs from "fs"
-import sql from "../../help/sql"
 
 let h = new Hlp();
 const EventEmitter = require('events');
@@ -141,7 +140,7 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       return ctx.scene.leave()
     }
 
-    code = sql(code)
+
      code = code.replace(/(^\s*pt)(.*)/gim, 'console.log($2);');
 
     fromId = ctx.message.from.id

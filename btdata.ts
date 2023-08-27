@@ -11,7 +11,8 @@ ${config.startSymbol}js or ${config.startSymbol}node
 ${config.startSymbol}cpp or ${config.startSymbol}cplus
 ${config.startSymbol}jv or ${config.startSymbol}java
 ${config.startSymbol}go for golang
-${config.startSymbol}ts or ${config.startSymbol}type for typescript`
+${config.startSymbol}ts or ${config.startSymbol}type for typescript
+${config.startSymbol}sql for sql`
 
 export let hreal = `=========================
 Compilation commands

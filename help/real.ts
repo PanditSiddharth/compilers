@@ -1,7 +1,6 @@
 import { Telegraf, Context } from "telegraf";
 import config from "../config";
 import Hlp from "../helpers";
-import sql from "./sql"
 
 const h = new Hlp();
 
@@ -29,7 +28,7 @@ function reply(ctx: any, mss: any, tim: any = 10) {
 }
 
 function real(bot: Telegraf) {
-  const sreg = new RegExp(`^\\${config.startSymbol}(rcc|rpy|rjs|rjv|rcpp|rgo|rts)`, "i");
+  const sreg = new RegExp(`^\\${config.startSymbol}(rcc|rpy|rjs|rjv|rcpp|rgo|rts|rsql)`, "i");
 
   bot.hears(sreg, async (ctx: Context) => {
     try {
@@ -55,11 +54,8 @@ function real(bot: Telegraf) {
           .replace(/^(\s*)(pt)(.*)/gim, "$1printf($3);");
       } else if (cmp === "rpy") {
         code = code.replace(/^(\s*)(pt)(.*)/gim, '$1print($3);');
-      } else if (cmp === "rjs" || cmp === "rts" || cmp == "rsql") {
-
+      } else if (cmp === "rjs" || cmp === "rts") {
         code = code.replace(/^(\s*)(pt)(.*)/gim, '$1console.log($3);');
-
-        code = sql(code)
       } else if (cmp === "rcpp") {
         code = code.replace(/"start"/gi, "#include <iostream>\nusing namespace std;\nint main(){")
           .replace(/"end"/gi, "return 0;\n}")
