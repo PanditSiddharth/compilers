@@ -1,5 +1,6 @@
 { pkgs }: {
     deps = [
+        pkgs.nodejs
         pkgs.python3Full
         pkgs.nano
         pkgs.vim

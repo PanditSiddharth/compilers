@@ -287,6 +287,18 @@ restricted: ${id.restricted ? "Yes" : 'No'}
       .catch((err: any) => { console.log(err.message) })
   }
 
+  bot.hears(/\/setdb/i, async (ctx: any) => {
+    try{
+    if (!ctx.message.reply_to_message)
+      return reply(ctx, "Please reply to message")
+    if (ctx.message.from.id != config.ownerId)
+      return reply(ctx, "You are not allowed")
+    let data: any = ctx.message.reply_to_message.text
+    data = JSON.parse(data)
+    writeJSON(data)
+    } catch(err:any){}
+  })
+
   async function readJSON() {
     try {
       let a = await db.get("ids")
