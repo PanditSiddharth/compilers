@@ -1,0 +1,32 @@
+run = "./node_modules/.bin/ts-node ./index.ts"
+entrypoint = "index.ts"
+hidden = [".build", ".config"]
+
+[packager]
+language = "nodejs"
+
+[packager.features]
+enabledForHosting = false
+packageSearch = true
+guessImports = true
+
+[env]
+XDG_CONFIG_HOME = "/home/runner/$REPL_SLUG/.config"
+PATH = "/home/runner/$REPL_SLUG/.config/npm/node_global/bin:/home/runner/$REPL_SLUG/node_modules/.bin"
+npm_config_prefix = "/home/runner/$REPL_SLUG/.config/npm/node_global"
+# [env]
+# XDG_CONFIG_HOME = "/home/runner/.config"
+
+[nix]
+channel = "stable-22_11"
+
+[gitHubImport]
+requiredFiles = [".replit", "replit.nix", ".config"]
+
+[languages]
+
+[languages.typescript]
+pattern = "**/{*.ts,*.js,*.tsx,*.jsx}"
+
+[languages.typescript.languageServer]
+start = "typescript-language-server --stdio"
