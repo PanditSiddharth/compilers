@@ -17,9 +17,6 @@ npm_config_prefix = "/home/runner/$REPL_SLUG/.config/npm/node_global"
 # [env]
 # XDG_CONFIG_HOME = "/home/runner/.config"
 
-[nix]
-channel = "stable-22_11"
-
 [gitHubImport]
 requiredFiles = [".replit", "replit.nix", ".config"]
 

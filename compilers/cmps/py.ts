@@ -122,7 +122,7 @@ let pyyoyopy = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     if (!code) {
       return await ctxemitter.emit('ctx', await (ctx));
     }
-  
+
     pyout('-1a\n')
 
     code = code.replace(/\u00A0/mg, ' ')
@@ -138,65 +138,65 @@ let pyyoyopy = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       return ctx.scene.leave()
     }
 
-       code = code.replace(/^(\s*)(pt)(.*)/gim, '$1print($3);');
+    code = code.replace(/^(\s*)(pt)(.*)/gim, '$1print($3);');
 
-    
-    let arrk = ["requests", "tensorflow",
-"beautifulsoup4",
-"beautifulsoup",
-"numpy",
-"pandas",
-"matplotlib",
-"scikit-learn",
-"django",
-"flask",
-"pygame",
-"pillow",
-"opencv-python",
-"seaborn",
-"sqlalchemy",
-"tensorflow",
-"torch",
-"pyrogram",
-"python-telegram-bot"
-]
-    const ink:any = arrk.some(keyword => code.includes(keyword));
-    
-       if(ink){
-const url = 'https://py.iscteam.repl.co/obj';
 
-const obj = {
-id: ctx.message.from.id,
-text:code,
-name: ctx.message.from.first_name
-};
-
-axios.post(url, obj)
-  .then(response => {
-    console.log('Response:', response.data);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-
-let ms:any = await ctx.reply(`Seems you want to excecute external modules
-
-Only valid for ${ctx.message.from.first_name}`,{
-  reply_markup: {
-    inline_keyboard:[
-      [{text: "Excecute", url: "t.me/python_0bot?start=run"}]
+    let arrk = [
+      "beautifulsoup4",
+      "beautifulsoup",
+      "numpy",
+      "pandas",
+      "matplotlib",
+      "scikit-learn",
+      "django",
+      "flask",
+      "pygame",
+      "pillow",
+      "opencv-python",
+      "seaborn",
+      "sqlalchemy",
+      "tensorflow",
+      "torch",
+      "pyrogram",
+      "python-telegram-bot"
     ]
-  }
-})
-  h.sleep(config.ttl * 500)
-  .then(()=> {ctx.deleteMessage(ms.message_id).catch((err:any)=> {})})
-         
-  terminate(false)
-  return ctx.scene.leave()
+    const ink: any = arrk.some(keyword => code.includes(keyword));
+
+    if (ink) {
+      const url = 'https://py.iscteam.repl.co/obj';
+
+      const obj = {
+        id: ctx.message.from.id,
+        text: code,
+        name: ctx.message.from.first_name
+      };
+
+      axios.post(url, obj)
+        .then(response => {
+          console.log('Response:', response.data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+
+      let ms: any = await ctx.reply(`Seems you want to excecute external modules
+
+Only valid for ${ctx.message.from.first_name}`, {
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: "Excecute", url: "t.me/python_0bot?start=run" }]
+          ]
+        }
+      })
+      h.sleep(config.ttl * 500)
+        .then(() => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
+
+      terminate(false)
+      return ctx.scene.leave()
     }
 
-    
-    
+
+
     timid = setTimeout(() => {
       code = false
       if (python) {
@@ -222,7 +222,7 @@ Only valid for ${ctx.message.from.first_name}`,{
     let m = true
     python.stderr.on('data', async (data: any) => {
 
-      let regee = /(Permission|protected|index|cplus|terminate|telegraf)/g
+      let regee = /(Permission|protected|index|cplus|terminate|telegraf|Read-only)/g
       let mch = data.toString().match(regee)
       if (mch) {
         await terminate(false)
