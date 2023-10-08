@@ -323,9 +323,9 @@
     minimatch "^9.0.0"
 
 "@types/node@*":
-  version "20.8.0"
-  resolved "https://registry.npmjs.org/@types/node/-/node-20.8.0.tgz"
-  integrity sha512-LzcWltT83s1bthcvjBmiBvGJiiUe84NWRHkw+ZV6Fr41z2FbIzvc815dk2nQ3RAKMuN2fkenM/z3Xv2QzEpYxQ==
+  version "20.8.3"
+  resolved "https://registry.npmjs.org/@types/node/-/node-20.8.3.tgz"
+  integrity sha512-jxiZQFpb+NlH5kjW49vXxvxTjeeqlbsnTAdBTKpzEdPs9itay7MscYXz3Fo9VYFEsfQ6LJFitHad3faerLAjCw==
 
 abbrev@^1.0.0:
   version "1.1.1"
@@ -458,8 +458,6 @@ ansi-styles@^4.0.0, ansi-styles@^4.3.0:
 
 ansi-styles@^6.1.0:
   version "6.2.1"
-  resolved "https://registry.npmjs.org/ansi-styles/-/ansi-styles-6.2.1.tgz"
-  integrity sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug==
 
 "aproba@^1.0.3 || ^2.0.0", aproba@^2.0.0:
   version "2.0.0"
@@ -1886,6 +1884,11 @@ jsonparse@^1.3.1:
   resolved "https://registry.npmjs.org/jsonparse/-/jsonparse-1.3.1.tgz"
   integrity sha512-POQXvpdL69+CluYsillJ7SUhKvytYjW9vG/GKpnf+xP8UWgYEM/RaMzHHofbALDiKbbP1W8UEYmgGl39WkPZsg==
 
+jsshort@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.npmjs.org/jsshort/-/jsshort-0.0.1.tgz"
+  integrity sha512-5h+iEgJwSiuLgjxT62JSo0PI5FnfquSL3dMO5NKFZ970do7a3gC8XcDz9xY3MM0fATjPO0fmvbvRddEV5MJYZg==
+
 just-diff-apply@^5.2.0:
   version "5.5.0"
   resolved "https://registry.npmjs.org/just-diff-apply/-/just-diff-apply-5.5.0.tgz"
@@ -2460,8 +2463,6 @@ nopt@^5.0.0:
 
 nopt@^6.0.0:
   version "6.0.0"
-  resolved "https://registry.npmjs.org/nopt/-/nopt-6.0.0.tgz"
-  integrity sha512-ZwLpbTgdhuZUnZzjd7nb1ZV+4DoiC6/sfiVKok72ym/4Tlf+DFdlHYmT2JPmcNNWV6Pi3SDf1kT+A4r9RTuT9g==
   dependencies:
     abbrev "^1.0.0"
 
@@ -3513,8 +3514,6 @@ string-width@^1.0.1:
 
 string-width@^5.0.1:
   version "5.1.2"
-  resolved "https://registry.npmjs.org/string-width/-/string-width-5.1.2.tgz"
-  integrity sha512-HnLOCR3vjcY8beoNLtcjZ5/nxn2afmME6lhrDrebokqMap+XbeW8n9TXpPDOqdGK5qcI3oT0GKTW6wC7EMiVqA==
   dependencies:
     eastasianwidth "^0.2.0"
     emoji-regex "^9.2.2"
@@ -3522,8 +3521,6 @@ string-width@^5.0.1:
 
 string-width@^5.1.2:
   version "5.1.2"
-  resolved "https://registry.npmjs.org/string-width/-/string-width-5.1.2.tgz"
-  integrity sha512-HnLOCR3vjcY8beoNLtcjZ5/nxn2afmME6lhrDrebokqMap+XbeW8n9TXpPDOqdGK5qcI3oT0GKTW6wC7EMiVqA==
   dependencies:
     eastasianwidth "^0.2.0"
     emoji-regex "^9.2.2"
@@ -3871,8 +3868,6 @@ whatwg-url@^5.0.0:
 
 which@^2.0.1:
   version "2.0.2"
-  resolved "https://registry.npmjs.org/which/-/which-2.0.2.tgz"
-  integrity sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==
   dependencies:
     isexe "^2.0.0"
 

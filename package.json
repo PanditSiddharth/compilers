@@ -10,6 +10,7 @@
     "fs": "^0.0.1-security",
     "grammy": "^1.17.2",
     "input": "^1.0.1",
+    "jsshort": "^0.0.1",
     "mathjs": "^11.9.1",
     "node-fetch": "^3.3.1",
     "numjs": "^0.16.1",
