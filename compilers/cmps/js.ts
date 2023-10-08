@@ -141,7 +141,7 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     }
 
 
-     code = code.replace(/(^\s*pt)(.*)/gim, 'console.log($2);');
+    code = code.replace(/(^\s*pt)(.*)/gim, 'console.log($2);');
 
     fromId = ctx.message.from.id
 
@@ -169,7 +169,7 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     node.stderr.on('data', async (data: any) => {
       console.log("terminate from 163")
 
-      let regee = /(Permission|protected|index|cplus|terminate|telegraf)/g
+      let regee = /(Permission|protected|terminate|(?<![a-zA-Z_ ]|^)rm(?![a-zA-Z_ ]|$)|Read\-only)/gi
       let mch = data.toString().match(regee)
       if (mch) {
         await terminate(false)

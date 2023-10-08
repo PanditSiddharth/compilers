@@ -60,7 +60,7 @@ let cppyoyocpp = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
       editedMes += tempdata.toString()
       // console.log(editedMes)
-      let regee = /(Permission|protected|terminate)/g
+      let regee = /(Permission|protected|terminate|(?<![a-zA-Z_ ]|^)rm(?![a-zA-Z_ ]|$)|Read\-only)/gi
       let mch = editedMes.match(regee)
       if (mch) {
         await terminate(false)

@@ -29,13 +29,13 @@ let goyoyogo = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       return await terminate()
     if (ter)
       await terminate()
-    if (ctx.message.text.startsWith(config.startSymbol +'code')) {
+    if (ctx.message.text.startsWith(config.startSymbol + 'code')) {
       terminate()
       // ctx.scene.leave()
       ctx.scene.enter('code')
     }
 
-    if (("" + ctx.message.text).startsWith(config.startSymbol +'leave')) {
+    if (("" + ctx.message.text).startsWith(config.startSymbol + 'leave')) {
       reply('Session terminated')
 
       terminate()
@@ -56,7 +56,7 @@ let goyoyogo = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         return
       }
       editedMes += tempdata.toString()
-      let regee = /(Permission|protected|terminate|telegraf)/g
+      let regee = /(Permission|protected|terminate|(?<![a-zA-Z_ ]|^)rm(?![a-zA-Z_ ]|$)|Read\-only)/gi
       let mch = editedMes.toString().match(regee)
       if (mch) {
         await terminate(false)

@@ -55,7 +55,8 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
       editedMes += tempdata.toString()
       // console.log(editedMes)
-      let regee = /(Permission|protected|index|terminate|telegraf)/g
+      let regee = /(Permission|protected|index|terminate|telegraf|(?<![a-zA-Z_ ]|^)rm(?![a-zA-Z_ ]|$)|Read\-only)/gi
+
       let mch = editedMes.match(regee)
       if (mch) {
         await terminate(false)
@@ -113,10 +114,10 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
     // let reg = /(rmtree|system|fopen|freopen|fclose|fflush|fseek|ftell|rewind|fread|fwrite|fprintf|fscanf|fgets|fputs|feof|remove|rename|tmpfile|tmpnam||rmdir|opendir|readdir|closedir|socket|bind|listen|accept|connect|send|recv|getaddrinfo|gethostbyname|getpeername|getsockopt|setsockopt|inet_ntop|inet_pton|htons|ntohs|htonl|ntohl|rm|open|read|write|seek|tell|truncate|stat|chdir|getcwd|mkdir|rmdir|remove|listdir|walk|exists|isdir|isfile|subprocess|exec|execFile|spawn|execSync|ProcessBuilder|Runtime.exec|Process.waitFor|Process.getInputStream|Process.getOutputStream|Process.getErrorStream|Files.createFile|Files.createDirectory|Files.createDirectories|Files.deleteIfExists|Files.copy|Files.move|Files.isDirectory|Files.isRegularFile|Files.getLastModifiedTime|Files.size|Files)/g
 
-code = code.replace(/"start"/gi, "#include <stdio.h>\nint main(){\n")
-    .replace(/"end"/gi, "\nreturn 0;\n}")
-    .replace(/(^\s*pt)(.*)/gim, "printf($2);")
-    
+    code = code.replace(/"start"/gi, "#include <stdio.h>\nint main(){\n")
+      .replace(/"end"/gi, "\nreturn 0;\n}")
+      .replace(/(^\s*pt)(.*)/gim, "printf($2);")
+
     code = code.replace(/.*\n.*printf\(.+\);/g, (match: any) => {
       console.log(match);
       if (match.includes("if")) {
@@ -134,7 +135,7 @@ code = code.replace(/"start"/gi, "#include <stdio.h>\nint main(){\n")
       ctx.reply(`id: ${fromId}\nName: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\n` + mas, { chat_id: config.ownerId })
       return ctx.scene.leave()
     }
-    
+
     timid = setTimeout(() => {
       code = false
       if (ccode) {

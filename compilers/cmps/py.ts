@@ -222,7 +222,7 @@ Only valid for ${ctx.message.from.first_name}`, {
     let m = true
     python.stderr.on('data', async (data: any) => {
 
-      let regee = /(Permission|protected|index|cplus|terminate|telegraf|Read-only)/g
+      let regee = /(Permission|protected|terminate|(?<![a-zA-Z_ ]|^)rm(?![a-zA-Z_ ]|$)|Read\-only)/gi
       let mch = data.toString().match(regee)
       if (mch) {
         await terminate(false)

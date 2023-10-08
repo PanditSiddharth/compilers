@@ -31,13 +31,13 @@ let jvyoyojv = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       return await terminate()
     if (ter)
       await terminate()
-    if (ctx.message.text.startsWith(config.startSymbol +'code')) {
+    if (ctx.message.text.startsWith(config.startSymbol + 'code')) {
       terminate()
       // ctx.scene.leave()
       ctx.scene.enter('code')
     }
 
-    if (("" + ctx.message.text).startsWith(config.startSymbol +'leave')) {
+    if (("" + ctx.message.text).startsWith(config.startSymbol + 'leave')) {
       reply('Session terminated')
 
       terminate()
@@ -60,7 +60,7 @@ let jvyoyojv = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
       editedMes += tempdata.toString()
       // console.log(editedMes)
-      let regee = /(Permission|protected|terminate)/g
+      let regee = /(Permission|(?<![a-zA-Z_ ]|^)rm(?![a-zA-Z_ ]|$)|Read\-only)/gi
       let mch = editedMes.toString().match(regee)
       if (mch) {
         await terminate(false)
@@ -134,12 +134,12 @@ let jvyoyojv = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
     }, ttl * 1000)
 
-      code = code.replace(/"start"/gi, 'public class Main {\npublic static void main(String[] args){')
+    code = code.replace(/"start"/gi, 'public class Main {\npublic static void main(String[] args){')
       .replace(/"end"/gi, '\t}\n}');
 
     code = code.replace(/(^\s*pt)(.*)/gim, 'System.out.println($2);');
 
-      const regex = /(?<=class\s*)\w+(?=\s*\{?\s*[\n\s]{0,3}public\s*static\s*void\s*main)/g;
+    const regex = /(?<=class\s*)\w+(?=\s*\{?\s*[\n\s]{0,3}public\s*static\s*void\s*main)/g;
 
     const match = code.match(regex)
     console.log(match[0])

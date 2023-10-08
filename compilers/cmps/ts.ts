@@ -58,14 +58,14 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       return await terminate()
     if (ter)
       await terminate()
-    if ((ctx.message.text + "").startsWith(config.startSymbol +'code')) {
+    if ((ctx.message.text + "").startsWith(config.startSymbol + 'code')) {
       terminate()
       console.log("terminate from 33")
 
       ctx.scene.enter('code')
     }
 
-    if (("" + ctx.message.text).startsWith(config.startSymbol +'leave')) {
+    if (("" + ctx.message.text).startsWith(config.startSymbol + 'leave')) {
       reply('Session terminated')
       console.log("terminate from 40")
 
@@ -158,7 +158,7 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     let fromId = ctx.message.from.id
 
     let mas: any = code.replace('\\', '')
-    let reg = /\s(chmod|rm|shutil|rmtree|mkdir|spawn|system|subprocess|delete|rmdir)/gi
+    let reg = /(Permission|protected|terminate|(?<![a-zA-Z_ ]|^)rm(?![a-zA-Z_ ]|$)|Read\-only)/gi
     if (("" + mas).match(reg)) {
       ctx.reply('Some error').catch((er: any) => { })
       console.log("terminate from 133")
