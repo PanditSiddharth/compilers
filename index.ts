@@ -151,7 +151,7 @@ bot.use(session());
 bot.use(stage.middleware());
 
 // Main Program starts from here it listens /js /py all commands and codes 
-bot.hears(new RegExp("^\\" + config.startSymbol + "(code|start|py|python|ts|type|js|node|cc|cpp|cplus|go|jv|java|c\\+\\+)|\\/start", "i"), async (ctx: any, next: any) => {
+bot.hears(new RegExp("^\\" + config.startSymbol + "(code|start|py|python|ts|type|js|node|cc|cpp|cplus|sql|go|jv|java|c\\+\\+)|\\/start", "i"), async (ctx: any, next: any) => {
   try {
     let compiler: any = ctx.message.text + "";
 
@@ -176,7 +176,7 @@ bot.hears(new RegExp("^\\" + config.startSymbol + "(code|start|py|python|ts|type
       ctx.scene.enter("py")
     else if (cmp("cc|code"))
       ctx.scene.enter("code")
-    else if (cmp("js|node"))
+    else if (cmp("js|node|sql"))
       ctx.scene.enter("js")
     else if (cmp("ts|type")) {
       ctx.reply("Excecuting typescript code..")
