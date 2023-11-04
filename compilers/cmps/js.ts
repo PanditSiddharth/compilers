@@ -102,7 +102,6 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         return
       firstlistener = false
       ctxemitter.on('ctx', async (ctxx: any) => {
-        console.log('yes')
         ctxx.deleteMessage().catch(() => { })
         try {
           editedMes += ctxx.message.text + "\n"
@@ -110,11 +109,7 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
             mid = await ctx.reply("" + editedMes)
           else
             await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
-          console.log(ctxx.message.text)
           await node.stdin.write(ctxx.message.text + "\n")
-
-          node.stdin.end()
-
         } catch (err: any) { console.log(err) }
 
       });
@@ -256,6 +251,7 @@ var kill = function(pid: any, signal?: any, callback?: any) {
 };
 
 let terminate = async (slow: any = true) => {
+
   if (slow)
     await h.sleep(200)
   firstlistener = true
