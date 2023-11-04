@@ -18,6 +18,7 @@ let firstlistener = true
 interface Opt {
   code?: any; ter?: Boolean; onlyTerminate?: boolean
 }
+let countpp = 0;
 let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
   // obj = obj || {}
   let code = obj.code || false
@@ -25,6 +26,7 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
   let onlyTerminate = obj.onlyTerminate || false
 
   try {
+
     if (onlyTerminate)
       return await terminate()
     if (ter)
@@ -101,6 +103,7 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       if (!firstlistener)
         return
       firstlistener = false
+    let connt = 0;
       ctxemitter.on('ctx', async (ctxx: any) => {
         ctxx.deleteMessage().catch(() => { })
         try {
@@ -110,6 +113,9 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
           else
             await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
           await node.stdin.write(ctxx.message.text + "\n")
+          connt++;
+          if(connt >= countpp)
+            node.stdin.end()
         } catch (err: any) { console.log(err) }
 
       });
@@ -148,7 +154,7 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         ctx.scene.leave()
       }
     }, ttl * 1000)
-
+    countpp = countp(code)
     node = spawn(config.node, ['-e', code], {
       stdio: ['pipe', 'pipe', 'pipe'],
       uid: 1000,
@@ -192,6 +198,9 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
     code = false
     node.on("error", (err: any) => { console.log(err); terminate(); ctx.scene.leave() })
+
+
+
     node.on('close', (code: any) => {
       if (code == 0) {
         reply('Program terminated successfully')
@@ -255,7 +264,7 @@ let terminate = async (slow: any = true) => {
   if (slow)
     await h.sleep(200)
   firstlistener = true
-
+  node.stdin.end()
   try {
     // node.stdin.pause()
     clearTimeout(timid)
@@ -290,4 +299,24 @@ let terminate = async (slow: any = true) => {
   }
   await h.sleep(500)
   return
+}
+
+// Define an array of patterns to match
+const patterns = [
+  /input\([^)]*\)/g,
+  /prompt\([^)]*\)/g,
+  /readline\([^)]*\)/g,
+  /question\([^)]*\)/g,
+];
+
+function countp(inputString: any) {
+  if (typeof inputString !== 'string') {
+    console.error('Input is not a string');
+    return 0;
+  }
+  const matches: any = patterns.reduce((totalMatches, pattern) => {
+    const patternMatches: any = inputString.match(pattern);
+    return totalMatches.concat(patternMatches || []);
+  }, []);
+  return matches.length;
 }
