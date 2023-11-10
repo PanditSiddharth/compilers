@@ -117,6 +117,7 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     code = code.replace(/"start"/gi, "#include <stdio.h>\nint main(){\n")
       .replace(/"end"/gi, "\nreturn 0;\n}")
       .replace(/(^\s*pt)(.*)/gim, "printf($2);")
+.replace(/#include\s*\<conio\.h\>/, `#include "conio.h"`)
 
     code = code.replace(/.*\n.*printf\(.+\);/g, (match: any) => {
       console.log(match);
@@ -147,7 +148,11 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
     fs.writeFileSync(`./files/ccode/c${fromId}c.c`, code);
 
-    const { status, stderr } = spawnSync('gcc', [`./files/ccode/c${fromId}c.c`, '-o', `./files/ccode/c${fromId}c`, "-lm"]);
+    const { status, stderr } = spawnSync('gcc', [
+      '-I/home/runner/compilers/lib/',
+      '-o',
+      `./files/ccode/c${fromId}c`,
+      `./files/ccode/c${fromId}c.c`, "./lib/conio.c", "-lm"]);
 
     try {
       // fs.unlinkSync(`./files/ccode/c${fromId}c.c`);
