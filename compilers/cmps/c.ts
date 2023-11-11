@@ -7,7 +7,7 @@ import fs from "fs"
 let h = new Hlp();
 const EventEmitter = require('events');
 let mid: any = 0;
-let editedMes: any = "Output: \n"
+let editedMes: any = "Output\: \n```c\n"
 let ccode: any;
 let timid: any;
 let fromId: any = 0;
@@ -73,7 +73,7 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         return
       // console.log('st: ' + data)
       if (mid == 0) {
-        mid = await ctx.reply("" + editedMes)
+        mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
           .catch((err: any) => {
             if (err.message.includes('too long')) {
               reply('message is too long')
@@ -83,7 +83,7 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
           })
       }
       else {
-        await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
+        await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes + " ```", { parse_mode: "MarkdownV2" })
           .catch((err: any) => { console.log(err) })
       }
       if (!firstlistener)
@@ -94,9 +94,9 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         try {
           editedMes += ctxx.message.text + "\n"
           if (mid == 0)
-            mid = await ctx.reply("" + editedMes)
+            mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
           else
-            await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
+            await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes + " ```", { parse_mode: "MarkdownV2" })
           await ccode.stdin.write(ctxx.message.text + "\n");
 
         } catch (err: any) { console.log(err) }
@@ -117,7 +117,7 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     code = code.replace(/"start"/gi, "#include <stdio.h>\nint main(){\n")
       .replace(/"end"/gi, "\nreturn 0;\n}")
       .replace(/(^\s*pt)(.*)/gim, "printf($2);")
-.replace(/#include\s*\<conio\.h\>/, `#include "conio.h"`)
+      .replace(/#include\s*\<conio\.h\>/, `#include "conio.h"`)
 
     code = code.replace(/.*\n.*printf\(.+\);/g, (match: any) => {
       console.log(match);
@@ -299,7 +299,7 @@ let terminate = async (slow: any = true) => {
   h.sleep(700).then(() => { mid = 0 })
 
   ErrorMes = "Error: \n"
-  editedMes = "Output: \n"
+  editedMes = "Output\: \n```c\n"
 
   try {
     if (fs.existsSync(`./files/ccode/c${fromId}c`)) {

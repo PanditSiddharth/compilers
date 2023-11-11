@@ -48,7 +48,9 @@ function tstojs(code: string): string {
 
 let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
   // obj = obj || {}
-
+  const edit = async (messageId:any, messageText:any) => {
+    return await bot.telegram.editMessageText(ctx.chat.id, messageId, undefined, messageText + " ```", {parse_mode: "MarkdownV2"})
+  }
   let code = obj.code || false
   let ter = obj.ter || false
   let onlyTerminate = obj.onlyTerminate || false
@@ -111,7 +113,7 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         return
 
       if (mid == 0 && !err) {
-        mid = await ctx.reply("" + editedMes)
+         mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
           .catch((err: any) => {
             if (err.message.includes('too long')) {
               reply('message is too long')
@@ -122,7 +124,7 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
       else if (!err) {
 
-        await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
+        await edit(mid.message_id, editedMes)
           .catch((err) => { console.log(err) })
       }
       // return
@@ -136,9 +138,9 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         try {
           editedMes += ctxx.message.text + "\n"
           if (mid == 0)
-            mid = await ctx.reply("" + editedMes)
+             mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
           else
-            await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
+            await edit(mid.message_id, editedMes)
           console.log(ctxx.message.text)
           await node.stdin.write(ctxx.message.text + "\n")
 
@@ -341,7 +343,7 @@ let terminate = async (slow: any = true) => {
   h.sleep(500).then(() => { mid = 0; err = false })
 
   ErrorMes = "Error: \n"
-  editedMes = "Output: \n"
+  editedMes = "Output\: \n```ts\n"
 
   if (fs.existsSync(`./compilers/tsnode/ts${fromId}ts.ts`)) {
     try {

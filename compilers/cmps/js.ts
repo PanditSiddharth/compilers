@@ -7,7 +7,7 @@ import fs from "fs"
 let h = new Hlp();
 const EventEmitter = require('events');
 let mid: any = 0;
-let editedMes: any = "Output: \n"
+let editedMes: any = "Output\: \n```js\n"
 let node: any;
 let timid: any;
 let fromId: any = 0;
@@ -20,6 +20,9 @@ interface Opt {
 }
 let countpp = 0;
 let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
+  const edit = async (messageId:any, messageText:any) => {
+    return await bot.telegram.editMessageText(ctx.chat.id, messageId, undefined, messageText + " ```", {parse_mode: "MarkdownV2"})
+  }
   // obj = obj || {}
   let code = obj.code || false
   let ter = obj.ter || false
@@ -84,7 +87,7 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         return
 
       if (mid == 0) {
-        mid = await ctx.reply("" + editedMes)
+         mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
           .catch((err: any) => {
             if (err.message.includes('too long')) {
               reply('message is too long')
@@ -95,7 +98,7 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
       else {
 
-        await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
+        await edit(mid.message_id, editedMes)
           .catch((err) => { console.log(err) })
       }
       // return
@@ -109,9 +112,9 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         try {
           editedMes += ctxx.message.text + "\n"
           if (mid == 0)
-            mid = await ctx.reply("" + editedMes)
+             mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
           else
-            await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
+            await edit(mid.message_id, editedMes)
           await node.stdin.write(ctxx.message.text + "\n")
           connt++;
           if(connt >= countpp)
@@ -290,7 +293,7 @@ let terminate = async (slow: any = true) => {
   h.sleep(500).then(() => { mid = 0 })
 
   ErrorMes = "Error: \n"
-  editedMes = "Output: \n"
+  editedMes = "Output\: \n```js\n"
 
   if (fs.existsSync(`./compilers/node/js${fromId}js.ts`)) {
     try {

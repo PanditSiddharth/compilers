@@ -7,7 +7,7 @@ import config from '../../config'
 let h = new Hlp();
 const EventEmitter = require('events');
 let mid: any = 0;
-let editedMes: any = "Output: \n"
+let editedMes: any = "Output\: \n```go\n"
 let golang: any;
 let fromId: any = 0;
 const ctxemitter = new EventEmitter();
@@ -25,6 +25,10 @@ let goyoyogo = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
   let onlyTerminate = obj.onlyTerminate || false
 
   try {
+    const edit = async (messageId:any, messageText:any) => {
+      return await bot.telegram.editMessageText(ctx.chat.id, messageId, undefined, messageText + " ```", {parse_mode: "MarkdownV2"})
+    }
+    
     if (onlyTerminate)
       return await terminate()
     if (ter)
@@ -72,7 +76,7 @@ let goyoyogo = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         return
       // console.log('st: ' + data)
       if (mid == 0) {
-        mid = await ctx.reply("" + editedMes)
+         mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
           .catch((err: any) => {
             if (err.message.includes('too long')) {
               reply('message is too long')
@@ -82,7 +86,7 @@ let goyoyogo = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
           })
       }
       else {
-        await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
+        await edit(mid.message_id, editedMes)
           .catch((err) => { console.log(err) })
       }
       if (!firstlistener)
@@ -93,9 +97,9 @@ let goyoyogo = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         try {
           editedMes += ctxx.message.text + "\n"
           if (mid == 0)
-            mid = await ctx.reply("" + editedMes)
+             mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
           else
-            await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes)
+            await edit(mid.message_id, editedMes)
           await golang.stdin.write(ctxx.message.text + "\n")
 
           golang.stdin.end()
@@ -266,7 +270,7 @@ let terminate = async (slow: any = true) => {
   h.sleep(700).then(() => { mid = 0 })
 
   ErrorMes = "Error: \n"
-  editedMes = "Output: \n"
+  editedMes = "Output\: \n```go\n"
 
   try {
     if (fs.existsSync(`./files/golang/go${fromId}go/main.go`)) {
