@@ -7,7 +7,7 @@ import config from './config'
 import real from "./help/real"
 import sql from "./help/sql"
 // 2 global dependencies
-import { Scenes, session, Telegraf } from "telegraf";
+import { Composer, Scenes, session, Telegraf } from "telegraf";
 
 // importig all starters file which is starting point after this file
 import pyStarter from './starters/pystarter'
@@ -17,9 +17,12 @@ import tsStarter from './starters/tsstarter'
 import cppStarter from './starters/cppstarter'
 import jvStarter from './starters/jvstarter'
 import goStarter from './starters/gostarter'
+import compose from './compose';
 let objj: any = {};
 // this will run web server and always make it alive
 keep_alive(objj)
+
+const bot = new Composer<Scenes.SceneContext>();
 
 // env variable 
 require('dotenv').config()
@@ -137,7 +140,7 @@ goScene.on("message", async (ctx: any) => {
 });
 
 // making instance of Telegraf class
-let bot = new Telegraf<Scenes.SceneContext>(config.token);
+
 
 // regestering all scenes
 let stage = new Scenes.Stage<Scenes.SceneContext>([cScene, pyScene, jsScene, cppScene, jvScene, goScene, tsScene], { ttl: config.ttl });
@@ -145,16 +148,13 @@ let stage = new Scenes.Stage<Scenes.SceneContext>([cScene, pyScene, jsScene, cpp
 // passing bot instance in bot.ts file by call those function
 bt(bot);
 real(bot as any);
-
-// Some global telegraf uses for help
-bot.use(session());
-bot.use(stage.middleware());
-
+compose(bot, stage.middleware());
+bot.use(session())
+bot.use(stage.middleware())
 // Main Program starts from here it listens /js /py all commands and codes 
 bot.hears(new RegExp("^\\" + config.startSymbol + "(code|start|py|python|ts|type|js|node|cc|cpp|cplus|sql|go|jv|java|c\\+\\+)|\\/start", "i"), async (ctx: any, next: any) => {
   try {
     let compiler: any = ctx.message.text + "";
-
 
     let memb = await ctx.getChatMember(ctx.botInfo.id)
     if (!memb.can_delete_messages) {
@@ -195,13 +195,12 @@ bot.hears(new RegExp("^\\" + config.startSymbol + "(code|start|py|python|ts|type
     else if (cmp("go"))
       ctx.scene.enter("go")
     next();
-  } catch (error) {
-    console.log("error start index")
+  } catch (error: any) {
+    console.log("error start index", error)
   }
 })
 
-// launching bot in polling mode
-bot.launch({ dropPendingUpdates: true });
+
 
 // This function checks that if any compiler command change then it changes session; Example : js to py
 async function startcheck(ctx: any, y: any, json: any = {}) {

@@ -1,8 +1,8 @@
 { pkgs }: {
     deps = [
-        pkgs.nodejs
         pkgs.python3Full
         pkgs.nano
+        pkgs.nodejs-16_x
         pkgs.vim
         pkgs.python39Packages.pip
         pkgs.toybox
@@ -15,7 +15,6 @@
         pkgs.gcc
         pkgs.yarn
         pkgs.esbuild
-        pkgs.nodejs
         pkgs.nodePackages.typescript
         pkgs.nodePackages.typescript-language-server
     ];

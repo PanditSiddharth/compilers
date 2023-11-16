@@ -20,8 +20,8 @@ interface Opt {
 }
 let cppyoyocpp = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
   // obj = obj || {}
-  const edit = async (messageId:any, messageText:any) => {
-    return await bot.telegram.editMessageText(ctx.chat.id, messageId, undefined, messageText + " ```", {parse_mode: "MarkdownV2"})
+  const edit = async (messageId: any, messageText: any) => {
+    return await ctx.telegram.editMessageText(ctx.chat.id, messageId, undefined, messageText + " ```", { parse_mode: "MarkdownV2" })
   }
   let code = obj.code || false
   let ter = obj.ter || false
@@ -32,13 +32,13 @@ let cppyoyocpp = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       return await terminate()
     if (ter)
       await terminate()
-    if (ctx.message.text.startsWith(config.startSymbol +'code')) {
+    if (ctx.message.text.startsWith(config.startSymbol + 'code')) {
       terminate()
       // ctx.scene.leave()
       ctx.scene.enter('code')
     }
 
-    if (("" + ctx.message.text).startsWith(config.startSymbol +'leave')) {
+    if (("" + ctx.message.text).startsWith(config.startSymbol + 'leave')) {
       reply('Session terminated')
 
       terminate()
@@ -80,7 +80,7 @@ let cppyoyocpp = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         return
       // console.log('st: ' + data)
       if (mid == 0) {
-        mid = await ctx.reply("" + editedMes + " ```", {parse_mode: "MarkdownV2"})
+        mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
           .catch((err: any) => {
             if (err.message.includes('too long')) {
               reply('message is too long')
@@ -101,9 +101,9 @@ let cppyoyocpp = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         try {
           editedMes += ctxx.message.text + "\n"
           if (mid == 0)
-            mid = await ctx.reply("" + editedMes + " ```", {parse_mode: "MarkdownV2"})
+            mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
           else
-          await edit(mid.message_id, editedMes)
+            await edit(mid.message_id, editedMes)
           await cplus.stdin.write(ctxx.message.text + "\n");
 
         } catch (err: any) { console.log(err) }
@@ -142,9 +142,9 @@ let cppyoyocpp = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     }, ttl * 1000)
 
     code = code.replace(/"start"/gi, "#include <iostream>\nusing namespace std;\nint main(){\n")
-    .replace(/"end"/gi, "\nreturn 0;\n}")
-   .replace(/(^\s*pt)(.*)/gim, "cout<<$2;")
-    
+      .replace(/"end"/gi, "\nreturn 0;\n}")
+      .replace(/(^\s*pt)(.*)/gim, "cout<<$2;")
+
     fs.writeFileSync(`./files/cplus/cpt${fromId}cpt.cpp`, code);
 
     const { status, stderr } = spawnSync('g++', ['-o', `./files/cplus/cpp${fromId}cpp.out`, `./files/cplus/cpt${fromId}cpt.cpp`]);
@@ -193,7 +193,7 @@ let cppyoyocpp = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
       else {
         ErrorMes = ErrorMes + data
-        bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, ErrorMes)
+        ctx.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, ErrorMes)
           .then(async (mmm: any) => {
             await h.sleep(30000);
             ctx.deleteMessage(mmm).catch(() => { })

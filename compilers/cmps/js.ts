@@ -20,8 +20,8 @@ interface Opt {
 }
 let countpp = 0;
 let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
-  const edit = async (messageId:any, messageText:any) => {
-    return await bot.telegram.editMessageText(ctx.chat.id, messageId, undefined, messageText + " ```", {parse_mode: "MarkdownV2"})
+  const edit = async (messageId: any, messageText: any) => {
+    return await ctx.telegram.editMessageText(ctx.chat.id, messageId, undefined, messageText + " ```", { parse_mode: "MarkdownV2" })
   }
   // obj = obj || {}
   let code = obj.code || false
@@ -87,7 +87,7 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         return
 
       if (mid == 0) {
-         mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
+        mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
           .catch((err: any) => {
             if (err.message.includes('too long')) {
               reply('message is too long')
@@ -106,18 +106,18 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       if (!firstlistener)
         return
       firstlistener = false
-    let connt = 0;
+      let connt = 0;
       ctxemitter.on('ctx', async (ctxx: any) => {
         ctxx.deleteMessage().catch(() => { })
         try {
           editedMes += ctxx.message.text + "\n"
           if (mid == 0)
-             mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
+            mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
           else
             await edit(mid.message_id, editedMes)
           await node.stdin.write(ctxx.message.text + "\n")
           connt++;
-          if(connt >= countpp)
+          if (connt >= countpp)
             node.stdin.end()
         } catch (err: any) { console.log(err) }
 
@@ -186,7 +186,7 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
       else {
         ErrorMes = ErrorMes + data
-        bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, ErrorMes)
+        ctx.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, ErrorMes)
           .then(async (mmm: any) => {
             await h.sleep(30000);
             ctx.deleteMessage(mmm).catch(() => { })

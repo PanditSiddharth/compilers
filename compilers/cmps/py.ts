@@ -23,8 +23,8 @@ interface Opt {
 }
 let pyyoyopy = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
   // obj = obj || {}
-  const edit = async (messageId:any, messageText:any) => {
-    return await bot.telegram.editMessageText(ctx.chat.id, messageId, undefined, messageText + " ```", {parse_mode: "MarkdownV2"})
+  const edit = async (messageId: any, messageText: any) => {
+    return await ctx.telegram.editMessageText(ctx.chat.id, messageId, undefined, messageText + " ```", { parse_mode: "MarkdownV2" })
   }
   let code = obj.code || false
   let ter = obj.ter || false
@@ -83,7 +83,7 @@ let pyyoyopy = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
         // console.log('st: ' + data)
         if (mid == 0) {
-           mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
+          mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
             .catch((err: any) => {
               if (err.message.includes('too long')) {
                 looperr = true
@@ -113,7 +113,7 @@ let pyyoyopy = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         try {
           editedMes += ctxx.message.text + "\n"
           if (mid == 0)
-             mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
+            mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
           else
             await edit(mid.message_id, editedMes)
           await python.stdin.write(ctxx.message.text + "\n")
@@ -239,7 +239,7 @@ Only valid for ${ctx.message.from.first_name}`, {
       }
       else {
         ErrorMes = ErrorMes + data
-        bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, ErrorMes)
+        ctx.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, ErrorMes)
           .then(async (mmm: any) => {
             await h.sleep(30000);
             ctx.deleteMessage(mmm).catch(() => { })

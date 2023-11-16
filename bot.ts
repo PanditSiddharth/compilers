@@ -80,7 +80,7 @@ ${config.owner ? "Owner: " + config.owner : "𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞�
 
   async function hsend(ctx: any, json: any = {}) {
     try {
-      return await bot.telegram.editMessageText(ctx.chat.id, json.mid, undefined, json.txt, json.json).catch((err: any) => { })
+      return await ctx.telegram.editMessageText(ctx.chat.id, json.mid, undefined, json.txt, json.json).catch((err: any) => { })
     } catch (error) { }
   }
 
@@ -200,7 +200,7 @@ ${config.channel + " " + config.group}`
       let idmatch = msg.text.match(/\-100[0-9_]+/)
       if (idmatch) {
         let idd = idmatch[0]
-        let cid = await bot.telegram.getChat(idd).catch((err: any) => { })
+        let cid = await ctx.telegram.getChat(idd).catch((err: any) => { })
         if (!cid)
           return reply(ctx, "Seems I'm not admin of given chat")
         return ctx.reply(`
@@ -262,7 +262,7 @@ restricted: ${id.restricted ? "Yes" : 'No'}
     if (!match)
       return reply(ctx, "Please give id where to send text")
     let ctxx: any = ctx
-    bot.telegram.sendMessage(match[0], msg.reply_to_message.text)
+    ctxx.telegram.sendMessage(match[0], msg.reply_to_message.text)
       .catch((err: any) => { reply(ctx, err.message) })
     reply(ctx, "message successfully sent", 60)
   })

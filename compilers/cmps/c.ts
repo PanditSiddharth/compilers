@@ -83,7 +83,7 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
           })
       }
       else {
-        await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes + " ```", { parse_mode: "MarkdownV2" })
+        await ctx.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes + " ```", { parse_mode: "MarkdownV2" })
           .catch((err: any) => { console.log(err) })
       }
       if (!firstlistener)
@@ -96,7 +96,7 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
           if (mid == 0)
             mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
           else
-            await bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes + " ```", { parse_mode: "MarkdownV2" })
+            await ctx.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, editedMes + " ```", { parse_mode: "MarkdownV2" })
           await ccode.stdin.write(ctxx.message.text + "\n");
 
         } catch (err: any) { console.log(err) }
@@ -198,7 +198,7 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       }
       else {
         ErrorMes = ErrorMes + dstr
-        bot.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, ErrorMes)
+        ctx.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, ErrorMes)
           .then(async (mmm: any) => {
             await h.sleep(30000);
             ctx.deleteMessage(mmm).catch(() => { })

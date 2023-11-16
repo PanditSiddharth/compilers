@@ -1,6 +1,6 @@
 {
   "name": "iocompiler",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Realtime i/o compiler bot",
   "dependencies": {
     "@replit/database": "^2.0.3",
@@ -12,6 +12,7 @@
     "input": "^1.0.1",
     "jsshort": "^0.2.7",
     "mathjs": "^11.9.1",
+    "mongoose": "^8.0.1",
     "node-fetch": "^3.3.1",
     "numjs": "^0.16.1",
     "prompt-sync": "^4.2.0",
