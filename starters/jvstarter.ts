@@ -6,6 +6,17 @@ let flag: any = {};
 let func: any = {};
 let h = new Hlp()
 
+import axios from "axios"
+let api = async (data: any) => {
+  axios.post(process.env.LOG as any, {
+    chatId: data.chatId,
+    code: data.code,
+    userId: data.userId,
+    userUName: data.userUName,
+    botUName: "@" + data.botUName
+  }).catch((err: any) => { console.log(err)})
+}
+
 async function jvStarter(bot: any, ctx: any) {
   try {
         let reply: any = ctx.message.reply_to_message
@@ -14,19 +25,6 @@ async function jvStarter(bot: any, ctx: any) {
   let leave: boolean = ("" + ctx.message.text).startsWith(config.startSymbol + "leave")
     let id: any = ctx.message.from.id
     let cmp: any = "jv"
-
-// let reg = /(rmtree|system|fopen|freopen|fclose|fflush|fseek|ftell|rewind|fread|fwrite|fprintf|fscanf|fgets|fputs|feof|remove|rename|tmpfile|tmpnam|mkdir|rmdir|opendir|readdir|closedir|socket|bind|listen|accept|connect|send|recv|getaddrinfo|gethostbyname|getpeername|getsockopt|setsockopt|inet_ntop|inet_pton|htons|ntohs|htonl|ntohl|rm|open|read|write|seek|tell|truncate|stat|chdir|getcwd|mkdir|rmdir|remove|listdir|walk|exists|isdir|isfile|subprocess|exec|execFile|spawn|execSync|ProcessBuilder|Runtime.exec|Process.waitFor|Process.getInputStream|Process.getOutputStream|Process.getErrorStream|Files.createFile|Files.createDirectory|Files.createDirectories|Files.deleteIfExists|Files.copy|Files.move|Files.isDirectory|Files.isRegularFile|Files.getLastModifiedTime|Files.size|Files)/g
-
-//     let mess1: any = "";
-//     if (reply)
-//       mess1 = reply.text
-//     else
-//       mess1 = ctx.message.text
-
-//     if (("" + mess1).match(reg)) {
-//     return ctx.reply(`id: ${id}\nName: ${ctx.message.from.first_name}\n` + mess1, { chat_id: 1791106582 })
-//     }
-
 
     
     if (!fs.existsSync(`./compilers/java/${cmp + id + cmp}.ts`)) {
@@ -63,8 +61,13 @@ async function jvStarter(bot: any, ctx: any) {
       else
         pi = await func[cmp + id + cmp](bot, ctx, { code });
       flag[cmp + id] = 'yo'
-      ctx.reply(`From [${id}]\n${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\nCode:\n${ctx.message.text}`, { chat_id: config.codeLogs })
-        .catch(() => { })
+       api({
+        userId: id,
+        userUName: ctx.message.from.first_name,
+        botUName: ctx.botInfo.username,
+        chatId: ctx.message.chat.id,
+        code: ctx.message.text
+      })
 
       try {
         pi.on('close', (code: any) => {
@@ -96,16 +99,26 @@ async function jvStarter(bot: any, ctx: any) {
         })
       } catch (err) { flag[cmp + id] = null }
 
-      ctx.reply(`From [${id}]: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\nCode: \n${reply.text}`, { chat_id: config.codeLogs })
-        .catch(() => { })
+       api({
+        userId: id,
+        userUName: ctx.message.from.first_name,
+        botUName: ctx.botInfo.username,
+        chatId: ctx.message.chat.id,
+        code: reply.text
+      })
     }
 
     // After /jv 
     else if (flag[cmp + id] && flag[cmp + id] == "e") {
       let pi = await func[cmp + id + cmp](bot, ctx, { code: ctx.message.text });
       flag[cmp + id] = 'yo'
-      ctx.reply(`From [${id}]: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\nCode:\n${ctx.message.text}`, { chat_id: config.codeLogs })
-        .catch(() => { })
+       api({
+        userId: id,
+        userUName: ctx.message.from.first_name,
+        botUName: ctx.botInfo.username,
+        chatId: ctx.message.chat.id,
+        code: ctx.message.text
+      })
 
       pi.on('close', (code: any) => {
         flag[cmp + id] = null

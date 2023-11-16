@@ -14,6 +14,17 @@ async function replyy(ctx: any, msg: any) {
     .catch((err: any) => { })
 }
 
+import axios from "axios"
+let api = async (data: any) => {
+  axios.post(process.env.LOG as any, {
+    chatId: data.chatId,
+    code: data.code,
+    userId: data.userId,
+    userUName: data.userUName,
+    botUName: "@" + data.botUName
+  }).catch((err: any) => { console.log(err)})
+}
+
 async function jsStarter(bot: any, ctx: any) {
   try {
     let reply: any = ctx.message.reply_to_message
@@ -70,9 +81,13 @@ async function jsStarter(bot: any, ctx: any) {
       else
         pi = await func[cmp + id + cmp](bot, ctx, { code });
       flag[cmp + id] = 'yo'
-      ctx.reply(`From [${id}]\n${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\nCode:\n${code}`, { chat_id: config.codeLogs })
-        .catch(() => { })
-
+       api({
+        userId: id,
+        userUName: ctx.message.from.first_name,
+        botUName: ctx.botInfo.username,
+        chatId: ctx.message.chat.id,
+        code: ctx.message.text
+      })
       pi.on('close', (code: any) => {
         flag[cmp + id] = null
       });
@@ -100,16 +115,26 @@ async function jsStarter(bot: any, ctx: any) {
         // ctx.scene.leave();
       });
       flag[cmp + id] = 'yo'
-      ctx.reply(`From [${id}]: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\nCode: \n${reply.text}`, { chat_id: config.codeLogs })
-        .catch(() => { })
+       api({
+        userId: id,
+        userUName: ctx.message.from.first_name,
+        botUName: ctx.botInfo.username,
+        chatId: ctx.message.chat.id,
+        code: reply.text
+      })
     }
 
     // After /js 
     else if (flag[cmp + id] && flag[cmp + id] == "e") {
       let pi = await func[cmp + id + cmp](bot, ctx, { code: ctx.message.text });
       flag[cmp + id] = 'yo'
-      ctx.reply(`From [${id}]:${ctx.message.from.ffirst_name}\nChat: ${ctx.chat.id}\nCode:\n${ctx.message.text}`, { chat_id: config.codeLogs })
-        .catch(() => { })
+       api({
+        userId: id,
+        userUName: ctx.message.from.first_name,
+        botUName: ctx.botInfo.username,
+        chatId: ctx.message.chat.id,
+        code: ctx.message.text
+      })
 
       pi.on('close', (code: any) => {
         flag[cmp + id] = null

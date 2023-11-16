@@ -12,35 +12,6 @@ const bt = async (bot: any) => {
 
   const fs = require('fs');
   const filePath = './data.txt';
-  // mdb(bot as any)
-
-  bot.on('my_chat_member', async (ctx: any) => {
-    let chat: any = ctx.chat
-    if (!(chat.id + "").startsWith("-100"))
-      return
-    let status: any = ctx.update.my_chat_member.new_chat_member.status
-    console.log(status)
-    let ostatus: any = ctx.update.my_chat_member.old_chat_member.status
-
-    if (status != 'left' && !['member', 'administrator'].includes(ostatus)) {
-      updateJSON(chat.id)
-      return ctx.reply(`#NewChat
-
-Title: ${chat.title}
-ID: ${chat.id}
-${chat.username ? "Username: @" + chat.username : ""}`, { chat_id: config.chatLogs })
-    }
-
-    if (status == 'left' || status == 'kicked') {
-      removeId(chat.id)
-      return ctx.reply(`#LeftChat
-
-Title: ${chat.title}
-ID: ${chat.id}
-${chat.username ? "Username: @" + chat.username : ""}`, { chat_id: config.chatLogs })
-    }
-    return
-  })
 
   let previous = Date.now()
   bot.hears(new RegExp("^\\" + config.startSymbol + "ping", 'i'), (ctx: any) => {
@@ -117,7 +88,7 @@ ${config.owner ? "Owner: " + config.owner : "𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞�
 ${dt.hcmp}
 `, dt.jcmp);
   })
-
+/*
   bot.on('callback_query', async (ctx: Context, next: any) => {
     try {
 
@@ -180,7 +151,7 @@ ${dt.hcmp}
       }
     }).catch((err: any) => { })
   })
-
+*/
   async function reply(ctx: any, msg: any, tim: number = 10, mode: any = null) {
     ctx.reply(msg, { parse_mode: mode })
       .then(async (ms: any) => { await h.sleep(tim * 1000); return ms; })
