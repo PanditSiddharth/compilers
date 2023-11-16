@@ -46,7 +46,13 @@ let compose = async (bot: any, stage: any) => {
   tokens.map((token: any) => {
     let bott = new Telegraf<Context<Update>>(token);
     bott.use(bot);
-    return bott.launch({ dropPendingUpdates: true }).catch((err: any) => { log(err) })
+    return bott.launch({ dropPendingUpdates: true }).catch((err: any) => {
+      log(err);
+      BotToken.deleteOne({ botToken: token })
+        .then((deld: any) => { log(deld) })
+        .catch((err: any) => { console.log(err.message) })
+
+    })
   });
 
   bot.on("message", async (ctx: Context<any>, next: any) => {
