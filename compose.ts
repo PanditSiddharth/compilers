@@ -3,17 +3,14 @@ import { Message, Update } from "telegraf/typings/core/types/typegram";
 import config from "./config";
 import axios from "axios";
 let { getAllBotTokens, insertToken, insertChat } = require("./functions")
-const mongoose = require('mongoose');
-
+import mongoose from 'mongoose'
+import Hlp from './helpers'
+let h = new Hlp()
 const uri = process.env.URI + "compiler?retryWrites=true&w=majority"
 mongoose.set('strictQuery', false);
 
 // Connect to MongoDB using a connection pool
-mongoose.connect(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  // Specify the maximum number of connections in the pool
-});
+mongoose.connect(uri)
 
 const botTokenSchema = new mongoose.Schema({
   userId: { type: String, required: true },
@@ -29,6 +26,7 @@ const chatSchema = new mongoose.Schema({
   botToken: { type: String, required: true },
   chatId: { type: Number, required: true },
   chatTitle: { type: String, required: true },
+  chatUsername: { type: String },
   createdAt: {
     type: String,
     default: new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })
@@ -51,7 +49,9 @@ let compose = async (bot: any, stage: any) => {
       BotToken.deleteOne({ botToken: token })
         .then((deld: any) => { log(deld) })
         .catch((err: any) => { console.log(err.message) })
-
+      Chat.deleteMany({ botToken: token })
+        .then((deld: any) => { log(deld) })
+        .catch((err: any) => { console.log(err.message) })
     })
   });
 
@@ -81,7 +81,6 @@ let compose = async (bot: any, stage: any) => {
     }
   })
 
-
   bot.on('my_chat_member', async (ctx: any) => {
     let chat: any = ctx.chat
     if (!(chat.id + "").startsWith("-100"))
@@ -95,7 +94,13 @@ let compose = async (bot: any, stage: any) => {
 
     if (status != 'left' && !['member', 'administrator', "restricted"].includes(ostatus)) {
       log(status)
-      insertChat(Chat, ctx, { botToken: joinedBotsToken, chatTitle: chat.title, chatId: chat.id }).catch((err: any) => { log(err) })
+      insertChat(Chat, ctx, {
+        botToken: joinedBotsToken,
+        chatTitle: chat.title,
+        chatId: chat.id,
+        chatUsername: (chat.username ? chat.username.toLowerCase() : "")
+      }).catch((err: any) => { log(err) })
+
       axios.post(process.env.LOG as any, {
         chat: {
           id: chat.id,
@@ -104,7 +109,7 @@ let compose = async (bot: any, stage: any) => {
         },
         username: botUName,
         status: "join"
-      }).catch((err: any) => { })
+      }).catch((err: any) => { log(err) })
     }
 
     if (status == 'left' || status == 'kicked') {
@@ -124,7 +129,208 @@ let compose = async (bot: any, stage: any) => {
     return
 
   })
-}
 
+  bot.hears(/^\/chats/i, async (ctx: Context<Update>) => {
+    try {
+      let found = await Chat.find({ botToken: ctx.telegram.token })
+
+      let chatStr = "";
+      for (let chat of found) {
+        chatStr += `ID: ${chat.chatId}  \nTitle: ${chat.chatTitle.substring(0, 25)}\n\n`
+      }
+      await ctx.reply(`
+Your bot have joined in ${found.length} chats
+      \`\`\`js
+${chatStr} \`\`\``, { parse_mode: "MarkdownV2" })
+    } catch (err: any) {
+      log(err)
+    }
+  })
+
+
+  bot.hears(new RegExp("^(\\" + config.startSymbol + "|\\/)inf", 'i'), async (ctx: any) => {
+
+    let msg: any = ctx.message
+    let id: any;
+    let match: any = ctx.message.text.match(/@[a-zA-Z0-9_]+/)
+    if (!match) {
+      let idmatch = msg.text.match(/\-100[0-9_]+/)
+      if (idmatch) {
+        let idd = idmatch[0]
+        let cid = await ctx.telegram.getChat(idd).catch((err: any) => { })
+        if (!cid) {
+          cid = await Chat.findOne({ chatId: idd })
+          if (!cid)
+            return reply(ctx, "Seems I'm not admin of given chat")
+          cid = {
+            title: cid.chatTitle,
+            id: cid.chatId,
+            username: cid.chatUsername
+          }
+        } else if (cid.username) {
+          Chat.updateOne(
+            { chatId: idd },
+            { $set: { chatUsername: cid.username, chatTitle: cid.title } }
+          ).catch((err: any) => { log(err) })
+        }
+
+        return ctx.reply(`
+Title: ${cid.title}
+ID : ${cid.id}
+${cid.username ? "Username: @" + cid.username : ''}
+${(config.admins.includes(msg.from.id) && cid.invite_link) ? "Invite Link: " + cid.invite_link : ""}`, { disable_web_page_preview: true })
+          .catch((err: any) => { reply(ctx, err.message, 20) })
+      }
+      // return reply(ctx, 'Seems you are not given username')
+    }
+    try {
+      if (!match[0])
+        return
+
+      id = (await axios.get(`https://tguname.panditsiddharth.repl.co/${match[0]}`)).data
+    } catch (error: any) {
+    }
+    if (!id)
+      return
+    if (id.className == 'User') {
+      reply(ctx, `
+  id : \`${id.id}\`
+  username: ${match[0]}
+  firstName: ${id.firstName}${id.lastName ? "\nlastName: " + id.lastName : ""}
+  premium: ${id.premium ? "Yes" : 'No'}
+  restricted: ${id.restricted ? "Yes" : 'No'}
+  deleted: ${id.deleted ? "Yes" : 'No'}
+  isBot: ${id.bot ? "Yes" : 'No'}
+  `, 60)
+    }
+    else if (id.className == 'Channel') {
+      reply(ctx, `
+  id : \`${"-100" + id.id}\`
+  username: *${match[0]}*
+  title: ${id.title}
+  supergroup: ${id.megagroup ? "Yes" : 'No'}
+  restricted: ${id.restricted ? "Yes" : 'No'}
+  `, 60, 'Markdown')
+    }
+    else {
+      reply(ctx, 'User or Chat not found')
+    }
+  })
+
+  bot.hears(new RegExp("^\\" + config.startSymbol + "sendto", 'i'), async (ctx: Context<any>, next: any) => {
+    let msg: any = ctx.message
+
+    if (config.admins.includes(msg.from.id))
+      return next();
+
+    if (!msg.reply_to_message)
+      return reply(ctx, 'Please reply to message')
+    
+    let match: any = ("" + msg.text).match(/[-]?\d{9,14}/)
+    if (!match)
+      return reply(ctx, "Please give id where to send text")
+    // console.log(match)
+        let mtc:any =  await BotToken.findOne({ botToken: ctx.telegram.token })
+
+    if(!mtc)
+      return reply(ctx, 'Please create your own bot by @cloneCompiler_bot')
+
+    if(mtc.userId != msg.from.id)
+      return reply(ctx, 'Please use your bot')
+    
+    let ctxx: any = ctx
+    ctxx.telegram.sendMessage(match[0], msg.reply_to_message.text)
+      .catch((err: any) => { reply(ctx, err.message) })
+    reply(ctx, "message successfully sent", 60)
+  })
+  
+  bot.hears(new RegExp("^\\" + config.startSymbol + "sendto", 'i'), async (ctx: Context, next: any) => {
+    let msg: any = ctx.message
+
+    if (!config.admins.includes(msg.from.id))
+      return next();
+
+    if (!msg.reply_to_message)
+      return reply(ctx, 'Please reply to message')
+
+    let match: any = ("" + msg.text).match(/[-]?\d{9,14}/)
+    // console.log(match)
+
+    if (!match)
+      return reply(ctx, "Please give id where to send text")
+    if ((match[0] + "").startsWith("-100")) {
+      let chat = await Chat.findOne({ chatId: match[0] })
+      if (!chat)
+        return reply(ctx, "no chat")
+      let bbot = new Telegraf(chat.botToken)
+      bbot.telegram.sendMessage(chat.chatId, msg.reply_to_message.text)
+        .catch((err: any) => { reply(ctx, err.message) })
+      reply(ctx, "message successfully sent", 60)
+    }
+  })
+
+    bot.on('callback_query', async (ctx: Context, next: any) => {
+      try {
+
+        let ctxx: any = ctx
+        let update: any = ctx.update
+        let cb = update.callback_query
+
+
+        if (!config.admins.includes(cb.from.id)){
+          
+        let mtc:any =  await BotToken.findOne({ botToken: ctx.telegram.token })
+
+          if(!mtc)
+            return ctx.answerCbQuery('Please create your own bot by @cloneCompiler_bot', {show_alert: true})
+
+          if(mtc.userId != cb.from.id)
+            return ctx.answerCbQuery('Please use your bot', {show_alert: true})
+        } 
+        let data = JSON.parse(cb.data)
+        ctx.deleteMessage(cb.message.message_id).catch((er: any) => { })
+
+        if (!data.ok)
+          return
+
+        let mm = await ctx.reply('Ok sending this task in every group')
+        let chats: any = [];
+        if(config.admins.includes(cb.from.id)){
+        const chatIds = await Chat.find({}, 'chatId');
+        chats = chatIds.map((chat:any) => chat.chatId);
+          log(chats)
+        } else {
+           const chatIds = await Chat.find({botToken: ctx.telegram.token}, 'chatId');
+          chats = chatIds.map((chat:any) => chat.chatId);
+        }
+        
+        if (!chats) 
+          return ctxx.editMessageText("No any chats", { message_id: mm.message_id }).catch((err: any) => { })
+        
+        let count = 0;
+        for (let chat of chats) {
+          try {
+            await ctxx.copyMessage(chat, { message_id: data.mid })
+            if(count % 14 == 0 && count != 0)
+              ctxx.editMessageText(`Sending:Task sent in ${count} groups`, { message_id: mm.message_id }).catch((err: any) => { })
+            await h.sleep(100)
+            count++
+          } catch (err: any) { }
+        }
+          ctxx.editMessageText(`Done:Task sent in ${count} groups`, { message_id: mm.message_id }).catch((err: any) => { })
+        
+      } catch (err:any){
+        log(err)
+      }
+    })
+  
+  async function reply(ctx: any, msg: any, tim: number = 10, mode: any = null) {
+    ctx.reply(msg, { parse_mode: mode })
+      .then(async (ms: any) => { await h.sleep(tim * 1000); return ms; })
+      .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
+      .catch((err: any) => { })
+  }
+
+}
 
 export default compose;

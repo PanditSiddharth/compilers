@@ -88,70 +88,22 @@ ${config.owner ? "Owner: " + config.owner : "𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞�
 ${dt.hcmp}
 `, dt.jcmp);
   })
-/*
-  bot.on('callback_query', async (ctx: Context, next: any) => {
-    try {
 
-      let ctxx: any = ctx
-      let update: any = ctx.update
-      let cb = update.callback_query
-      if (!cb.data.includes('task'))
-        return next()
-
-      if (!config.admins.includes(cb.from.id))
-        return ctx.answerCbQuery('You are not allowed', { show_alert: true })
-
-      let data = JSON.parse(cb.data)
-      ctx.deleteMessage(cb.message.message_id).catch((er: any) => { })
-
-      if (!data.ok)
-        return
-
-      let mm = await ctx.reply('Ok sending this task in every group')
-
-      let chats = await readJSON()
-
-      if (!chats) {
-        return ctxx.editMessageText("No any chats", { message_id: mm.message_id })
-          .catch((err: any) => { })
-      }
-
-      let ingroups = 0
-
-      for (let i = 0; i < chats.length; i++) {
-        try {
-          await ctxx.copyMessage(chats[i], { message_id: data.mid })
-          // console.log(readJSON())
-          ingroups++
-        } catch (err: any) { }
-      }
-      let cmpr = -11;
-      let intid = setInterval(() => {
-        if (cmpr == ingroups) {
-          clearTimeout(intid)
-          ctxx.editMessageText(`Task sent in ${ingroups} groups`, { message_id: mm.message_id }).catch((err: any) => { })
-        } else {
-          cmpr = ingroups
+    bot.hears(new RegExp("^\\" + config.startSymbol + "sendtask", 'i'), async (ctx: Context) => {
+      let msg: any = ctx.message
+      if (!msg.reply_to_message)
+        return ctx.reply("Please reply to Question")
+  
+      ctx.reply("क्या आप अपने होशो हवास में हैं ?", {
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: 'हाँ भाई हाँ', callback_data: JSON.stringify({ ok: true, action: "task", mid: msg.reply_to_message.message_id, userId: msg.from.id }) },
+            { text: 'नहीं', callback_data: JSON.stringify({ ok: false, action: "task" }) }]
+          ]
         }
-      }, 1000)
-    } catch (error: any) { console.log(error.message) }
-  })
-
-  bot.hears(new RegExp("^\\" + config.startSymbol + "sendtask", 'i'), async (ctx: Context) => {
-    let msg: any = ctx.message
-    if (!msg.reply_to_message)
-      return ctx.reply("Please reply to Question")
-
-    ctx.reply("क्या आप अपने होशो हवास में हैं ?", {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: 'हाँ भाई हाँ', callback_data: JSON.stringify({ ok: true, action: "task", mid: msg.reply_to_message.message_id }) },
-          { text: 'नहीं', callback_data: JSON.stringify({ ok: false, action: "task" }) }]
-        ]
-      }
-    }).catch((err: any) => { })
-  })
-*/
+      }).catch((err: any) => { })
+    })
+  
   async function reply(ctx: any, msg: any, tim: number = 10, mode: any = null) {
     ctx.reply(msg, { parse_mode: mode })
       .then(async (ms: any) => { await h.sleep(tim * 1000); return ms; })
@@ -162,82 +114,28 @@ ${dt.hcmp}
   let minf = `bot owner ${config.owner ? config.owner : "@PanditSiddharth"}
 ${config.channel + " " + config.group}`
 
-  bot.hears(new RegExp("^(\\" + config.startSymbol + "|\\/)inf", 'i'), async (ctx: any) => {
 
-    let msg: any = ctx.message
-    let id: any;
-    let match: any = ctx.message.text.match(/@[a-zA-Z0-9_]+/)
-    if (!match) {
-      let idmatch = msg.text.match(/\-100[0-9_]+/)
-      if (idmatch) {
-        let idd = idmatch[0]
-        let cid = await ctx.telegram.getChat(idd).catch((err: any) => { })
-        if (!cid)
-          return reply(ctx, "Seems I'm not admin of given chat")
-        return ctx.reply(`
-Title: ${cid.title}
-id : ${cid.id}
-${cid.username ? "Username: @" + cid.username : ''}
-${(config.admins.includes(msg.from.id) && cid.invite_link) ? "Invite Link: " + cid.invite_link : ""}`, { disable_web_page_preview: true })
-          .catch((err: any) => { reply(ctx, err.message, 20) })
-      }
-      // return reply(ctx, 'Seems you are not given username')
-    }
-    try {
-      if (!match[0])
-        return
+  // bot.hears(new RegExp("^\\" + config.startSymbol + "sendto", 'i'), async (ctx: Context, next: any) => {
+  //   let msg: any = ctx.message
 
-      id = (await axios.get(`https://tguname.panditsiddharth.repl.co/${match[0]}`)).data
-    } catch (error: any) {
-    }
-    if (!id)
-      return
-    if (id.className == 'User') {
-      reply(ctx, `
-id : \`${id.id}\`
-username: ${match[0]}
-firstName: ${id.firstName}${id.lastName ? "\nlastName: " + id.lastName : ""}
-premium: ${id.premium ? "Yes" : 'No'}
-restricted: ${id.restricted ? "Yes" : 'No'}
-deleted: ${id.deleted ? "Yes" : 'No'}
-isBot: ${id.bot ? "Yes" : 'No'}
-`, 60)
-    }
-    else if (id.className == 'Channel') {
-      reply(ctx, `
-id : \`${"-100" + id.id}\`
-username: *${match[0]}*
-title: ${id.title}
-supergroup: ${id.megagroup ? "Yes" : 'No'}
-restricted: ${id.restricted ? "Yes" : 'No'}
-`, 60, 'Markdown')
-    }
-    else {
-      reply(ctx, 'User or Chat not found')
-    }
-  })
+  //   if (config.admins.includes(msg.from.id))
+  //     return next();
 
+  //   if (!msg.reply_to_message)
+  //     return reply(ctx, 'Please reply to message')
 
-  bot.hears(new RegExp("^\\" + config.startSymbol + "sendto", 'i'), async (ctx: Context) => {
-    let msg: any = ctx.message
+  //   let match: any = ("" + msg.text).match(/[-]?\d{9,14}/)
+  //   // console.log(match)
 
-    if (!config.admins.includes(msg.from.id))
-      return reply(ctx, 'You are not allowed')
+  //   if (!match)
+  //     return reply(ctx, "Please give id where to send text")
+  //   let ctxx: any = ctx
+  //   ctxx.telegram.sendMessage(match[0], msg.reply_to_message.text)
+  //     .catch((err: any) => { reply(ctx, err.message) })
+  //   reply(ctx, "message successfully sent", 60)
+  // })
 
-    if (!msg.reply_to_message)
-      return reply(ctx, 'Please reply to message')
-
-    let match: any = ("" + msg.text).match(/[-]?\d{9,14}/)
-    // console.log(match)
-
-    if (!match)
-      return reply(ctx, "Please give id where to send text")
-    let ctxx: any = ctx
-    ctxx.telegram.sendMessage(match[0], msg.reply_to_message.text)
-      .catch((err: any) => { reply(ctx, err.message) })
-    reply(ctx, "message successfully sent", 60)
-  })
-
+  /*
   bot.hears(new RegExp("^\\" + config.startSymbol + "chats|count", 'i'), async (ctx: Context) => {
     let msg: any = ctx.message
     let id;
@@ -253,6 +151,8 @@ restricted: ${id.restricted ? "Yes" : 'No'}
     if (msg.text.startsWith(config.startSymbol + "count") && config.admins.includes(id))
       ctx.reply((await readJSON()).length + "").catch((err: any) => { })
   })
+  */
+
   // Function to write a new JSON object to the file
   function writeJSON(data: any) {
     db.set("ids", data)
