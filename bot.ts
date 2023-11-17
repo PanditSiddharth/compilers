@@ -89,20 +89,7 @@ ${dt.hcmp}
 `, dt.jcmp);
   })
 
-    bot.hears(new RegExp("^\\" + config.startSymbol + "sendtask", 'i'), async (ctx: Context) => {
-      let msg: any = ctx.message
-      if (!msg.reply_to_message)
-        return ctx.reply("Please reply to Question")
-  
-      ctx.reply("क्या आप अपने होशो हवास में हैं ?", {
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: 'हाँ भाई हाँ', callback_data: JSON.stringify({ ok: true, action: "task", mid: msg.reply_to_message.message_id, userId: msg.from.id }) },
-            { text: 'नहीं', callback_data: JSON.stringify({ ok: false, action: "task" }) }]
-          ]
-        }
-      }).catch((err: any) => { })
-    })
+ 
   
   async function reply(ctx: any, msg: any, tim: number = 10, mode: any = null) {
     ctx.reply(msg, { parse_mode: mode })
