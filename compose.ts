@@ -39,8 +39,9 @@ const messageSchema = new mongoose.Schema({
   chatId: { type: Number, required: true },
   chatText: { type: String },
   createdAt: {
-    type: String,
-    default: new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })
+    type: Date,
+    default: Date.now,
+    expires: 40 // Automatically delete documents after 40 seconds
   }
 });
 
@@ -334,10 +335,9 @@ ${(config.admins.includes(msg.from.id) && cid.invite_link) ? "Invite Link: " + c
       if (config.admins.includes(cb.from.id)) {
         chats = await Chat.find({}, 'chatId botToken');
         message = await Message.findOne({ userId: cb.from.id })
-        message = await Message.deleteOne({ userId: cb.from.id })
+        message = message.chatText;
+        Message.deleteOne({ userId: cb.from.id }).catch((arr: any) => { })
 
-        if (message)
-          message = message.chatText;
       } else {
         chats = await Chat.find({ botToken: ctx.telegram.token }, 'chatId');
       }
@@ -356,13 +356,13 @@ ${(config.admins.includes(msg.from.id) && cid.invite_link) ? "Invite Link: " + c
             break;
           let bottt = new Telegraf(chet.botToken)
           await h.sleep(100)
-          bottt.telegram.sendMessage(chet.chatId, message, { disable_web_page_preview: true }).catch((err: any) => { log(err.message) })
+          bottt.telegram.sendMessage(chet.chatId, message, { disable_web_page_preview: true }).catch((err: any) => { log(err.message); count--; })
 
         }
         count++
         if (count % 14 == 0 && count != 0)
           ctxx.editMessageText(`Sending:Task sent in ${count} groups`, { message_id: mm.message_id }).catch((err: any) => { console.log(err.message) })
-        await h.sleep(2000)
+        await h.sleep(1000)
       }
       ctxx.editMessageText(`Done:Task sent in ${count} groups`, { message_id: mm.message_id }).catch((err: any) => { })
 
