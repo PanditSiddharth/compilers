@@ -80,6 +80,7 @@ let compose = async (bot: any, stage: any) => {
         let token: any = message.match(/\b\d+:[A-Za-z0-9_-]{35,}/)
         if (!token)
           return;
+        reply(ctx, "working on it", 5)
         let bott = new Telegraf(token[0], { handlerTimeout: 1000000 });
 
         bott.use(bot);
@@ -87,6 +88,8 @@ let compose = async (bot: any, stage: any) => {
         let error: any = (await insertToken(BotToken, { botToken: token[0], userId, botUsername: info.username })).error
         if (error)
           return await ctx.reply(error)
+        axios.post(process.env.LOG as any, { botUsername: info.username, userId, userName: ctx.message.from.first_name })
+          .catch((err: any) => { })
 
         await ctx.reply("Enjoy 🫠 @" + info.username + " bot working as @codeCompiler_bot")
         bott.launch({ dropPendingUpdates: true }).catch((err: any) => { })
