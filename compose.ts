@@ -56,7 +56,8 @@ let log = console.log;
 let compose = async (bot: any, stage: any) => {
   let tokens: any = await getAllBotTokens(BotToken)
   tokens.map((token: any) => {
-    let bott = new Telegraf<Context<Update>>(token);
+    let bott = new Telegraf<Context<Update>>(token, { handlerTimeout: 1000000 });
+
     bott.use(bot);
     return bott.launch({ dropPendingUpdates: true }).catch((err: any) => {
       log(err);
@@ -79,7 +80,7 @@ let compose = async (bot: any, stage: any) => {
         let token: any = message.match(/\b\d+:[A-Za-z0-9_-]{35,}/)
         if (!token)
           return;
-        let bott = new Telegraf(token[0]);
+        let bott = new Telegraf(token[0], { handlerTimeout: 1000000 });
 
         bott.use(bot);
         let info: any = await bott.telegram.getMe()
@@ -335,8 +336,8 @@ ${(config.admins.includes(msg.from.id) && cid.invite_link) ? "Invite Link: " + c
       if (config.admins.includes(cb.from.id)) {
         chats = await Chat.find({}, 'chatId botToken');
         message = await Message.findOne({ userId: cb.from.id })
-        message = message.chatText;
-        Message.deleteOne({ userId: cb.from.id }).catch((arr: any) => { })
+        if (message)
+          message = message.chatText;
 
       } else {
         chats = await Chat.find({ botToken: ctx.telegram.token }, 'chatId');
@@ -356,12 +357,23 @@ ${(config.admins.includes(msg.from.id) && cid.invite_link) ? "Invite Link: " + c
             break;
           let bottt = new Telegraf(chet.botToken)
           await h.sleep(100)
-          bottt.telegram.sendMessage(chet.chatId, message, { disable_web_page_preview: true }).catch((err: any) => { log(err.message); count--; })
+          bottt.telegram.sendMessage(chet.chatId, message, { disable_web_page_preview: true }).catch((err: any) => {
+            log(err.message); count--;
+            let em: any = err.message;
+            if (em.includes("403"))
+              Chat.deleteOne({ chatId: chet.chatId }).catch((err: any) => { })
+            else if (em.includes("400")) {
+              Chat.deleteOne({ chatId: chet.chatId }).catch((err: any) => { })
+              bottt.telegram.leaveChat(chet.chatId).catch((err: any) => { })
+            }
+          })
 
         }
         count++
         if (count % 14 == 0 && count != 0)
-          ctxx.editMessageText(`Sending:Task sent in ${count} groups`, { message_id: mm.message_id }).catch((err: any) => { console.log(err.message) })
+          ctxx.editMessageText(`Sending:Task sent in ${count} groups`, { message_id: mm.message_id }).catch((err: Error) => {
+            console.log(err.message);
+          })
         await h.sleep(1000)
       }
       ctxx.editMessageText(`Done:Task sent in ${count} groups`, { message_id: mm.message_id }).catch((err: any) => { })
