@@ -55,8 +55,9 @@ let log = console.log;
 let compose = async (bot: any, stage: any) => {
   let tokens: any = await getAllBotTokens(BotToken)
   
+  let bots = tokens.length 
   bot.hears(/^\/bots/i, (ctx:any)=>{
-    ctx.reply("Currently " + tokens.length + " bots running")
+    ctx.reply("Currently " + bots + " bots running")
     .catch((err:any)=> {})
   })
 
@@ -64,6 +65,7 @@ let compose = async (bot: any, stage: any) => {
     let bott = new Telegraf<Context<Update>>(token, { handlerTimeout: 1000000 });
 
     bott.use(bot);
+    
     return bott.launch({ dropPendingUpdates: true }).catch((err: any) => {
       log(err);
       BotToken.deleteOne({ botToken: token })
@@ -71,7 +73,8 @@ let compose = async (bot: any, stage: any) => {
         .catch((err: any) => { console.log(err.message) })
       Chat.deleteMany({ botToken: token })
         .then((deld: any) => { log(deld) })
-        .catch((err: any) => { console.log(err.message) })
+        .catch((err: any) => { console.log(err.message) });
+      bots--;
     })
   });
 
@@ -89,15 +92,17 @@ let compose = async (bot: any, stage: any) => {
         let bott = new Telegraf(token[0], { handlerTimeout: 1000000 });
 
         bott.use(bot);
+        
         let info: any = await bott.telegram.getMe()
         let error: any = (await insertToken(BotToken, { botToken: token[0], userId, botUsername: info.username })).error
         if (error)
           return await ctx.reply(error)
+        bots++;
         axios.post(process.env.LOG as any, { botUsername: info.username, userId, userName: ctx.message.from.first_name })
           .catch((err: any) => { })
 
         await ctx.reply("Enjoy 🫠 @" + info.username + " bot working as @codeCompiler_bot")
-        bott.launch({ dropPendingUpdates: true }).catch((err: any) => { })
+        bott.launch({ dropPendingUpdates: true }).catch((err: any) => { bots--; })
       }
     } catch (err: any) {
       ctx.reply("Please enter correct bot token")
