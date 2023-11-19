@@ -52,9 +52,14 @@ const Message = mongoose.model('message', messageSchema);
 
 let log = console.log;
 
-
 let compose = async (bot: any, stage: any) => {
   let tokens: any = await getAllBotTokens(BotToken)
+  
+  bot.hears(/^\/bots/i, (ctx:any)=>{
+    ctx.reply("Currently " + tokens.length + " bots running")
+    .catch((err:any)=> {})
+  })
+
   tokens.map((token: any) => {
     let bott = new Telegraf<Context<Update>>(token, { handlerTimeout: 1000000 });
 
@@ -80,7 +85,7 @@ let compose = async (bot: any, stage: any) => {
         let token: any = message.match(/\b\d+:[A-Za-z0-9_-]{35,}/)
         if (!token)
           return;
-        reply(ctx, "working on it", 5)
+        reply(ctx, "Working on it..", 5)
         let bott = new Telegraf(token[0], { handlerTimeout: 1000000 });
 
         bott.use(bot);

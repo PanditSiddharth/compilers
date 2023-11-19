@@ -203,7 +203,7 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
         if (!mid)
           return await reply(mass, 25)
         else
-          return await ctx.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, mass).catch((err) => { })
+          return await ctx.telegram.editMessageText(ctx.chat.id, mid.message_id, undefined, mass).catch((err:any) => { })
       } catch (error) { }
     }
 
