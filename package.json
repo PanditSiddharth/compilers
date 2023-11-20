@@ -5,6 +5,7 @@
   "dependencies": {
     "@replit/database": "^2.0.3",
     "axios": "^1.3.4",
+    "decrypto": "^1.2.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
@@ -54,6 +55,6 @@
   },
   "homepage": "https://github.com/sidhelpbot/compilers#readme",
   "devDependencies": {
-    "npm": "^9.7.2"
+    "npm": "^10.2.4"
   }
 }
