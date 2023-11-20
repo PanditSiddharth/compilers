@@ -267,6 +267,7 @@ let terminate = async (slow: any = true) => {
   if (slow)
     await h.sleep(200)
   firstlistener = true
+  if(node && node.stdin)
   node.stdin.end()
   try {
     // node.stdin.pause()

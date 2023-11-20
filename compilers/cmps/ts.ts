@@ -139,7 +139,8 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
             mid = await ctx.reply("" + editedMes + " ```", { parse_mode: "MarkdownV2" })
           else
             await edit(mid.message_id, editedMes)
-          console.log(ctxx.message.text)
+          
+  if(node && node.stdin)
           await node.stdin.write(ctxx.message.text + "\n")
 
           node.stdin.end()
