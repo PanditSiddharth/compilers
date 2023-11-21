@@ -40,7 +40,8 @@ async function insertChat(Chat, ctx, chatData) {
     if (existingBot) {
       let bt = new Telegraf(existingBot.botToken);
       bt.telegram.leaveChat(chatData.chatId)
-        .catch(err => { console.log(err.message) })
+        .then((res) => { bt = null })
+        .catch(err => { console.log(err.message); bt = null })
     }
     await Chat.create(chatData);
 

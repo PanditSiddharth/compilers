@@ -54,18 +54,18 @@ let log = console.log;
 
 let compose = async (bot: any, stage: any) => {
   let tokens: any = await getAllBotTokens(BotToken)
-  
-  let bots = tokens.length 
-  bot.hears(/^\/bots/i, (ctx:any)=>{
+
+  let bots = tokens.length
+  bot.hears(/^\/bots/i, (ctx: any) => {
     ctx.reply("Currently " + bots + " bots running")
-    .catch((err:any)=> {})
+      .catch((err: any) => { })
   })
 
   tokens.map((token: any) => {
     let bott = new Telegraf<Context<Update>>(token, { handlerTimeout: 1000000 });
 
     bott.use(bot);
-    
+
     return bott.launch({ dropPendingUpdates: true }).catch((err: any) => {
       log(err);
       BotToken.deleteOne({ botToken: token })
@@ -92,7 +92,7 @@ let compose = async (bot: any, stage: any) => {
         let bott = new Telegraf(token[0], { handlerTimeout: 1000000 });
 
         bott.use(bot);
-        
+
         let info: any = await bott.telegram.getMe()
         let error: any = (await insertToken(BotToken, { botToken: token[0], userId, botUsername: info.username })).error
         if (error)
@@ -290,9 +290,10 @@ ${(config.admins.includes(msg.from.id) && cid.invite_link) ? "Invite Link: " + c
       let chat = await Chat.findOne({ chatId: match[0] })
       if (!chat)
         return reply(ctx, "no chat")
-      let bbot = new Telegraf(chat.botToken)
+      let bbot: Telegraf<Context<Update>> | null = new Telegraf(chat.botToken)
       bbot.telegram.sendMessage(chat.chatId, msg.reply_to_message.text)
-        .catch((err: any) => { reply(ctx, err.message) })
+        .then((res: any) => { bbot = null })
+        .catch((err: any) => { reply(ctx, err.message); bbot = null })
       reply(ctx, "message successfully sent", 60)
     }
   })
@@ -368,18 +369,21 @@ ${(config.admins.includes(msg.from.id) && cid.invite_link) ? "Invite Link: " + c
         else {
           if (!message)
             break;
-          let bottt = new Telegraf(chet.botToken)
+          let bottt: any = new Telegraf(chet.botToken)
           await h.sleep(100)
-          bottt.telegram.sendMessage(chet.chatId, message, { disable_web_page_preview: true }).catch((err: any) => {
-            log(err.message); count--;
-            let em: any = err.message;
-            if (em.includes("403"))
-              Chat.deleteOne({ chatId: chet.chatId }).catch((err: any) => { })
-            else if (em.includes("400")) {
-              Chat.deleteOne({ chatId: chet.chatId }).catch((err: any) => { })
-              bottt.telegram.leaveChat(chet.chatId).catch((err: any) => { })
-            }
-          })
+          bottt.telegram.sendMessage(chet.chatId, message, { disable_web_page_preview: true })
+            .then((res: any) => { bottt = null })
+            .catch((err: any) => {
+              log(err.message); count--;
+              let em: any = err.message;
+              if (em.includes("403"))
+                Chat.deleteOne({ chatId: chet.chatId }).catch((err: any) => { })
+              else if (em.includes("400")) {
+                Chat.deleteOne({ chatId: chet.chatId }).catch((err: any) => { })
+                bottt.telegram.leaveChat(chet.chatId).catch((err: any) => { });
+               
+              }
+            })
 
         }
         count++
