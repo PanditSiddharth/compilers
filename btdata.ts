@@ -99,5 +99,6 @@ export let jcmp = {
       [[ob("Utility", "util"), ob("Admin", "admin"), ob("toReal", "real")], [
         ob("Close", "close")
       ]]
-  }
+  }, 
+  disable_web_page_preview: true
 }

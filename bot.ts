@@ -86,7 +86,10 @@ ${config.owner ? "Owner: " + config.owner : "𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞�
     ctx.reply(`𝗥𝗲𝗮𝗹𝘁𝗶𝗺𝗲 𝗶/𝗼 𝗰𝗼𝗺𝗽𝗶𝗹𝗲𝗿 𝗯𝗼𝘁
 
 ${dt.hcmp}
+
+${ (ctx.chat.type == "private" )? "Create Your Own Compiler bot just by sending bot token in @CloneCompiler_bot\n\nSee more: https://t.me/logicBots/174": ""}
 `, dt.jcmp);
+    
   })
 
  
