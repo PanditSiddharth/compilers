@@ -136,11 +136,10 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     let mas: any = code.replace('\\', '')
     let reg = /\s(chmod|rm|shutil|rmtree|mkdir|rename|spawn|system|subprocess|open|delete|rmdir)/gi
     if (("" + mas).match(reg)) {
-      ctx.reply('Some error').catch((er: any) => { })
+      ctx.reply('Some error').catch(h.er)
       console.log("terminate from 133")
 
       terminate()
-      ctx.reply(`id: ${fromId}\nName: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\n` + mas, { chat_id: config.ownerId })
       return ctx.scene.leave()
     }
 
@@ -190,7 +189,7 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
           .then(async (mmm: any) => {
             await h.sleep(30000);
             ctx.deleteMessage(mmm).catch(() => { })
-          }).catch(() => { })
+          }).catch(h.er)
 
       }
 
@@ -267,8 +266,8 @@ let terminate = async (slow: any = true) => {
   if (slow)
     await h.sleep(200)
   firstlistener = true
-  if(node && node.stdin)
-  node.stdin.end()
+  if (node && node.stdin)
+    node.stdin.end()
   try {
     // node.stdin.pause()
     clearTimeout(timid)

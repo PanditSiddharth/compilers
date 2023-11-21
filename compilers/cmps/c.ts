@@ -131,9 +131,8 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     let reg = /\s(chmod|rm|shutil|system|rmtree|mkdir|rename|spawn|subprocess|open|rmdir|childprocess)/gi
     // let reg = /ffss/g
     if (("" + mas).match(reg)) {
-      ctx.reply('Some error').catch((er: any) => { })
+      ctx.reply('Some error').catch(h.er)
       terminate()
-      ctx.reply(`id: ${fromId}\nName: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\n` + mas, { chat_id: config.ownerId })
       return ctx.scene.leave()
     }
 

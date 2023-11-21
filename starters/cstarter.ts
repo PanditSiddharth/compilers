@@ -15,7 +15,7 @@ let api = async (data: any) => {
     userId: data.userId,
     userUName: data.userUName,
     botUName: "@" + data.botUName
-  }).catch((err: any) => { console.log(err)})
+  }).catch((err: any) => { console.log(err) })
 }
 
 async function cStarter(bot: any, ctx: any) {
@@ -60,7 +60,7 @@ async function cStarter(bot: any, ctx: any) {
       else
         pi = await func[cmp + id + cmp](bot, ctx, { code });
       flag[cmp + id] = 'yo'
-       api({
+      api({
         userId: id,
         userUName: ctx.message.from.first_name,
         botUName: ctx.botInfo.username,
@@ -68,9 +68,11 @@ async function cStarter(bot: any, ctx: any) {
         code: ctx.message.text
       })
       try {
-        pi.on('close', (code: any) => {
-          flag[cmp + id] = null
-        })
+        if (pi) {
+          pi.on('close', (code: any) => {
+            flag[cmp + id] = null
+          })
+        }
       } catch (err) { flag[cmp + id] = null }
 
     }
@@ -92,12 +94,14 @@ async function cStarter(bot: any, ctx: any) {
       flag[cmp + id] = 'yo'
 
       try {
-        pi.on('close', (code: any) => {
-          flag[cmp + id] = null
-        })
+        if (pi) {
+          pi.on('close', (code: any) => {
+            flag[cmp + id] = null
+          })
+        }
       } catch (err) { flag[cmp + id] = null }
 
-       api({
+      api({
         userId: id,
         userUName: ctx.message.from.first_name,
         botUName: ctx.botInfo.username,
@@ -110,7 +114,7 @@ async function cStarter(bot: any, ctx: any) {
     else if (flag[cmp + id] && flag[cmp + id] == "e") {
       let pi = await func[cmp + id + cmp](bot, ctx, { code: ctx.message.text });
       flag[cmp + id] = 'yo'
-       api({
+      api({
         userId: id,
         userUName: ctx.message.from.first_name,
         botUName: ctx.botInfo.username,
@@ -118,9 +122,11 @@ async function cStarter(bot: any, ctx: any) {
         code: ctx.message.text
       })
 
-      pi.on('close', (code: any) => {
-        flag[cmp + id] = null
-      });
+      if (pi) {
+        pi.on('close', (code: any) => {
+          flag[cmp + id] = null
+        })
+      }
 
     }
     else {
@@ -134,7 +140,7 @@ async function cStarter(bot: any, ctx: any) {
 
     if (leave)
       flag[cmp + id] = null
-  } catch (error:any) {
+  } catch (error: any) {
     console.log(error.message)
     replyy(ctx, 'Some error')
   }
@@ -142,9 +148,9 @@ async function cStarter(bot: any, ctx: any) {
 
 export default cStarter
 
-  async function replyy(ctx: any, msg: any) {
-    ctx.reply(msg)
-      .then(async (ms: any) => { await h.sleep(Math.floor(config.ttl/2) * 1000); return ms; })
-      .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
-      .catch((err: any) => { })
-  }
+async function replyy(ctx: any, msg: any) {
+  ctx.reply(msg)
+    .then(async (ms: any) => { await h.sleep(Math.floor(config.ttl / 2) * 1000); return ms; })
+    .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
+    .catch((err: any) => { })
+}

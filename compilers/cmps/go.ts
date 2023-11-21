@@ -122,7 +122,6 @@ let goyoyogo = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     if (("" + mas).match(reg)) {
       ctx.reply('Some error').catch((er: any) => { })
       terminate()
-      ctx.reply(`id: ${fromId}\nName: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\n` + mas, { chat_id: config.ownerId })
       return ctx.scene.leave()
     }
 

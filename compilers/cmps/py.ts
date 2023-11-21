@@ -190,7 +190,7 @@ Only valid for ${ctx.message.from.first_name}`, {
             [{ text: "Excecute", url: "t.me/python_0bot?start=run" }]
           ]
         }
-      })
+      }).catch(h.er)
       h.sleep(config.ttl * 500)
         .then(() => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
 
@@ -243,7 +243,7 @@ Only valid for ${ctx.message.from.first_name}`, {
           .then(async (mmm: any) => {
             await h.sleep(30000);
             ctx.deleteMessage(mmm).catch(() => { })
-          }).catch(() => { })
+          }).catch(h.er)
 
       }
 

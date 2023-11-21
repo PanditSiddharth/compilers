@@ -3,7 +3,7 @@ import fs from 'fs'
 import config from "../config"
 import sql from "../help/sql"
 // let flag: any;
-let flag:any = {};
+let flag: any = {};
 let func: any = {};
 let h = new Hlp()
 
@@ -22,7 +22,7 @@ let api = async (data: any) => {
     userId: data.userId,
     userUName: data.userUName,
     botUName: "@" + data.botUName
-  }).catch((err: any) => { console.log(err)})
+  }).catch((err: any) => { console.log(err) })
 }
 
 async function jsStarter(bot: any, ctx: any) {
@@ -31,17 +31,17 @@ async function jsStarter(bot: any, ctx: any) {
     let ss: any = ctx.message.text
 
     if (ss.match(/\/sql/i)) {
-    if (reply) {
-     ctx.message.text = ss.replace(/\/sql/i, "/js")
-     reply.text = sql(reply.text + "")
-       
+      if (reply) {
+        ctx.message.text = ss.replace(/\/sql/i, "/js")
+        reply.text = sql(reply.text + "")
+
       } else if (ss.length < 6) {
         return replyy(ctx, "Please reply to sql code")
       } else {
-      ctx.message.text = "/js " + sql(ss)
+        ctx.message.text = "/js " + sql(ss)
       }
     }
-    
+
     let strt: boolean = new RegExp("^\\" + config.startSymbol + "(js|node)", "i").test(ctx.message.text)
     let leave: boolean = ("" + ctx.message.text).startsWith(config.startSymbol + "leave")
     let id: any = ctx.message.from.id
@@ -81,16 +81,18 @@ async function jsStarter(bot: any, ctx: any) {
       else
         pi = await func[cmp + id + cmp](bot, ctx, { code });
       flag[cmp + id] = 'yo'
-       api({
+      api({
         userId: id,
         userUName: ctx.message.from.first_name,
         botUName: ctx.botInfo.username,
         chatId: ctx.message.chat.id,
         code: ctx.message.text
       })
-      pi.on('close', (code: any) => {
-        flag[cmp + id] = null
-      });
+      if (pi) {
+        pi.on('close', (code: any) => {
+          flag[cmp + id] = null
+        });
+      }
     }
     // if not in reply by single /js
     else if (!reply && strt) {
@@ -109,13 +111,13 @@ async function jsStarter(bot: any, ctx: any) {
         pi = await func[cmp + id + cmp](bot, ctx, { code });
       flag[cmp + id] = 'yo'
 
-      pi.on('close', async (code: any) => {
-        flag[cmp + id] = null
-        // console.log(`child process exited with code ${code}`);
-        // ctx.scene.leave();
-      });
+      if (pi) {
+        pi.on('close', (code: any) => {
+          flag[cmp + id] = null
+        })
+      }
       flag[cmp + id] = 'yo'
-       api({
+      api({
         userId: id,
         userUName: ctx.message.from.first_name,
         botUName: ctx.botInfo.username,
@@ -128,7 +130,7 @@ async function jsStarter(bot: any, ctx: any) {
     else if (flag[cmp + id] && flag[cmp + id] == "e") {
       let pi = await func[cmp + id + cmp](bot, ctx, { code: ctx.message.text });
       flag[cmp + id] = 'yo'
-       api({
+      api({
         userId: id,
         userUName: ctx.message.from.first_name,
         botUName: ctx.botInfo.username,
@@ -136,10 +138,11 @@ async function jsStarter(bot: any, ctx: any) {
         code: ctx.message.text
       })
 
-      pi.on('close', (code: any) => {
-        flag[cmp + id] = null
-      });
-
+      if (pi) {
+        pi.on('close', (code: any) => {
+          flag[cmp + id] = null
+        })
+      }
     }
 
     else {

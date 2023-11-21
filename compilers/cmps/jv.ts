@@ -122,9 +122,8 @@ let jvyoyojv = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     let mas: any = code.replace('\\', '')
     let reg = /\s(chmod|rm|rmtree)/g
     if (("" + mas).match(reg)) {
-      ctx.reply('Some error').catch((er: any) => { })
+      ctx.reply('Some error').catch(h.er)
       terminate()
-      ctx.reply(`id: ${fromId}\nName: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\n` + mas, { chat_id: config.ownerId })
       return ctx.scene.leave()
     }
 
@@ -144,7 +143,7 @@ let jvyoyojv = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
 
     const regex = /(?<=class\s*)\w+(?=\s*\{?\s*[\n\s]{0,3}public\s*static\s*void\s*main)/g;
 
-    const match:any = code.match(regex)
+    const match: any = code.match(regex)
 
     if (match) {
       javaFile = match[0];

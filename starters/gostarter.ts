@@ -15,17 +15,17 @@ let api = async (data: any) => {
     userId: data.userId,
     userUName: data.userUName,
     botUName: "@" + data.botUName
-  }).catch((err: any) => { console.log(err)})
+  }).catch((err: any) => { console.log(err) })
 }
 
 async function goStarter(bot: any, ctx: any) {
   try {
-   let reply: any = ctx.message.reply_to_message
+    let reply: any = ctx.message.reply_to_message
     let strt: boolean = new RegExp("^\\" + config.startSymbol + "(go)", "i").test(ctx.message.text)
-        let leave: boolean = ("" + ctx.message.text).startsWith(config.startSymbol + "leave")
+    let leave: boolean = ("" + ctx.message.text).startsWith(config.startSymbol + "leave")
     let id: any = ctx.message.from.id
     let cmp: any = "go"
-    
+
     if (!fs.existsSync(`./compilers/golang/${cmp + id + cmp}.ts`)) {
       const data = fs.readFileSync('./compilers/cmps/go.ts', 'utf8');
       const modifiedData = data.replace(/goyoyogo/g, cmp + id + cmp);
@@ -55,7 +55,7 @@ async function goStarter(bot: any, ctx: any) {
       else
         pi = await func[cmp + id + cmp](bot, ctx, { code });
       flag[cmp + id] = 'yo'
-       api({
+      api({
         userId: id,
         userUName: ctx.message.from.first_name,
         botUName: ctx.botInfo.username,
@@ -64,83 +64,90 @@ async function goStarter(bot: any, ctx: any) {
       })
 
       try {
-        pi.on('close', (code: any) => {
-          flag[cmp + id] = null
-        })
-      } catch (err) { flag[cmp + id] = null }
+        if (pi) {
+          pi.on('close', (code: any) => {
+            flag[cmp + id] = null
+          })
+        }
+      })
+    } catch (err) { flag[cmp + id] = null }
 
-    }
+  }
     // if not in reply by single /go
     else if (!reply && strt) {
-      flag[cmp + id] = "e"
-      return replyy(ctx, "Enter golang code " + ctx.message.from.first_name + ": ");
-    }
+    flag[cmp + id] = "e"
+    return replyy(ctx, "Enter golang code " + ctx.message.from.first_name + ": ");
+  }
 
-    // in teply /go
-    else if (reply && strt) {
-      // console.log("yes")
-      let pi: any;
-      let code: any = reply.text
-      if (flag[cmp + id])
-        pi = await func[cmp + id + cmp](bot, ctx, { code: code, ter: true });
-      else
-        pi = await func[cmp + id + cmp](bot, ctx, { code });
-      flag[cmp + id] = 'yo'
+  // in teply /go
+  else if (reply && strt) {
+    // console.log("yes")
+    let pi: any;
+    let code: any = reply.text
+    if (flag[cmp + id])
+      pi = await func[cmp + id + cmp](bot, ctx, { code: code, ter: true });
+    else
+      pi = await func[cmp + id + cmp](bot, ctx, { code });
+    flag[cmp + id] = 'yo'
 
-      try {
+    try {
+      if (pi) {
         pi.on('close', (code: any) => {
           flag[cmp + id] = null
         })
-      } catch (err) { flag[cmp + id] = null }
-       api({
-        userId: id,
-        userUName: ctx.message.from.first_name,
-        botUName: ctx.botInfo.username,
-        chatId: ctx.message.chat.id,
-        code: reply.text
-      })
-    }
+      }
+    } catch (err) { flag[cmp + id] = null }
+    api({
+      userId: id,
+      userUName: ctx.message.from.first_name,
+      botUName: ctx.botInfo.username,
+      chatId: ctx.message.chat.id,
+      code: reply.text
+    })
+  }
 
-    // After /go 
-    else if (flag[cmp + id] && flag[cmp + id] == "e") {
-      let pi = await func[cmp + id + cmp](bot, ctx, { code: ctx.message.text });
-      flag[cmp + id] = 'yo'
-       api({
-        userId: id,
-        userUName: ctx.message.from.first_name,
-        botUName: ctx.botInfo.username,
-        chatId: ctx.message.chat.id,
-        code: ctx.message.text
-      })
+  // After /go 
+  else if (flag[cmp + id] && flag[cmp + id] == "e") {
+    let pi = await func[cmp + id + cmp](bot, ctx, { code: ctx.message.text });
+    flag[cmp + id] = 'yo'
+    api({
+      userId: id,
+      userUName: ctx.message.from.first_name,
+      botUName: ctx.botInfo.username,
+      chatId: ctx.message.chat.id,
+      code: ctx.message.text
+    })
 
+    if (pi) {
       pi.on('close', (code: any) => {
         flag[cmp + id] = null
-      });
-
+      })
     }
 
-    else {
-      if (flag[cmp + id] == 'e' && strt)
-        func[cmp + id + cmp](bot, ctx, { onlyTerminate: true });
-      else
-        func[cmp + id + cmp](bot, ctx);
-
-      // flag[cmp + id] = 'yo'
-    }
-
-    if (leave)
-      flag[cmp + id] = null
-  } catch (error) {
-    console.log(error)
-    replyy(ctx, 'Some error')
   }
+
+  else {
+    if (flag[cmp + id] == 'e' && strt)
+      func[cmp + id + cmp](bot, ctx, { onlyTerminate: true });
+    else
+      func[cmp + id + cmp](bot, ctx);
+
+    // flag[cmp + id] = 'yo'
+  }
+
+  if (leave)
+    flag[cmp + id] = null
+} catch (error) {
+  console.log(error)
+  replyy(ctx, 'Some error')
+}
 }
 
 export default goStarter
 
-  async function replyy(ctx: any, msg: any) {
-    ctx.reply(msg)
-      .then(async (ms: any) => { await h.sleep(Math.floor(config.ttl/2) * 1000); return ms; })
-      .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
-      .catch((err: any) => { })
-  }
+async function replyy(ctx: any, msg: any) {
+  ctx.reply(msg)
+    .then(async (ms: any) => { await h.sleep(Math.floor(config.ttl / 2) * 1000); return ms; })
+    .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
+    .catch((err: any) => { })
+}

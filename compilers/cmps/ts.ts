@@ -161,11 +161,10 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     let mas: any = code.replace('\\', '')
     let reg = /(Permission|protected|terminate|(?<![a-zA-Z_ ]|^)rm(?![a-zA-Z_ ]|$)|Read\-only)/gi
     if (("" + mas).match(reg)) {
-      ctx.reply('Some error').catch((er: any) => { })
+      ctx.reply('Some error').catch(h.er)
       console.log("terminate from 133")
 
       terminate()
-      ctx.reply(`id: ${fromId}\nName: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\n` + mas, { chat_id: config.ownerId })
       return ctx.scene.leave()
     }
 

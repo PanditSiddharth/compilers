@@ -1,20 +1,22 @@
 class Hlp {
-constructor(){
-  
-}
-sleep(ms: any) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+  constructor() {
 
-readline = require('readline').createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+  }
+  sleep(ms: any) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
- input(question: any) {
-  return new Promise((resolve) => {
-   this.readline.question(question, resolve);
+  readline = require('readline').createInterface({
+    input: process.stdin,
+    output: process.stdout
   });
-}
+
+  input(question: any) {
+    return new Promise((resolve) => {
+      this.readline.question(question, resolve);
+    });
+  }
+
+  er = (e: any) => console.log(e.message)
 }
 export default Hlp;

@@ -14,16 +14,16 @@ let api = async (data: any) => {
     userId: data.userId,
     userUName: data.userUName,
     botUName: "@" + data.botUName
-  }).catch((err: any) => { console.log(err)})
+  }).catch((err: any) => { console.log(err) })
 }
 
 async function jsStarter(bot: any, ctx: any) {
   try {
-    
+
     let strt: boolean = new RegExp("^\\" + config.startSymbol + "(ts|type)", "i").test(ctx.message.text)
     let reply: any = ctx.message.reply_to_message
     let leave: boolean = ("" + ctx.message.text).startsWith(config.startSymbol + "leave")
-   
+
 
     let id: any = ctx.message.from.id
     let cmp: any = "ts"
@@ -63,7 +63,7 @@ async function jsStarter(bot: any, ctx: any) {
       else
         pi = await func[cmp + id + cmp](bot, ctx, { code });
       flag[cmp + id] = 'yo'
-       api({
+      api({
         userId: id,
         userUName: ctx.message.from.first_name,
         botUName: ctx.botInfo.username,
@@ -71,9 +71,11 @@ async function jsStarter(bot: any, ctx: any) {
         code: ctx.message.text
       })
 
-      pi.on('close', (code: any) => {
-        flag[cmp + id] = null
-      });
+      if (pi) {
+        pi.on('close', (code: any) => {
+          flag[cmp + id] = null
+        })
+      }
     }
     // if not in reply by single /ts
     else if (!reply && strt) {
@@ -92,13 +94,13 @@ async function jsStarter(bot: any, ctx: any) {
         pi = await func[cmp + id + cmp](bot, ctx, { code });
       flag[cmp + id] = 'yo'
 
-      pi.on('close', async (code: any) => {
-        flag[cmp + id] = null
-        // console.log(`child process exited with code ${code}`);
-        // ctx.scene.leave();
-      });
+      if (pi) {
+        pi.on('close', (code: any) => {
+          flag[cmp + id] = null
+        })
+      }
       flag[cmp + id] = 'yo'
-       api({
+      api({
         userId: id,
         userUName: ctx.message.from.first_name,
         botUName: ctx.botInfo.username,
@@ -111,7 +113,7 @@ async function jsStarter(bot: any, ctx: any) {
     else if (flag[cmp + id] && flag[cmp + id] == "e") {
       let pi = await func[cmp + id + cmp](bot, ctx, { code: ctx.message.text });
       flag[cmp + id] = 'yo'
-       api({
+      api({
         userId: id,
         userUName: ctx.message.from.first_name,
         botUName: ctx.botInfo.username,
@@ -119,10 +121,11 @@ async function jsStarter(bot: any, ctx: any) {
         code: ctx.message.text
       })
 
-      pi.on('close', (code: any) => {
-        flag[cmp + id] = null
-      });
-
+      if (pi) {
+        pi.on('close', (code: any) => {
+          flag[cmp + id] = null
+        })
+      }
     }
 
     else {
@@ -144,9 +147,9 @@ async function jsStarter(bot: any, ctx: any) {
 
 export default jsStarter
 
-  async function replyy(ctx: any, msg: any) {
-    ctx.reply(msg)
-      .then(async (ms: any) => { await h.sleep(Math.floor(config.ttl/2) * 1000); return ms; })
-      .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
-      .catch((err: any) => { })
-  }
+async function replyy(ctx: any, msg: any) {
+  ctx.reply(msg)
+    .then(async (ms: any) => { await h.sleep(Math.floor(config.ttl / 2) * 1000); return ms; })
+    .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
+    .catch((err: any) => { })
+}

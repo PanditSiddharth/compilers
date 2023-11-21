@@ -14,19 +14,19 @@ let api = async (data: any) => {
     userId: data.userId,
     userUName: data.userUName,
     botUName: "@" + data.botUName
-  }).catch((err: any) => { console.log(err)})
+  }).catch((err: any) => { console.log(err) })
 }
 
 async function jvStarter(bot: any, ctx: any) {
   try {
-        let reply: any = ctx.message.reply_to_message
+    let reply: any = ctx.message.reply_to_message
     let strt: boolean = new RegExp("^\\" + config.startSymbol + "(jv|java)", "i").test(ctx.message.text)
-    
-  let leave: boolean = ("" + ctx.message.text).startsWith(config.startSymbol + "leave")
+
+    let leave: boolean = ("" + ctx.message.text).startsWith(config.startSymbol + "leave")
     let id: any = ctx.message.from.id
     let cmp: any = "jv"
 
-    
+
     if (!fs.existsSync(`./compilers/java/${cmp + id + cmp}.ts`)) {
       const data = fs.readFileSync('./compilers/cmps/jv.ts', 'utf8');
       const modifiedData = data.replace(/jvyoyojv/g, cmp + id + cmp);
@@ -61,7 +61,7 @@ async function jvStarter(bot: any, ctx: any) {
       else
         pi = await func[cmp + id + cmp](bot, ctx, { code });
       flag[cmp + id] = 'yo'
-       api({
+      api({
         userId: id,
         userUName: ctx.message.from.first_name,
         botUName: ctx.botInfo.username,
@@ -70,9 +70,11 @@ async function jvStarter(bot: any, ctx: any) {
       })
 
       try {
-        pi.on('close', (code: any) => {
-          flag[cmp + id] = null
-        })
+        if (pi) {
+          pi.on('close', (code: any) => {
+            flag[cmp + id] = null
+          })
+        }
       } catch (err) { flag[cmp + id] = null }
 
     }
@@ -94,12 +96,14 @@ async function jvStarter(bot: any, ctx: any) {
       flag[cmp + id] = 'yo'
 
       try {
-        pi.on('close', (code: any) => {
-          flag[cmp + id] = null
-        })
+        if (pi) {
+          pi.on('close', (code: any) => {
+            flag[cmp + id] = null
+          })
+        }
       } catch (err) { flag[cmp + id] = null }
 
-       api({
+      api({
         userId: id,
         userUName: ctx.message.from.first_name,
         botUName: ctx.botInfo.username,
@@ -112,7 +116,7 @@ async function jvStarter(bot: any, ctx: any) {
     else if (flag[cmp + id] && flag[cmp + id] == "e") {
       let pi = await func[cmp + id + cmp](bot, ctx, { code: ctx.message.text });
       flag[cmp + id] = 'yo'
-       api({
+      api({
         userId: id,
         userUName: ctx.message.from.first_name,
         botUName: ctx.botInfo.username,
@@ -120,9 +124,11 @@ async function jvStarter(bot: any, ctx: any) {
         code: ctx.message.text
       })
 
-      pi.on('close', (code: any) => {
-        flag[cmp + id] = null
-      });
+      if (pi) {
+        pi.on('close', (code: any) => {
+          flag[cmp + id] = null
+        })
+      }
 
     }
 
@@ -145,9 +151,9 @@ async function jvStarter(bot: any, ctx: any) {
 
 export default jvStarter
 
-  async function replyy(ctx: any, msg: any) {
-    ctx.reply(msg)
-      .then(async (ms: any) => { await h.sleep(Math.floor(config.ttl/2) * 1000); return ms; })
-      .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
-      .catch((err: any) => { })
-  }
+async function replyy(ctx: any, msg: any) {
+  ctx.reply(msg)
+    .then(async (ms: any) => { await h.sleep(Math.floor(config.ttl / 2) * 1000); return ms; })
+    .then(async (ms: any) => { ctx.deleteMessage(ms.message_id).catch((err: any) => { }) })
+    .catch((err: any) => { })
+}
