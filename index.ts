@@ -35,8 +35,10 @@ let func: any = {};
 
 // Helper function which replace bot username if exists in command
 function cmdd(ctx: any) {
+  if(ctx.message && ctx.message.text){
   ctx.message.text = ctx.message.text.replace(new RegExp("^\\" + config.startSymbol + "[a-zA-Z0-9]{2,9}@" + ctx.botInfo.username, 'i'),
     (match: any) => match.replace("@" + ctx.botInfo.username, ""))
+  }
 }
 
 // All scenes 
