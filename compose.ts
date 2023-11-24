@@ -8,7 +8,9 @@ import Hlp from './helpers'
 let h = new Hlp()
 const uri = process.env.URI + "compiler?retryWrites=true&w=majority"
 mongoose.set('strictQuery', false);
+import express from "express";
 
+const app: any = express();
 // Connect to MongoDB using a connection pool
 mongoose.connect(uri)
 
@@ -34,7 +36,7 @@ const chatSchema = new mongoose.Schema({
 });
 
 const messageSchema = new mongoose.Schema({
-  botToken: { type: String, required: true },
+  botToken: { type: String, required: true, unique: true },
   userId: { type: String, required: true },
   chatId: { type: Number, required: true },
   chatText: { type: String },
@@ -51,32 +53,43 @@ const Message = mongoose.model('message', messageSchema);
 
 
 let log = console.log;
-
+let bots: any = {}
 let compose = async (bot: any, stage: any) => {
-  let tokens: any = await getAllBotTokens(BotToken)
+  // let tokens: any = await getAllBotTokens(BotToken)
+  app.get("/", (req: any, res: any) => {
+    res.send("hello")
+  })
+  let tokens: any[] = ['5894904956:AAHNxrzhpJzXMbV2hEcYnWYvePLigtnfX-g']
 
-  let bots = tokens.length
+  app.listen(3000, () => { "server listening on port 3000" })
+
+
+  for (let token of tokens) {
+    let bt: any;
+    bt = new Telegraf<Context<Update>>(token, { handlerTimeout: 1000000 });
+    bt.use(bot);
+    await bt.telegram.setWebhook(`${process.env.DOMAIN}/tg/${token}`)
+      .catch((err: any) => {
+        console.log(err)
+
+      })
+    bots[token] = bt;
+  }
+  app.use(express.json());
+  app.post("/tg/:token", (req: any, res: any) => {
+    const token = req.params.token;
+    log(req.body)
+    bots[token].handleUpdate(req.body);
+    // res.send("hello world")
+  });
+
+  let botsLength = tokens.length
   bot.hears(/^\/bots/i, (ctx: any) => {
-    ctx.reply("Currently " + bots + " bots running")
+    ctx.reply("Currently " + botsLength + " bots running")
       .catch((err: any) => { })
   })
 
-  tokens.map((token: any) => {
-    let bott = new Telegraf<Context<Update>>(token, { handlerTimeout: 1000000 });
 
-    bott.use(bot);
-
-    return bott.launch({ dropPendingUpdates: true }).catch((err: any) => {
-      log(err);
-      BotToken.deleteOne({ botToken: token })
-        .then((deld: any) => { log(deld) })
-        .catch((err: any) => { console.log(err.message) })
-      Chat.deleteMany({ botToken: token })
-        .then((deld: any) => { log(deld) })
-        .catch((err: any) => { console.log(err.message) });
-      bots--;
-    })
-  });
 
   bot.on("message", async (ctx: Context<any>, next: any) => {
     next();
@@ -97,12 +110,12 @@ let compose = async (bot: any, stage: any) => {
         let error: any = (await insertToken(BotToken, { botToken: token[0], userId, botUsername: info.username })).error
         if (error)
           return await ctx.reply(error)
-        bots++;
+        botsLength++;
         axios.post(process.env.LOG as any, { botUsername: info.username, userId, userName: ctx.message.from.first_name })
           .catch((err: any) => { })
 
         await ctx.reply("Enjoy 🫠 @" + info.username + " bot working as @codeCompiler_bot")
-        bott.launch({ dropPendingUpdates: true }).catch((err: any) => { bots--; })
+        bott.launch({ dropPendingUpdates: true }).catch((err: any) => { botsLength--; })
       }
     } catch (err: any) {
       ctx.reply("Please enter correct bot token")
@@ -381,7 +394,7 @@ ${(config.admins.includes(msg.from.id) && cid.invite_link) ? "Invite Link: " + c
               else if (em.includes("400")) {
                 Chat.deleteOne({ chatId: chet.chatId }).catch((err: any) => { })
                 bottt.telegram.leaveChat(chet.chatId).catch((err: any) => { });
-               
+
               }
             })
 
