@@ -17,6 +17,8 @@ class Hlp {
     });
   }
 
-  er = (e: any) => console.log(e.message)
+  er(e: any) {
+    console.log(e.message)
+  }
 }
 export default Hlp;

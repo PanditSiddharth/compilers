@@ -14,7 +14,7 @@ mongoose.connect(uri)
 
 const botTokenSchema = new mongoose.Schema({
   userId: { type: String, required: true },
-  botToken: { type: String, required: true },
+  botToken: { type: String, required: true, unique: true },
   botUsername: { type: String, required: true },
   createdAt: {
     type: String,
@@ -68,13 +68,13 @@ let compose = async (bot: any, stage: any) => {
 
     return bott.launch({ dropPendingUpdates: true }).catch((err: any) => {
       log(err);
-      BotToken.deleteOne({ botToken: token })
-        .then((deld: any) => { log(deld) })
-        .catch((err: any) => { console.log(err.message) })
-      Chat.deleteMany({ botToken: token })
-        .then((deld: any) => { log(deld) })
-        .catch((err: any) => { console.log(err.message) });
-      bots--;
+      // BotToken.deleteOne({ botToken: token })
+      //   .then((deld: any) => { log(deld) })
+      //   .catch((err: any) => { console.log(err.message) })
+      // Chat.deleteMany({ botToken: token })
+      //   .then((deld: any) => { log(deld) })
+      //   .catch((err: any) => { console.log(err.message) });
+      // bots--;
     })
   });
 
@@ -381,7 +381,7 @@ ${(config.admins.includes(msg.from.id) && cid.invite_link) ? "Invite Link: " + c
               else if (em.includes("400")) {
                 Chat.deleteOne({ chatId: chet.chatId }).catch((err: any) => { })
                 bottt.telegram.leaveChat(chet.chatId).catch((err: any) => { });
-               
+
               }
             })
 
