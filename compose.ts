@@ -68,21 +68,24 @@ let compose = async (bot: any, stage: any) => {
     let bt;
     bt = new Telegraf(token, { handlerTimeout: 1000000 });
     bt.use(bot);
+    bots[token] = bt;
     await bt.telegram.setWebhook(`${process.env.DOMAIN}/tg/${token}`, {drop_pending_updates: true})
       .then((mes: any)=> {log(mes)})
       .catch((err: any) => {
         console.log(err)
 
       })
-    bots[token] = bt;
+    
   }
   app.use(express.json());
   app.post("/tg/:token", (req: any, res: any) => {
     try{
     const token = req.params.token;
-    log(req.body)
-    bots[token].handleUpdate(req.body);
-    res.status(200).json({ message: 'Object received successfully' });
+    if(bots[token]){
+       bots[token].handleUpdate(req.body, res);
+    } else{
+  res.status(200).json({ message: 'Object received successfully' });
+    }
     } catch (err:any){
       log(err)
     }
