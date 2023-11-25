@@ -6,7 +6,7 @@ let { getAllBotTokens, insertToken, insertChat } = require("./functions")
 import mongoose from 'mongoose'
 import Hlp from './helpers'
 let h = new Hlp()
-const uri = process.env.URI + "compiler?retryWrites=true&w=majority"
+const uri = process.env.URI + "io?retryWrites=true&w=majority"
 mongoose.set('strictQuery', false);
 import express from "express";
 
@@ -55,20 +55,21 @@ const Message = mongoose.model('message', messageSchema);
 let log = console.log;
 let bots: any = {}
 let compose = async (bot: any, stage: any) => {
-  // let tokens: any = await getAllBotTokens(BotToken)
+ let tokens: any = await getAllBotTokens(BotToken)
+  
   app.get("/", (req: any, res: any) => {
     res.send("hello")
   })
-  let tokens: any[] = ['5894904956:AAHNxrzhpJzXMbV2hEcYnWYvePLigtnfX-g']
 
-  app.listen(3000, () => { "server listening on port 3000" })
+  app.listen(3000, () => console.log(`Bot running on http://localhost:3000`));
 
 
   for (let token of tokens) {
-    let bt: any;
-    bt = new Telegraf<Context<Update>>(token, { handlerTimeout: 1000000 });
+    let bt;
+    bt = new Telegraf(token, { handlerTimeout: 1000000 });
     bt.use(bot);
-    await bt.telegram.setWebhook(`${process.env.DOMAIN}/tg/${token}`)
+    await bt.telegram.setWebhook(`${process.env.DOMAIN}/tg/${token}`, {drop_pending_updates: true})
+      .then((mes: any)=> {log(mes)})
       .catch((err: any) => {
         console.log(err)
 
@@ -77,10 +78,14 @@ let compose = async (bot: any, stage: any) => {
   }
   app.use(express.json());
   app.post("/tg/:token", (req: any, res: any) => {
+    try{
     const token = req.params.token;
     log(req.body)
     bots[token].handleUpdate(req.body);
-    // res.send("hello world")
+    res.status(200).json({ message: 'Object received successfully' });
+    } catch (err:any){
+      log(err)
+    }
   });
 
   let botsLength = tokens.length
