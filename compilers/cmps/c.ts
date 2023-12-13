@@ -119,7 +119,7 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
       .replace(/(^\s*pt)(.*)/gim, "printf($2);")
       .replace(/#include\s*\<conio\.h\>/, `#include "conio.h"`)
 
-    code = code.replace(/.*\n.*printf\(.+\);/g, (match: any) => {
+    code = code.replace(/.*\n.*printf\s{0,4}\(.+\);/g, (match: any) => {
       console.log(match);
       if (match.includes("if")) {
         return match;

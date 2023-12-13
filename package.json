@@ -10,6 +10,7 @@
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
     "grammy": "^1.17.2",
+    "hindijs": "^1.0.0",
     "input": "^1.0.1",
     "jsshort": "^0.2.10",
     "mathjs": "^11.9.1",

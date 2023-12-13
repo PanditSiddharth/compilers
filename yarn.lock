@@ -1609,6 +1609,11 @@ has@^1.0.0, has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
+hindijs@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/hindijs/-/hindijs-1.0.0.tgz"
+  integrity sha512-P17UQ4f+Ce+7ySwrbsreyHVscb9fmWt6PAhy83VANuhBP/Jb3sPbtSTl4CY+zRo2gxU3cc5ssmrGrAbxxHCVCA==
+
 hosted-git-info@^6.0.0, hosted-git-info@^6.1.1:
   version "6.1.1"
   resolved "https://registry.npmjs.org/hosted-git-info/-/hosted-git-info-6.1.1.tgz"
