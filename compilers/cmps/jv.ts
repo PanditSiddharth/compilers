@@ -145,7 +145,7 @@ let jvyoyojv = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     const regex = /(?<=class\s*)\w+(?=\s*\{?\s*[\n\s]{0,3}public\s*static\s*void\s*main)/g;
 
     const match = code.match(regex)
-    console.log(match[0])
+    
     console.log("yes")
     if (match) {
       javaFile = match[0];
