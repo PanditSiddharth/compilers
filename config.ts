@@ -1,5 +1,7 @@
 require("dotenv").config()
 
+let env = require("./conf")
+
 // Configure Your own bot free bot source code for helping students 
 
 let ownerId = 1791106582
@@ -18,14 +20,14 @@ let config: Config = {
   channel: "@LogicBots",
 
   // set your bot token string in env
-  token: process.env.TOKEN as string,
+  token: process.env.TOKEN as string || env.token,
 
   // Write full path of these write here or in env vars
-  python: process.env.PYTHON as string || "python3",
-  java: process.env.JAVA as string || "java",
-  javac: process.env.JAVAC as string || "javac",
-  go: process.env.GO as string || "go",
-  node: process.env.NODE as string || "node"
+  python: process.env.PYTHON as string || env.python || "python3",
+  java: process.env.JAVA as string || env.java || "java",
+  javac: process.env.JAVAC as string || env.javac || "javac",
+  go: process.env.GO as string || env.go || "go",
+  node: process.env.NODE as string || env.node || "node"
 }
 
 export default config;

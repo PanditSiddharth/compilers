@@ -1,4 +1,4 @@
-require("./conf.js")
+
 // import files from project
 import keep_alive from './keep_alive'
 import fs from 'fs';
