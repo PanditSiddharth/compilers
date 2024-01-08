@@ -32,25 +32,18 @@ Now nvm installed now need to install nodejs
 ```sh
 # This will install nodejs (if you instll any other version then configure also correctly)
 nvm install v20.10.0
-```
-**Configure node.js path in ~/.bashrc file**  
-To open .bashrc run bellow written command it will open gedit editor  
-```sh
-gedit ~/.bashrc    # for terminal use nano or vi editor
-```
 
-Copy and paste these lines in bashrc file at last - save and close file  
-`export NVM_DIR="$HOME/.nvm" [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"`  
-`export PATH="$PATH:$NVM_DIR/versions/node/v20.10.0/bin"`  
-
-```sh
-source ~/.bashrc  # Loads current shell 
+# Configure node.js path
+export NVM_DIR="$HOME/.nvm" [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"`  
+export PATH="$PATH:$NVM_DIR/versions/node/v20.10.0/bin" 
 ```
 
 ### Step 2: Create directory structure for creating new subsystem
 ```sh
-mkdir -p /home/troot/{bin,usr/bin,lib,lib64,home/me,etc} 
-# you can replace troot with your new root path
+mkdir -p /home/troot/{bin,sbin,usr/bin,lib,lib64,home/me,etc,dev,root}
+mknod -m 666 /home/troot/dev/null c 1 3
+cp ~/.bashrc /home/troot/root
+cp -r ~/.nvm /home/troot/root
 ```
 
 ### Step 3: create new user
