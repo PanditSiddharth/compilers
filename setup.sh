@@ -4,6 +4,7 @@ echo "Enter commands separated by spaces:"
 read -r -a commands_input
 
 troot="/home/troot"
+output_file="output.txt"
 
 for cmd in "${commands_input[@]}"; do
     # Check if the command exists in the troot/bin, troot/usr/bin, or troot/sbin
