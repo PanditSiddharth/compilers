@@ -25,6 +25,7 @@
     "telegraf": "^4.12.2",
     "tgind": "^2.1.4",
     "tree-kill": "^1.2.2",
+    "ts-node": "^10.9.2",
     "tsx": "^4.7.0",
     "typescript": "^5.1.3"
   },
@@ -57,6 +58,7 @@
   },
   "homepage": "https://github.com/sidhelpbot/compilers#readme",
   "devDependencies": {
+    "@types/node": "^20.10.7",
     "npm": "^9.7.2"
   }
 }

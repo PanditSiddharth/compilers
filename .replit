@@ -1,4 +1,4 @@
-run = "./node_modules/.bin/tsx ./index.ts"
+run = "./node_modules/.bin/ts-node ./index.ts"
 entrypoint = "index.ts"
 hidden = [".build", ".config"]
 
