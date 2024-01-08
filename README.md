@@ -39,9 +39,9 @@ To open .bashrc run bellow written command it will open gedit editor
 gedit ~/.bashrc    # for terminal use nano or vi editor
 ```
 
-Copy and paste these lines in bashrc file at last - save and close file
-`export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+Copy and paste these lines in bashrc file at last - save and close file  
+`export NVM_DIR="$HOME/.nvm"  
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"`  
 `export PATH="$PATH:$NVM_DIR/versions/node/v20.10.0/bin"`  
 
