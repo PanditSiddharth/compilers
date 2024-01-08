@@ -15,6 +15,17 @@ for cmd in "${commands_input[@]}"; do
         if [[ -n "$pathtobin" ]]; then
             if [[ -e "/usr/bin/$cmd" ]]; then
                 cp "$pathtobin" "$troot/usr/bin/$cmd"
+                if [[ "$cmd" == "bash" && -e "/usr/bin/$cmd" ]]; then
+                     cp "$pathtobin" "$troot/bin/$cmd"
+                elif [[ "$cmd" == "sh" && -e "/usr/bin/$cmd" ]]; then
+                     cp "$pathtobin" "$troot/bin/$cmd"
+                elif [[ "$cmd" == "zsh" && -e "/usr/bin/$cmd" ]]; then
+                     cp "$pathtobin" "$troot/bin/$cmd"
+                elif [[ "$cmd" == "dash" && -e "/usr/bin/$cmd" ]]; then
+                     cp "$pathtobin" "$troot/bin/$cmd"
+                elif [[ "$cmd" == "rdash" && -e "/usr/bin/$cmd" ]]; then
+                     cp "$pathtobin" "$troot/bin/$cmd"
+                fi
             elif [[ -e "/bin/$cmd" ]]; then
                 cp "$pathtobin" "$troot/bin/$cmd"
             elif [[ -e "/sbin/$cmd" ]]; then
