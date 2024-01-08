@@ -118,7 +118,9 @@ apt install python3
 ```
 
 ### Step 6: Add libraries and binaries to troot's subsystem
-Download setup.sh
+See setup.sh files code, copy them and create file setup.sh in your system
+paste this code there  
+
 Run setup.sh to add each command on troot directory
 ```sh
 ./setup.sh   # you can run it many times if you want add more and more commands
@@ -130,6 +132,14 @@ This commands must be given to work
 ```sh
 # Enter commands:
 bash ls cd grep awk node python3 # many more commands
+```
+Change permission of subsystem by these commands
+```sh
+troot="/home/troot"
+chmod 755 "$troot"
+chmod 755 "$troot"/*
+chmod 777 "$troot/home"
+chmod -R o-w "$troot/lib" "$troot/lib64" "$troot/bin" "$troot/usr/bin" "$troot/sbin"
 ```
 
 ### Step 7: Clone git repository  
