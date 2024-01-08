@@ -8,7 +8,7 @@ output_file="output.txt"
 
 for cmd in "${commands_input[@]}"; do
     # Check if the command exists in the troot/bin, troot/usr/bin, or troot/sbin
-    if [[ -x "$troot/bin/$cmd" || -x "$troot/usr/bin/$cmd" || -x "$troot/sbin/$cmd" ]]; then
+    if [[ -f "$troot/bin/$cmd" || -f "$troot/usr/bin/$cmd" || -f "$troot/sbin/$cmd" ]]; then
         echo "$cmd is already usable."
     else
         pathtobin=$(command -v "$cmd")
