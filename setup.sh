@@ -30,6 +30,8 @@ for cmd in "${commands_input[@]}"; do
                 cp "$pathtobin" "$troot/bin/$cmd"
             elif [[ -e "/sbin/$cmd" ]]; then
                 cp "$pathtobin" "$troot/sbin/$cmd"
+            elif command -v "$cmd" &>/dev/null; then
+                cp "$pathtobin" "$troot/$(command -v $cmd)"
             fi
 
             ldd_output=$(ldd "$pathtobin" 2>/dev/null)
