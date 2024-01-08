@@ -15,7 +15,7 @@
         pkgs.gcc
         pkgs.yarn
         pkgs.esbuild
-        pkgs.nodejs
+        pkgs.nodejs_x18
         pkgs.nodePackages.typescript
         pkgs.nodePackages.typescript-language-server
     ];
