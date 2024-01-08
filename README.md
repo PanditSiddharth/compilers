@@ -84,7 +84,7 @@ chown -R usercmp:compiler /home/troot/home/me
 ### Step 5: Configure sshd_config file  
 ```sh
 # Open sshd_config file  
-gedit sshd_config    # for terminal: use nano or vi editor
+gedit /etc/ssh/sshd_config    # for terminal: use nano or vi editor
 ```
 find `Subsystem sftp` keyword written line in that file
 Add # hash before that line (To disable this line)
