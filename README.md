@@ -4,10 +4,6 @@ by @PanditSiddharth
 You can use this bot in telegram  
 Link: https://telegram.me/codecompiler_bot  
 
-See all command of bot by `/help` command  
-See bot is running or not by `/ping` command  
-See current version and featurs of bot by `/version` command  
-
 For any other help:  
 Support Group: https://telegram.me/LogicB_support  
 Updates : https://telegram.me/Logicbots  
@@ -46,8 +42,8 @@ gedit ~/.bashrc    # for terminal use nano or vi editor
 Copy and paste these lines in bashrc file at last - save and close file
 `export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-export PATH="$PATH:$NVM_DIR/versions/node/v20.10.0/bin"`
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"`  
+`export PATH="$PATH:$NVM_DIR/versions/node/v20.10.0/bin"`  
 
 ```sh
 source ~/.bashrc  # Loads current shell 
@@ -118,7 +114,8 @@ apt install python3
 ```
 
 ### Step 6: Add libraries and binaries to troot's subsystem
-See setup.sh files code, copy them and create file setup.sh in your system
+See [setup.sh](https://github.com/PanditSiddharth/compilers/blob/cmp/setup.sh)
+ file's code, copy them and create file setup.sh in your system
 paste this code there  
 
 Run setup.sh to add each command on troot directory
@@ -194,6 +191,10 @@ cd /home/me  # path to your index.ts file
 # for stopping process     ./node_modules/.bin/pm2 stop [id] 
 # for deleting process     ./node_modules/.bin/pm2 delete [id] 
 ```
+
+See all command of bot by `/help` command  
+See bot is running or not by `/ping` command  
+See current version and featurs of bot by `/version` command  
 
 # Any query ? see this readme to join support group
 
