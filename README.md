@@ -119,7 +119,7 @@ Give commands name separated with spaces
 This commands must be given to work
 ```sh
 # Enter commands:
-bash ls cd grep awk node python3 # many more commands
+sh bash env cat ls cd grep awk node python3 # many more commands
 ```
 Change permission of subsystem by these commands
 ```sh
