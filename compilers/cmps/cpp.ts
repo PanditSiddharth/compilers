@@ -165,9 +165,6 @@ let cppyoyocpp = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     }
 
     cplus = spawn(`./files/cplus/cpp${fromId}cpp.out`, [], {
-      uid: 1000,
-      gid: 1000,
-      chroot: './compilers/cplus',
       maxBuffer: 1024 * 1024, // 1 MB
       env: {}
     });
