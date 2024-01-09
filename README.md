@@ -55,8 +55,8 @@ useradd usercmp
 # Assign shell to this created user
 chsh -s /bin/bash
 
-# assign it home directory me
-usermod -d /home/troot/home/me usercmp
+# assign it home directory root
+usermod -d /home/troot/root usercmp
 
 # Set password for this user
 passwd usercmp
@@ -71,7 +71,7 @@ groupadd compiler   # creates new group [for example here using compiler group]
 sudo usermod -aG compiler usercmp
 
 # Giving ownershing of me directory to new user usercmp and new group compiler
-chown -R usercmp:compiler /home/troot/home/me
+chown -R usercmp:compiler /home/troot/home
 ```
 
 ### Step 5: Configure sshd_config file  
