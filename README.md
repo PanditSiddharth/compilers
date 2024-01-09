@@ -40,10 +40,10 @@ export PATH="$PATH:$NVM_DIR/versions/node/v20.10.0/bin"
 
 ### Step 2: Create directory structure for creating new subsystem
 ```sh
-mkdir -p /home/troot/{bin,sbin,usr/bin,lib,lib64,home/me,etc,dev,root}
+mkdir -p /home/troot/{bin,sbin,usr/bin,lib,lib64,home/me,home/usercmp,etc,dev,root}
 mknod -m 666 /home/troot/dev/null c 1 3
-cp ~/.bashrc /home/troot/root
-cp -r ~/.nvm /home/troot/root
+cp ~/.bashrc /home/troot/home/usercmp 
+cp -r ~/.nvm /home/troot/home/usercmp 
 ```
 
 ### Step 3: create new user
@@ -69,9 +69,6 @@ groupadd compiler   # creates new group [for example here using compiler group]
 
 # Assign newly created user to this group
 sudo usermod -aG compiler usercmp
-
-# Giving ownershing of me directory to new user usercmp and new group compiler
-chown -R usercmp:compiler /home/troot/home
 ```
 
 ### Step 5: Configure sshd_config file  
@@ -165,7 +162,7 @@ npm i
 ### Step 9: Enter in subsystem and verify each commands and do permissions according to you
 ```sh
 # Enter in subsystem 
-chroot /home/troot
+ssh usercmp@localhost
 
 # now verify each command for example
 ls  # show current directory content
