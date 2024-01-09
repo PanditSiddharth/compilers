@@ -160,9 +160,9 @@ chmod 755 "$troot"
 chmod -R 755 "$troot"
 chmod 111 "$troot/home/me/compilers/conf.js"
 chmod 111 "$troot/home/me/compilers/config.ts"
-chmod -R 777 "$troot/home/me/compilers/compilers/*"
+chmod -R 777 "$troot/home/me/compilers/compilers/"
 chmod -R 555 "$troot/home/me/compilers/compilers/cmps"
-chmod -R 777 "$troot/home/me/compilers/files/*"
+chmod -R 777 "$troot/home/me/compilers/files/"
 chmod 777 "$troot/home/me/compilers/test"
 ```
 ### Step 10: Enter in subsystem and verify each commands and do permissions according to you
