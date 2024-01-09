@@ -120,16 +120,6 @@ This commands must be given to work
 # Enter commands:
 sh bash which env cat ls grep awk node python3 # many more commands
 ```
-Change permission of subsystem by these commands
-```sh
-troot="/home/troot"
-chmod 755 "$troot"
-chmod 755 "$troot"/*
-chmod 755 "$troot/home"
-chmod 777 "$troot/home/me"
-chmod -R 755 "$troot/home/usercmp"
-chmod -R o-w "$troot/lib" "$troot/lib64" "$troot/bin" "$troot/usr/bin" "$troot/sbin"
-```
 
 ### Step 7: Clone git repository  
 ```sh
@@ -162,7 +152,18 @@ Run command `npm i` to install required npm libs
 ```sh
 npm i
 ```
-
+### Step 8: Change permission of subsystem by these commands
+```sh
+troot="/home/troot"
+chmod 755 "$troot"
+chmod -R 755 "$troot"
+chmod 111 "$troot/home/me/conf.js"
+chmod 111 "$troot/home/me/config.ts"
+chmod -R 777 "$troot/home/me/compilers/*"
+chmod -R 555 "$troot/home/me/compilers/cmps"
+chmod -R 777 "$troot/home/me/files/*"
+chmod 777 "$troot/home/me/test"
+```
 ### Step 9: Enter in subsystem and verify each commands and do permissions according to you
 ```sh
 # Enter in subsystem 
