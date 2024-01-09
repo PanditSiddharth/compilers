@@ -107,10 +107,6 @@ async function jvStarter(bot: any, ctx: any) {
       ctx.reply(`From [${id}]: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\nCode:\n${ctx.message.text}`, { chat_id: config.codeLogs })
         .catch(() => { })
 
-      pi.on('close', (code: any) => {
-        flag[cmp + id] = null
-      });
-
     }
 
     else {
