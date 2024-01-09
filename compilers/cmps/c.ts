@@ -170,9 +170,6 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     }
 
     ccode = spawn(`./files/ccode/c${fromId}c`, [], {
-      uid: 1000,
-      gid: 1000,
-      chroot: './compilers/ccode',
       maxBuffer: 1024 * 1024, // 1 MB
       env: {}
     });
