@@ -43,7 +43,7 @@ export PATH="$PATH:$HOME/.nvm/versions/node/v20.10.0/bin"
 
 ### Step 2: Create directory structure for creating new subsystem
 ```sh
-mkdir -p /home/troot/{bin,sbin,usr/bin,lib,lib64,home/me,home/usercmp,etc,dev,root}
+mkdir -p /home/troot/{bin,sbin,usr/bin,lib,lib64,home/me,home/usercmp,tmp,etc,dev,root}
 mknod -m 666 /home/troot/dev/null c 1 3
 cp ~/.bashrc /home/troot/home/usercmp 
 cp -r ~/.nvm /home/troot/home/usercmp 
