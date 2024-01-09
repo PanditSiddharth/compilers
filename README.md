@@ -55,8 +55,8 @@ useradd usercmp
 # Assign shell to this created user
 chsh -s /bin/bash
 
-# assign it home directory root
-usermod -d /home/troot/root usercmp
+# assign it home directory usercmp 
+usermod -d /home/usercmp usercmp
 
 # Set password for this user
 passwd usercmp
