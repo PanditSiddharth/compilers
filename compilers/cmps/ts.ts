@@ -212,11 +212,7 @@ let tsyoyots = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     await h.sleep(30)
 
     node = spawn(process.env.NODE as any, [`./files/tsnode/ts${fromId}ts.js`], {
-
       stdio: ['pipe', 'pipe', 'pipe'],
-      uid: 1000,
-      gid: 1000,
-      chroot: './compilers/tsnode',
       maxBuffer: 1024 * 1024, // 1 MB
       env: { node: "/nix/store/dj805sw07vvpbxx39c8g67x8qddg0ikw-nodejs-18.12.1/bin/" }
     });
