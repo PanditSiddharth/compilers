@@ -43,7 +43,7 @@ export PATH="$PATH:$HOME/.nvm/versions/node/v20.10.0/bin"
 
 ### Step 2: Create directory structure for creating new subsystem
 ```sh
-mkdir -p /home/troot/{bin,sbin,usr/bin,lib,lib64,home/me,home/usercmp,tmp,etc,dev,root}
+mkdir -p /home/troot/{bin,sbin,usr/bin,lib,lib64,home/me,proc,home/usercmp,tmp,mnt,temp,var,etc,dev,root}
 mknod -m 666 /home/troot/dev/null c 1 3
 cp ~/.bashrc /home/troot/home/usercmp 
 cp -r ~/.nvm /home/troot/home/usercmp 
@@ -158,8 +158,8 @@ npm i
 troot="/home/troot"
 chmod 755 "$troot"
 chmod -R 755 "$troot"
-chmod 111 "$troot/home/me/compilers/conf.js"
-chmod 111 "$troot/home/me/compilers/config.ts"
+# chmod 444 "$troot/home/me/compilers/conf.js"
+# chmod 555 "$troot/home/me/compilers/config.ts"
 chmod -R 777 "$troot/home/me/compilers/compilers/"
 chmod -R 555 "$troot/home/me/compilers/compilers/cmps"
 chmod -R 777 "$troot/home/me/compilers/files/"
