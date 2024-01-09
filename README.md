@@ -127,7 +127,7 @@ chmod 755 "$troot"
 chmod 755 "$troot"/*
 chmod 755 "$troot/home"
 chmod 777 "$troot/home/me"
-chmod 755 "$troot/home/usercmp"
+chmod -R 755 "$troot/home/usercmp"
 chmod -R o-w "$troot/lib" "$troot/lib64" "$troot/bin" "$troot/usr/bin" "$troot/sbin"
 ```
 
