@@ -56,7 +56,7 @@ create user and set those password for example "usercmp"
 useradd usercmp  
 
 # Assign shell to this created user
-chsh -s /bin/bash
+chsh -s /bin/bash usercmp
 
 # assign it home directory usercmp 
 usermod -d /home/usercmp usercmp
