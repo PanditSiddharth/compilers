@@ -183,9 +183,6 @@ let jvyoyojv = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     }
     // ['-cp', '/path/to/compiled/class', 'Hello']
     java = spawn(config.java, ['-cp', `./files/java/jv${fromId}jv/`, javaFile], {
-      uid: 1000,
-      gid: 1000,
-      chroot: './compilers/java',
       maxBuffer: 1024 * 1024, // 1 MB
       env: {}
     });
