@@ -34,6 +34,8 @@ Now nvm installed now need to install nodejs
 nvm install v20.10.0
 
 # Configure node.js path in ~/.bashrc
+# use gedit or nano to add these lines at last of bashrc file 
+# gedit ~/.bashrc
 export NVM_DIR="$HOME/.nvm" [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"`  
 export PATH="$PATH:$HOME/.nvm/versions/node/v20.10.0/bin" 
 ```
