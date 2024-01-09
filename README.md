@@ -118,14 +118,16 @@ Give commands name separated with spaces
 This commands must be given to work
 ```sh
 # Enter commands:
-sh bash env cat ls cd grep awk node python3 # many more commands
+sh bash which env cat ls grep awk node python3 # many more commands
 ```
 Change permission of subsystem by these commands
 ```sh
 troot="/home/troot"
 chmod 755 "$troot"
 chmod 755 "$troot"/*
-chmod 777 "$troot/home"
+chmod 755 "$troot/home"
+chmod 777 "$troot/me"
+chmod 755 "$troot/usercmp"
 chmod -R o-w "$troot/lib" "$troot/lib64" "$troot/bin" "$troot/usr/bin" "$troot/sbin"
 ```
 
