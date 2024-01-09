@@ -145,8 +145,6 @@ let goyoyogo = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     } catch (err: any) { }
 
     golang = spawn(process.env.GO as any, ['run', `./files/golang/go${fromId}go/main.go`], {
-      uid: 1000,
-      gid: 1000,
       // chroot: './compilers/golang',
       maxBuffer: 1024 * 1024, // 1 MB
       env: {
