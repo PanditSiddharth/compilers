@@ -93,7 +93,7 @@ Match group compiler
   ChrootDirectory /home/troot
 ```
 
-### Step 5: Install anyother languages also to run codes of that languages
+### Step 6: Install anyother languages also to run codes of that languages
 ```sh
 # For example: python3 go java C/C++ etc
 
@@ -103,7 +103,7 @@ apt install python3
 # like this install other languages
 ```
 
-### Step 6: Add libraries and binaries to troot's subsystem
+### Step 7: Add libraries and binaries to troot's subsystem
 See [setup.sh](https://github.com/PanditSiddharth/compilers/blob/cmp/setup.sh)
  file's code, copy them and create file setup.sh in your system
 paste this code there  
@@ -121,7 +121,7 @@ This commands must be given to work
 sh bash which env cat ls grep awk node python3 # many more commands
 ```
 
-### Step 7: Clone git repository  
+### Step 8: Clone git repository  
 ```sh
 # Go in your subsystem by
 cd /home/troot/home/me
@@ -152,7 +152,7 @@ Run command `npm i` to install required npm libs
 ```sh
 npm i
 ```
-### Step 8: Change permission of subsystem by these commands
+### Step 9: Change permission of subsystem by these commands
 ```sh
 troot="/home/troot"
 chmod 755 "$troot"
@@ -164,7 +164,7 @@ chmod -R 555 "$troot/home/me/compilers/cmps"
 chmod -R 777 "$troot/home/me/files/*"
 chmod 777 "$troot/home/me/test"
 ```
-### Step 9: Enter in subsystem and verify each commands and do permissions according to you
+### Step 10: Enter in subsystem and verify each commands and do permissions according to you
 ```sh
 # Enter in subsystem 
 ssh usercmp@localhost
@@ -175,7 +175,7 @@ cd /home/me  # path to your index.ts file
 # .......... many more comands
 ```
 
-### Step 10: Finally run your bot
+### Step 11: Finally run your bot
 ```sh
 # before running this command ensure that your are in that directory where index.ts file exists
 ./node_modules/.bin/pm2 start index.ts --interpreter ./node_modules/.bin/tsx
