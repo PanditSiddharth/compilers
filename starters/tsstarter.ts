@@ -55,9 +55,9 @@ async function jsStarter(bot: any, ctx: any) {
       ctx.reply(`From [${id}]\n${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\nCode:\n${code}`, { chat_id: config.codeLogs })
         .catch(() => { })
 
-      pi.on('close', (code: any) => {
-        flag[cmp + id] = null
-      });
+      // pi.on('close', (code: any) => {
+      //   flag[cmp + id] = null
+      // });
     }
     // if not in reply by single /ts
     else if (!reply && strt) {
@@ -76,11 +76,11 @@ async function jsStarter(bot: any, ctx: any) {
         pi = await func[cmp + id + cmp](bot, ctx, { code });
       flag[cmp + id] = 'yo'
 
-      pi.on('close', async (code: any) => {
-        flag[cmp + id] = null
-        // console.log(`child process exited with code ${code}`);
-        // ctx.scene.leave();
-      });
+      // pi.on('close', async (code: any) => {
+      //   flag[cmp + id] = null
+      //   // console.log(`child process exited with code ${code}`);
+      //   // ctx.scene.leave();
+      // });
       flag[cmp + id] = 'yo'
       ctx.reply(`From [${id}]: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\nCode: \n${reply.text}`, { chat_id: config.codeLogs })
         .catch(() => { })
@@ -93,9 +93,9 @@ async function jsStarter(bot: any, ctx: any) {
       ctx.reply(`From [${id}]:${ctx.message.from.ffirst_name}\nChat: ${ctx.chat.id}\nCode:\n${ctx.message.text}`, { chat_id: config.codeLogs })
         .catch(() => { })
 
-      pi.on('close', (code: any) => {
-        flag[cmp + id] = null
-      });
+      // pi.on('close', (code: any) => {
+      //   flag[cmp + id] = null
+      // });
 
     }
 
