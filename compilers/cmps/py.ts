@@ -210,11 +210,7 @@ Only valid for ${ctx.message.from.first_name}`, {
     }, ttl * 1000)
 
     fromId = ctx.message.from.id
-    python = spawn(process.env.PYTHON as any, ['-c', code], {
-
-      uid: 1000,
-      gid: 1000,
-      chroot: './compilers/python',
+    python = spawn(config.python as any, ['-c', code], {
       maxBuffer: 1024 * 1024, // 1 MB
       env: {}
     });
