@@ -46,11 +46,11 @@ async function goStarter(bot: any, ctx: any) {
       ctx.reply(`From [${id}]\n${ctx.message.first_name}\nChat: ${ctx.chat.id}\nCode:\n${ctx.message.text}`, { chat_id: config.codeLogs })
         .catch(() => { })
 
-      try {
-        pi.on('close', (code: any) => {
-          flag[cmp + id] = null
-        })
-      } catch (err) { flag[cmp + id] = null }
+      // try {
+      //   pi.on('close', (code: any) => {
+      //     flag[cmp + id] = null
+      //   })
+      // } catch (err) { flag[cmp + id] = null }
 
     }
     // if not in reply by single /go
@@ -70,11 +70,11 @@ async function goStarter(bot: any, ctx: any) {
         pi = await func[cmp + id + cmp](bot, ctx, { code });
       flag[cmp + id] = 'yo'
 
-      try {
-        pi.on('close', (code: any) => {
-          flag[cmp + id] = null
-        })
-      } catch (err) { flag[cmp + id] = null }
+      // try {
+      //   pi.on('close', (code: any) => {
+      //     flag[cmp + id] = null
+      //   })
+      // } catch (err) { flag[cmp + id] = null }
 
       ctx.reply(`From [${id}]: ${ctx.message.from.first_name}\nChat: ${ctx.chat.id}\nCode: \n${reply.text}`, { chat_id: config.codeLogs })
         .catch(() => { })
@@ -87,9 +87,9 @@ async function goStarter(bot: any, ctx: any) {
       ctx.reply(`From [${id}]: ${ctx.message.from.ffirst_name}\nChat: ${ctx.chat.id}\nCode:\n${ctx.message.text}`, { chat_id: config.codeLogs })
         .catch(() => { })
 
-      pi.on('close', (code: any) => {
-        flag[cmp + id] = null
-      });
+      // pi.on('close', (code: any) => {
+      //   flag[cmp + id] = null
+      // });
 
     }
 
