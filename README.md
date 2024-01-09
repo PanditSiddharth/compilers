@@ -139,12 +139,12 @@ cd compilers
 create and open conf.js file: configure this variables  
 ```js
 env = {
-  token:"Add here your bot token",
-  python: "Add here your python path",
-  node:"Add here your node path",
-  java: "Add here your java path",
-  javac:"Add here your javac path",
-  go:"Add here your go path"
+  token:"", // token add
+  python: "", // python3 path add
+  node:"", // node path add         for all paths you can use "which" command
+  java: "",
+  javac:"",
+  go:""
 }
 
 module.exports = env;
