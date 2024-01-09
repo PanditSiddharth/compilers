@@ -160,9 +160,6 @@ let jsyoyojs = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     countpp = countp(code)
     node = spawn(config.node, ['-e', code], {
       stdio: ['pipe', 'pipe', 'pipe'],
-      uid: 1000,
-      gid: 1000,
-      chroot: './compilers/node',
       maxBuffer: 1024 * 1024, // 1 MB
       env: {}
     });
