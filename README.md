@@ -1,6 +1,8 @@
 # Realtime Input/Output compiler bot  
 by @PanditSiddharth  
 
+# Under maintainance
+
 You can use this bot in telegram  
 Link: https://telegram.me/codecompiler_bot  
 
@@ -119,7 +121,7 @@ Give commands name separated with spaces
 This commands must be given to work
 ```sh
 # Enter commands:
-sh bash which env cat ls grep awk node python3 # many more commands
+as  awk  bash  cat  cc	curl  env  g++	gcc  grep  ld  ls  make  mount	ping  ps  python3  sh  tar  which  zip # many more commands
 ```
 
 ### Step 8: Clone git repository  
