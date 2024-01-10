@@ -149,7 +149,7 @@ let cyoyoc = async (bot: Telegraf, ctx: any, obj: Opt = {}) => {
     fs.writeFileSync(`./files/ccode/c${fromId}c.c`, code);
 
     const { status, stderr } = spawnSync('gcc', [
-      '-I/home/runner/compilers/lib/',
+      '-I./lib/',
       '-o',
       `./files/ccode/c${fromId}c`,
       `./files/ccode/c${fromId}c.c`, "./lib/conio.c", "-lm"]);
