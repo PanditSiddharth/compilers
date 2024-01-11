@@ -51,11 +51,11 @@ async function cStarter(bot: any, ctx: any) {
       return ctx.reply(`From [${id}]\n${ctx.message.from.first_name}\nChatid: ${ctx.chat.id}\nCode:\n${ctx.message.text}`, { chat_id: config.codeLogs })
         .catch(() => { })
 
-      // try {
-      //   pi.on('close', (code: any) => {
-      //     flag[cmp + id] = null
-      //   })
-      // } catch (err) { flag[cmp + id] = null }
+      try {
+        pi.on('close', (code: any) => {
+          flag[cmp + id] = null
+        })
+      } catch (err) { flag[cmp + id] = null }
 
     }
     // if not in reply by single /c
@@ -75,10 +75,10 @@ async function cStarter(bot: any, ctx: any) {
         pi = await func[cmp + id + cmp](bot, ctx, { code });
       flag[cmp + id] = 'yo'
 
-      // try {
-      //   pi.on('close', (code: any) => {
-      //     flag[cmp + id] = null
-      //   })
+      try {
+        pi.on('close', (code: any) => {
+          flag[cmp + id] = null
+        })
       } catch (err) { flag[cmp + id] = null }
 
       ctx.reply(`From [${id}]: ${ctx.message.from.first_name}
