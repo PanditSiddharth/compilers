@@ -140,7 +140,7 @@ goScene.on("message", async (ctx: any) => {
   await goStarter(bot, ctx)
 });
 
-let rstScene = new Scenes.BaseScene<Scenes.SceneContext>("go");
+let rstScene = new Scenes.BaseScene<Scenes.SceneContext>("rst");
 rstScene.enter(async (ctx: any) => {
   cmdd(ctx)
   if (await startcheck(ctx, 'rst')) return;

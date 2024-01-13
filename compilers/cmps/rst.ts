@@ -297,7 +297,7 @@ let terminate = async (slow: any = true) => {
   } catch (err: any) { }
 
   try {
-    if (fs.existsSync(`./files/ccode/rst${fromId}rst.rs`)) {
+    if (fs.existsSync(`./files/rst/rst${fromId}rst.rs`)) {
       fs.unlinkSync(`./files/rst/rst${fromId}rst.rs`);
     }
   } catch (err: any) { }
