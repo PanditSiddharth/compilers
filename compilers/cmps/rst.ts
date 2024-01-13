@@ -288,7 +288,7 @@ let terminate = async (slow: any = true) => {
   h.sleep(700).then(() => { mid = 0 })
 
   ErrorMes = "Error: \n"
-  editedMes = "Output\: \n```c\n"
+  editedMes = "Output\: \n```rust\n"
 
   try {
     if (fs.existsSync(`./files/rst/rst${fromId}rst`)) {
