@@ -18,6 +18,7 @@ import tsStarter from './starters/tsstarter'
 import cppStarter from './starters/cppstarter'
 import jvStarter from './starters/jvstarter'
 import goStarter from './starters/gostarter'
+import rstStarter from './starters/rststarter'
 let objj: any = {};
 // this will run web server and always make it alive
 keep_alive(objj)
@@ -139,11 +140,24 @@ goScene.on("message", async (ctx: any) => {
   await goStarter(bot, ctx)
 });
 
+let rstScene = new Scenes.BaseScene<Scenes.SceneContext>("go");
+rstScene.enter(async (ctx: any) => {
+  cmdd(ctx)
+  if (await startcheck(ctx, 'rst')) return;
+  await rstStarter(bot, ctx)
+});
+
+rstScene.on("message", async (ctx: any) => {
+  cmdd(ctx)
+  await startcheck(ctx, 'rst')
+  await rstStarter(bot, ctx)
+});
+
 // making instance of Telegraf class
 let bot = new Telegraf<Scenes.SceneContext>(config.token);
 
 // regestering all scenes
-let stage = new Scenes.Stage<Scenes.SceneContext>([cScene, pyScene, jsScene, cppScene, jvScene, goScene, tsScene], { ttl: config.ttl });
+let stage = new Scenes.Stage<Scenes.SceneContext>([cScene, pyScene, jsScene, cppScene, jvScene, goScene, tsScene, rstScene], { ttl: config.ttl });
 
 // passing bot instance in bot.ts file by call those function
 bt(bot);
@@ -154,7 +168,7 @@ bot.use(session());
 bot.use(stage.middleware());
 
 // Main Program starts from here it listens /js /py all commands and codes 
-bot.hears(new RegExp("^\\" + config.startSymbol + "(code|start|py|python|ts|type|js|node|cc|cpp|cplus|sql|go|jv|java|c\\+\\+)|\\/start", "i"), async (ctx: any, next: any) => {
+bot.hears(new RegExp("^\\" + config.startSymbol + "(code|start|py|python|ts|type|js|node|cc|cpp|cplus|sql|go|jv|java|c\\+\\+|rst|rust)|\\/start", "i"), async (ctx: any, next: any) => {
   try {
     let compiler: any = ctx.message.text + "";
 
@@ -197,6 +211,8 @@ bot.hears(new RegExp("^\\" + config.startSymbol + "(code|start|py|python|ts|type
       ctx.scene.enter("jv")
     else if (cmp("go"))
       ctx.scene.enter("go")
+    else if (cmp("rst"))
+      ctx.scene.enter("rst")
     next();
   } catch (error) {
     console.log("error start index")
@@ -257,6 +273,10 @@ async function startcheck(ctx: any, y: any, json: any = {}) {
       ctx.scene.enter("jv")
       return true
     }
+else if (("rst rust").includes(cst)) {
+      ctx.scene.enter("rst")
+      return true
+}
     else if (("go").includes(cst)) {
       ctx.scene.enter("go")
       return true

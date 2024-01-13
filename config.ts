@@ -27,7 +27,8 @@ let config: Config = {
   java: process.env.JAVA as string || env.java || "java",
   javac: process.env.JAVAC as string || env.javac || "javac",
   go: process.env.GO as string || env.go || "go",
-  node: process.env.NODE as string || env.node || "node"
+  node: process.env.NODE as string || env.node || "node",
+  rust: process.env.RUSTC as string || env.rust || "rustc"
 }
 
 export default config;
@@ -59,4 +60,5 @@ interface Config {
   javac: string;
   go: string;
   node: string;
+  rust: string;
 }
