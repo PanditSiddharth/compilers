@@ -1,0 +1,9 @@
+node_modules/
+.npmignore
+package-lock.json
+.git
+test/
+copyfiles.js
+package-lock.json
+files/
+myfile.ts
