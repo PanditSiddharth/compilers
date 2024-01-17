@@ -34,9 +34,6 @@ export { createEnvironment } from './utils/createEnv';
 let objj: any = {};
 // this will run web server and always make it alive
 
-// env variable 
-require('dotenv').config()
-
 // Helper class object where sleep function etc listed
 let h = new Hlp()
 
