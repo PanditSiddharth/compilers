@@ -39,8 +39,8 @@ function cmdd(ctx: any) {
 export function compiler(token: tp.TelegramBotToken, conf: tp.Config = {} as tp.Config) {
 
   // Some default configurations
-  conf.version = "2.0.0"
-  conf.versionNo = 23
+  conf.version = "3.0.0"
+  conf.versionNo = 25
   conf.ttl = 60;
 
   if (!conf.startSymbol)
