@@ -1,4 +1,3 @@
-
 import bt from './bot';
 import Hlp from './helpers';
 import config from './config'
@@ -17,19 +16,8 @@ let exes = {
 }
 // 2 global dependencies
 import { Scenes, session, Telegraf } from "telegraf";
-
-// importig all starters file which is starting point after this file
-import pyStarter from './starters/pystarter'
-import cStarter from './starters/cstarter'
-import jsStarter from './starters/jsstarter'
-import tsStarter from './starters/tsstarter'
-import cppStarter from './starters/cppstarter'
-import jvStarter from './starters/jvstarter'
-import goStarter from './starters/gostarter'
-
+import starter from './starter'
 import * as tp from "./interfaces"
-import { createEnvironment } from './utils/createEnv';
-export { createEnvironment } from './utils/createEnv';
 
 let objj: any = {};
 // this will run web server and always make it alive
@@ -67,20 +55,20 @@ export function compiler(token: tp.TelegramBotToken, conf: tp.Config = {} as tp.
   (config as any).configure(conf)
   // config.config = conf;
 
-  createEnvironment()
+  // createEnvironment()
   // All scenes 
   let pyScene = new Scenes.BaseScene<Scenes.SceneContext>("py");
   pyScene.enter(async (ctx: any) => {
     cmdd(ctx);
     if (await startcheck(ctx, 'py python'))
       return;
-    await pyStarter(bot, ctx, conf)
+      await starter(bot, ctx, conf, {cmp: "py", exe:exes.python || exes.python3})
   });
 
   pyScene.on("message", async (ctx: any) => {
     cmdd(ctx);
     if (await startcheck(ctx, 'py python')) return;
-    await pyStarter(bot, ctx, conf)
+    await starter(bot, ctx, conf, {cmp: "py", exe:exes.python || exes.python3})
   });
 
   let cppScene = new Scenes.BaseScene<Scenes.SceneContext>("cpp");
@@ -88,40 +76,39 @@ export function compiler(token: tp.TelegramBotToken, conf: tp.Config = {} as tp.
   cppScene.enter(async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'cpp cplus')) return;
-
-    await cppStarter(bot, ctx, conf)
+    await starter(bot, ctx, conf, {cmp: "cpp", exe: exes.cpp})
   });
 
   cppScene.on("message", async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'cpp cplus')) return;
-    await cppStarter(bot, ctx, conf)
+    await starter(bot, ctx, conf, {cmp: "cpp", exe: exes.cpp})
   });
 
   let cScene = new Scenes.BaseScene<Scenes.SceneContext>("code");
   cScene.enter(async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'cc code')) return;
-    await cStarter(bot, ctx, conf);
+    await starter(bot, ctx, conf, {cmp: "c", exe: exes.gcc})
   });
 
   cScene.on("message", async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'cc code')) return;
-    await cStarter(bot, ctx, conf)
+    await starter(bot, ctx, conf, {cmp: "c", exe: exes.gcc})
   });
 
   let jvScene = new Scenes.BaseScene<Scenes.SceneContext>("jv");
   jvScene.enter(async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'jv java')) return;
-    await jvStarter(bot, ctx, conf)
+    await starter(bot, ctx, conf, {cmp: "java", exe:exes.java})
   });
 
   jvScene.on("message", async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'jv java')) return;
-    await jvStarter(bot, ctx, conf)
+    await starter(bot, ctx, conf, {cmp: "java", exe:exes.java})
   });
 
   let jsScene = new Scenes.BaseScene<Scenes.SceneContext>("js");
@@ -130,39 +117,39 @@ export function compiler(token: tp.TelegramBotToken, conf: tp.Config = {} as tp.
 
     if (await startcheck(ctx, 'js node sql')) return;
 
-    await jsStarter(bot, ctx, conf)
+    await starter(bot, ctx, conf, {cmp: "js", exe: exes.node})
   });
 
   jsScene.on("message", async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'js node sql')) return;
-    await jsStarter(bot, ctx, conf)
+    await starter(bot, ctx, conf, {cmp: "js", exe: exes.node})
   });
 
   let tsScene = new Scenes.BaseScene<Scenes.SceneContext>("ts");
   tsScene.enter(async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'ts type')) return;
-    await tsStarter(bot, ctx, conf)
+    await starter(bot, ctx, conf, {cmp: "ts", exe:exes.node})
   });
 
   tsScene.on("message", async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'ts type')) return;
-    await tsStarter(bot, ctx, conf)
+    await starter(bot, ctx, conf, {cmp: "ts", exe: exes.node})
   });
 
   let goScene = new Scenes.BaseScene<Scenes.SceneContext>("go");
   goScene.enter(async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'go')) return;
-    await goStarter(bot, ctx, conf)
+    await starter(bot, ctx, conf, {cmp: "go", exe: exes.go})
   });
 
   goScene.on("message", async (ctx: any) => {
     cmdd(ctx)
     await startcheck(ctx, 'go')
-    await goStarter(bot, ctx, conf)
+    await starter(bot, ctx, conf, {cmp: "go", exe: exes.go})
   });
 
   // making instance of Telegraf class
