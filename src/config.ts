@@ -8,8 +8,8 @@ let config: tp.Config = { ttl: 60};
 function configure(cnf: tp.Config) {
   config = cnf;
 }
-config.version = "2.0.0"
-config.versionNo = 23
+config.version = "3.1.0"
+config.versionNo = 26
 config.ttl = 60;
 
 if(!config.startSymbol)
