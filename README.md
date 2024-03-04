@@ -25,9 +25,14 @@ So use docker else any secure environment or give telegram id in allowed user op
 
 ```js
 let { compiler } = require('iocompiler');
-
+/*
+* ttl: max time to execute code, default 60 seconds
+* allowed: array of telegram ids of users who can execute code on it
+*/
 // allowed users id if you not give this then all users can use your bot
-let { bot } = compiler(TelegramBotToken, { allowed: [1791106582]});
+let { bot } = compiler(TelegramBotToken, { ttl: 60, allowed: [1791106582]});
+
+
 
 // launching telegraf bot in polling mode
 bot.launch({ dropPendingUpdates: true });
