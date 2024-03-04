@@ -1,4 +1,5 @@
 import * as tp from "./interfaces";
+import pjson from "../package.json";
 
 // Configure Your own bot free bot source code for helping students 
 let ownerId = 1791106582
@@ -8,8 +9,8 @@ let config: tp.Config = { ttl: 60};
 function configure(cnf: tp.Config) {
   config = cnf;
 }
-config.version = "3.1.0"
-config.versionNo = 26
+config.version = pjson.version
+config.versionNo = pjson.updateCount
 config.ttl = 60;
 
 if(!config.startSymbol)

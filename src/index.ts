@@ -2,6 +2,7 @@ import bt from './bot';
 import Hlp from './helpers';
 import config from './config'
 import real from "./help/real"
+import pjson from "../package.json"
 
 let which = require("which")
 let exes = {
@@ -39,8 +40,8 @@ function cmdd(ctx: any) {
 export function compiler(token: tp.TelegramBotToken, conf: tp.Config = {} as tp.Config) {
 
   // Some default configurations
-  conf.version = "3.1.0"
-  conf.versionNo = 26
+  conf.version = pjson.version;
+  conf.versionNo = pjson.updateCount;
   if(!conf.ttl)
   conf.ttl = 60;
 

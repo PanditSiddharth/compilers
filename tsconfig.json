@@ -5,6 +5,7 @@
     "declarationMap": true,
     "declarationDir": "types/",
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "outDir": "lib/",
     "rootDir": "src/",
     "target": "ES2019",
