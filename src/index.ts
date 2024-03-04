@@ -39,8 +39,9 @@ function cmdd(ctx: any) {
 export function compiler(token: tp.TelegramBotToken, conf: tp.Config = {} as tp.Config) {
 
   // Some default configurations
-  conf.version = "3.0.0"
-  conf.versionNo = 25
+  conf.version = "3.1.0"
+  conf.versionNo = 26
+  if(!conf.ttl)
   conf.ttl = 60;
 
   if (!conf.startSymbol)
@@ -62,13 +63,13 @@ export function compiler(token: tp.TelegramBotToken, conf: tp.Config = {} as tp.
     cmdd(ctx);
     if (await startcheck(ctx, 'py python'))
       return;
-      await starter(bot, ctx, conf, {cmp: "py", exe:exes.python || exes.python3})
+    await starter(bot, ctx, conf, { cmp: "py", exe: exes.python || exes.python3 })
   });
 
   pyScene.on("message", async (ctx: any) => {
     cmdd(ctx);
     if (await startcheck(ctx, 'py python')) return;
-    await starter(bot, ctx, conf, {cmp: "py", exe:exes.python || exes.python3})
+    await starter(bot, ctx, conf, { cmp: "py", exe: exes.python || exes.python3 })
   });
 
   let cppScene = new Scenes.BaseScene<Scenes.SceneContext>("cpp");
@@ -76,39 +77,39 @@ export function compiler(token: tp.TelegramBotToken, conf: tp.Config = {} as tp.
   cppScene.enter(async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'cpp cplus')) return;
-    await starter(bot, ctx, conf, {cmp: "cpp", exe: exes.cpp})
+    await starter(bot, ctx, conf, { cmp: "cpp", exe: exes.cpp })
   });
 
   cppScene.on("message", async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'cpp cplus')) return;
-    await starter(bot, ctx, conf, {cmp: "cpp", exe: exes.cpp})
+    await starter(bot, ctx, conf, { cmp: "cpp", exe: exes.cpp })
   });
 
   let cScene = new Scenes.BaseScene<Scenes.SceneContext>("code");
   cScene.enter(async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'cc code')) return;
-    await starter(bot, ctx, conf, {cmp: "c", exe: exes.gcc})
+    await starter(bot, ctx, conf, { cmp: "c", exe: exes.gcc })
   });
 
   cScene.on("message", async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'cc code')) return;
-    await starter(bot, ctx, conf, {cmp: "c", exe: exes.gcc})
+    await starter(bot, ctx, conf, { cmp: "c", exe: exes.gcc })
   });
 
   let jvScene = new Scenes.BaseScene<Scenes.SceneContext>("jv");
   jvScene.enter(async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'jv java')) return;
-    await starter(bot, ctx, conf, {cmp: "java", exe:exes.java})
+    await starter(bot, ctx, conf, { cmp: "java", exe: exes.java })
   });
 
   jvScene.on("message", async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'jv java')) return;
-    await starter(bot, ctx, conf, {cmp: "java", exe:exes.java})
+    await starter(bot, ctx, conf, { cmp: "java", exe: exes.java })
   });
 
   let jsScene = new Scenes.BaseScene<Scenes.SceneContext>("js");
@@ -117,39 +118,39 @@ export function compiler(token: tp.TelegramBotToken, conf: tp.Config = {} as tp.
 
     if (await startcheck(ctx, 'js node sql')) return;
 
-    await starter(bot, ctx, conf, {cmp: "js", exe: exes.node})
+    await starter(bot, ctx, conf, { cmp: "js", exe: exes.node })
   });
 
   jsScene.on("message", async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'js node sql')) return;
-    await starter(bot, ctx, conf, {cmp: "js", exe: exes.node})
+    await starter(bot, ctx, conf, { cmp: "js", exe: exes.node })
   });
 
   let tsScene = new Scenes.BaseScene<Scenes.SceneContext>("ts");
   tsScene.enter(async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'ts type')) return;
-    await starter(bot, ctx, conf, {cmp: "ts", exe:exes.node})
+    await starter(bot, ctx, conf, { cmp: "ts", exe: exes.node })
   });
 
   tsScene.on("message", async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'ts type')) return;
-    await starter(bot, ctx, conf, {cmp: "ts", exe: exes.node})
+    await starter(bot, ctx, conf, { cmp: "ts", exe: exes.node })
   });
 
   let goScene = new Scenes.BaseScene<Scenes.SceneContext>("go");
   goScene.enter(async (ctx: any) => {
     cmdd(ctx)
     if (await startcheck(ctx, 'go')) return;
-    await starter(bot, ctx, conf, {cmp: "go", exe: exes.go})
+    await starter(bot, ctx, conf, { cmp: "go", exe: exes.go })
   });
 
   goScene.on("message", async (ctx: any) => {
     cmdd(ctx)
     await startcheck(ctx, 'go')
-    await starter(bot, ctx, conf, {cmp: "go", exe: exes.go})
+    await starter(bot, ctx, conf, { cmp: "go", exe: exes.go })
   });
 
   // making instance of Telegraf class
@@ -193,47 +194,53 @@ export function compiler(token: tp.TelegramBotToken, conf: tp.Config = {} as tp.
         ctx.message.text = kkk.text;
         return ctx.scene.enter(kkk.cmp)
       }
+      const rplc = (fromR: String, toR: String) => {
+        if (compiler.startsWith(config?.startSymbol as any + fromR)) {
+          ctx.message.text = compiler.replace(new RegExp("^\\" + config.startSymbol + fromR, "i"), config.startSymbol as any + toR)
+        }
+      }
 
-      if (cmp("py|python")) 
-      {
+      if (cmp("py|python")) {
+        rplc("python", "py")
         if (exes.python3 || exes.python)
           ctx.scene.enter("py")
-        else ctx.reply("No python compiler exists in system").catch((err:any) => console.error(err))
+        else ctx.reply("No python compiler exists in system").catch((err: any) => console.error(err))
       }
-      else if (cmp("cc|code"))
-      {
+      else if (cmp("cc|code")) {
+        rplc("code", "cc")
         if (exes.gcc)
           ctx.scene.enter("code")
-        else ctx.reply("No gcc compiler exists in system").catch((err:any) => console.error(err))
+        else ctx.reply("No gcc compiler exists in system").catch((err: any) => console.error(err))
       }
-      else if (cmp("js|node|sql"))
-      {
+      else if (cmp("js|node|sql")) {
+        rplc("node", "js")
         if (exes.node)
           ctx.scene.enter("js")
-        else ctx.reply("No nodejs compiler exists in system").catch((err:any) => console.error(err))
+        else ctx.reply("No nodejs compiler exists in system").catch((err: any) => console.error(err))
       }
-      else if (cmp("ts|type"))       {
+      else if (cmp("ts|type")) {
+        rplc("type", "ts")
         if (exes.node)
           ctx.scene.enter("ts")
-        else ctx.reply("No node exists in system").catch((err:any) => console.error(err))
+        else ctx.reply("No node exists in system").catch((err: any) => console.error(err))
       }
-      else if (cmp("cpp|cplus"))
-      {
+      else if (cmp("cpp|cplus|c++")) {
+        rplc("cplus", "cpp")
+        rplc("c++", "cpp")
         if (exes.cpp)
           ctx.scene.enter("cpp")
-        else ctx.reply("No g++ compiler exists in system").catch((err:any) => console.error(err))
+        else ctx.reply("No g++ compiler exists in system").catch((err: any) => console.error(err))
       }
-      else if (cmp("jv|java"))
-      {
+      else if (cmp("jv|java")) {
+        rplc("java", "jv")
         if (exes.java || exes.javac)
           ctx.scene.enter("jv")
-        else ctx.reply("No java compiler exists in system").catch((err:any) => console.error(err))
+        else ctx.reply("No java compiler exists in system").catch((err: any) => console.error(err))
       }
-      else if (cmp("go"))
-      {
+      else if (cmp("go")) {
         if (exes.go)
           ctx.scene.enter("go")
-        else ctx.reply("No go compiler exists in system").catch((err:any) => console.error(err))
+        else ctx.reply("No go compiler exists in system").catch((err: any) => console.error(err))
       }
       // next();
     } catch (error) {

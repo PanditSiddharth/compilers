@@ -61,13 +61,14 @@ let cmplr = async (ctx: any, obj: any = {}) => {
           ctx.scene.leave()
           return
         }
-        newObj.editedMes += tempdata.toString()
-
+        newObj.editedMes += tempdata.toString().replace("\\", "\\\\")
+  
         if (repeats > 5 || looperr)
           return
 
         if (newObj.mid == 0) {
-          newObj.mid = await ctx.reply("" + newObj.editedMes + " ```", { parse_mode: "MarkdownV2" })
+          let replyString = "" + newObj.editedMes + " ```";
+          newObj.mid = await ctx.reply(replyString, { parse_mode: "MarkdownV2" })
             .catch((err: any) => {
               if (err.message.includes('too long')) {
                 looperr = true
@@ -96,12 +97,12 @@ let cmplr = async (ctx: any, obj: any = {}) => {
       newObj.ctxemitter.on('ctx', async (ctxx: any) => {
         ctxx.deleteMessage().catch(() => { })
         try {
-          newObj.editedMes += ctxx.message.text + "\n"
+          newObj.editedMes += ctxx.message.text.replace("\\", "\\\\") + "\n"
           if (newObj.mid == 0)
             newObj.mid = await ctx.reply("" + newObj.editedMes + " ```", { parse_mode: "MarkdownV2" })
           else
             await edit(newObj.mid.message_id, newObj.editedMes)
-          await newObj.node.stdin.write(ctxx.message.text + "\n")
+          await newObj.node.stdin.write(ctxx.message.text.replace("\\", "\\\\") + "\n")
           connt++;
           if (/js|ts/.test(newObj.cmp) && connt >= newObj.countpp) {
             newObj.node.stdin.end()
@@ -150,8 +151,8 @@ let cmplr = async (ctx: any, obj: any = {}) => {
       newObj.filePath = path.join(newObj.root, `main.${newObj.cmp}`);
 
       try {
-        if(!fs.existsSync(newObj.root))
-        fs.mkdirSync(newObj.root);
+        if (!fs.existsSync(newObj.root))
+          fs.mkdirSync(newObj.root);
       } catch (err: any) {
         // Handle file writing error
         console.error(err);
@@ -261,12 +262,12 @@ let cmplr = async (ctx: any, obj: any = {}) => {
       newObj.countpp = countp(newObj.code)
       newObj.code = newObj.code.replace(/(^\s*pt)(.*)/gim, 'console.log($2);');
       if (newObj.cmp.includes("ts"))
-        newObj.node = spawn(path.join('.', 'node_modules', '.bin', 'tsx'), ['-e', newObj.code], 
-      newObj.conf.spawnOptions || {
-          env: {
-            PATH: path.dirname(newObj.exe)
-          }
-        });
+        newObj.node = spawn(path.join('.', 'node_modules', '.bin', 'tsx'), ['-e', newObj.code],
+          newObj.conf.spawnOptions || {
+            env: {
+              PATH: path.dirname(newObj.exe)
+            }
+          });
       else
         newObj.node = spawn(newObj.exe, ['-e', newObj.code], newObj.conf.spawnOptions ||
           { env: {} });
