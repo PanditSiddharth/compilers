@@ -6,7 +6,6 @@ import { scenes } from './scenes';
 // 2 global dependencies
 import { Scenes, session, Telegraf } from "telegraf";
 import * as tp from "./interfaces"
-import { inlineStarter } from './inline';
 import { modeCheck } from './mode-check';
 
 type IOConfig = tp.Config;
@@ -15,17 +14,16 @@ export { IOConfig }
 let h = new Hlp()
 
 export function compiler(telegrafBotByUser: tp.TelegramBotToken | Telegraf<Scenes.SceneContext>) {
+
   modeCheck(conf.mode as tp.Mode, conf.allowed as string[])
 
   let bot: Telegraf<Scenes.SceneContext> = typeof telegrafBotByUser == "string" ?
-    new Telegraf<Scenes.SceneContext>(telegrafBotByUser, (conf.telegram && typeof conf.telegram == "object") ? conf.telegram : {})
+    new Telegraf<Scenes.SceneContext>(telegrafBotByUser)
     : telegrafBotByUser;
 
   // regestering all scenes
   let stage = new Scenes.Stage<Scenes.SceneContext>(scenes, { ttl: conf.ttl });
 
-  // passing bot instance in bot.ts file by call those function
-  inlineStarter(bot as any)
   bt(bot);
   real(bot as any);
 
@@ -38,8 +36,8 @@ export function compiler(telegrafBotByUser: tp.TelegramBotToken | Telegraf<Scene
     async (ctx: any, next: any) => {
       try {
 
-        if (["private", "docker-private"].includes(conf.mode as keyof typeof conf.allowed)
-          && !conf.allowed?.includes(+ctx.from.id as never))
+        if (["private", "docker-private"].includes(conf.mode! as string)
+          && (!conf.allowed?.includes(+ctx.from.id as never) || !conf?.root?.allowed?.includes(+ctx.from.id as never)))
           return ctx.reply("You are not allowed ask " + conf.group)
 
         let groupUser = await ctx.getChatMember(ctx.botInfo.id)
@@ -50,6 +48,7 @@ export function compiler(telegrafBotByUser: tp.TelegramBotToken | Telegraf<Scene
 
         const getCommand = () =>
           ctx?.message?.text?.match(new RegExp(`^${conf.startSymbol}([a-zA-Z]{2,4})`, "i"));
+        if(getCommand && getCommand()?.[1])
         ctx.scene.enter(getCommand()[1])
 
       } catch (error: any) {

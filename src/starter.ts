@@ -4,8 +4,7 @@ import { scenes } from './scenes';
 import * as tp from "./interfaces"
 import EventEmitter from 'events';
 import sql from "./help/sql"
-let which = require("which")
-let jsexe = which.sync('node', { nothrow: true })
+import config from './config';
 
 // let flag: any;
 let flag: any = {};
@@ -19,7 +18,7 @@ async function starter(ctx: any, usr: any) {
     let id: any = ctx.message.from.id
     let msg = ctx.message;
     let reply: any = ctx.message.reply_to_message
-    let text: any = ctx.message.text
+    let text: any = ctx.message?.text
 
     if (text.match(/\/sql/i)) {
 
@@ -43,13 +42,14 @@ async function starter(ctx: any, usr: any) {
       }
     }
 
-    msg.text = msg.text.replace(/\/(node|js|ts|type|py|python|cc|cpp|code|cplus|jv|java|go|golang|ps|sh|rs|rust)/i, "").trim()
+    msg.text = msg.text.replace(new RegExp(`\\/(${config.commands?.join("|")})`, "i"), "").trim()
 
     // if first time
     if (!func[id]) {
       func[id] = {...usr};
-      const moduleExports = require(conf.mode == "docker-private" || conf.mode == "public" ? "./docker" : `./compiler`);
+      const moduleExports = require((conf.mode == "private" || conf?.root?.allowed?.includes(id) && text?.trim()?.startsWith("/" + conf?.root?.command) ) ? "./compiler" : `./docker`);
       func[id].run = moduleExports.default || moduleExports;
+      
       let ctxemitter = new EventEmitter();
       ctxemitter.setMaxListeners(0)
       func[id].ctxemitter = ctxemitter;

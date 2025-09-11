@@ -156,7 +156,12 @@ let cmplr = async (ctx: CustomCtx, obj: any = {}) => {
       "jv": ["run", "-i", "--rm", "openjdk:25-slim", "sh", "-c",
         `echo "${newObj?.code?.replace(/"/g, '\\"')}" > ${findClass(newObj.code)}.java && javac ${newObj.code}.java && java ${findClass(newObj.code)}`
       ],
-      "rs": ["run", "-i", "--rm", "rust:1.83-slim", "sh", "-c",
+      "cc": ["run", "-i", "--rm", "gcc:14.3.0-trixie", "bash", "-c",
+        `echo "${newObj?.code?.replace(/"/g, '\\"')}" > main.c && gcc main.c -o main && stdbuf -o0 ./main`],
+"cpp": ["run", "-i", "--rm", "gcc:14.3.0-trixie", "bash", "-c",
+  `echo "${newObj?.code?.replace(/"/g, '\\"')}" > main.cpp && g++ main.cpp -o main && stdbuf -o0 ./main`],
+
+      "rs": ["run", "-i", "--rm", "rust:1.83-slim", "bash", "-c",
         `echo "${newObj?.code?.replace(/"/g, '\\"')}" > main.rs && rustc main.rs && ./main`],
     };
 

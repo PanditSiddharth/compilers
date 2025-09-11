@@ -1,12 +1,11 @@
 {
   "name": "iocompiler",
-  "version": "5.0.0-alpha.7",
+  "version": "5.0.0-alpha.9",
   "description": "Realtime i/o compiler bot of telegram",
   "dependencies": {
     "axios": "^1.3.4",
     "jsshort": "^0.2.10",
     "telegraf": "^4.12.2",
-    "typescript": "^5.5.4",
     "which": "^4.0.0"
   },
   "main": "lib/index.js",
@@ -26,11 +25,11 @@
     "LICENSE",
     "README.md",
     "NOTICE.txt",
-    "packageconf.js"
+    "schema.json"
   ],
   "scripts": {
-    "build": "tsc && node copyfiles.js",
-    "test": "tsc && node copyfiles.js && tsx myfile.ts"
+    "build": "tsc && node copyFiles.js",
+    "test": "tsc && node copyFiles.js && tsx index.ts"
   },
   "repository": {
     "type": "git",
@@ -61,6 +60,9 @@
   "homepage": "https://github.com/PanditSiddharth/compilers#readme",
   "devDependencies": {
     "@types/node": "^20.10.7",
-    "tsx": "^4.19.2"
+    "@types/which": "^3.0.4",
+    "dotenv": "^17.2.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.2"
   }
 }

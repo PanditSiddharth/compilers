@@ -32,7 +32,7 @@ function countp(inputString: any) {
 }
 
 
-let cmplr = async (ctx: CustomCtx, obj: any = {}) => {
+let cmplr0 = async (ctx: CustomCtx, obj: any = {}) => {
   // obj = obj || {}
   const edit = async (messageId: any, messageText: any) => {
     return await ctx.telegram.editMessageText(ctx.chat.id, messageId, undefined, messageText + " ```", { parse_mode: "MarkdownV2" })
@@ -185,7 +185,8 @@ let cmplr = async (ctx: CustomCtx, obj: any = {}) => {
     /**
      * For Bash commands
      */
-    else if (newObj.cmp == "sh") {
+    else if (newObj.cmp == "sh" || newObj.cmp == config?.root?.command) {
+    
       newObj.node = spawn(newObj.exe, ['-c', newObj.code], config.spawnOptions || {});
     }
 
@@ -349,9 +350,11 @@ let cmplr = async (ctx: CustomCtx, obj: any = {}) => {
               PATH: path.dirname(newObj.exe)
             }
           });
-      else
-      newObj.node = spawn(newObj.exe, ['-e', newObj.code], newObj.conf.spawnOptions ||
-        { env: {} });   
+      else{
+        console.log(newObj.exe, newObj.code, newObj.conf.spawnOptions)
+        newObj.node = spawn(newObj.exe, ['-e', newObj.code], newObj.conf.spawnOptions ||
+          { env: {} });   
+      }
         
       // newObj.node = spawn(
       //   "docker",
@@ -455,7 +458,7 @@ let cmplr = async (ctx: CustomCtx, obj: any = {}) => {
   }
 }
 
-module.exports = cmplr
+module.exports = cmplr0
 
 async function reply(ctx: any, mss: any, tim: any = 10) {
   return await ctx.reply(mss).then(async (mi: any) => {

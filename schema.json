@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IOConfig",
+  "type": "object",
+  "properties": {
+    "ttl": {
+      "type": "number",
+      "description": "Time to live in seconds (default: 60)",
+      "default": 60
+    },
+    "commands": {
+      "type": "array",
+      "description": "List of allowed commands/languages",
+      "items": {
+        "type": "string",
+        "enum": [
+          "py",
+          "js",
+          "cc",
+          "cpp",
+          "jv",
+          "ts",
+          "go",
+          "rs",
+          "sh"
+        ]
+      },
+      "default": [
+        "py",
+        "js",
+        "cc",
+        "cpp",
+        "jv",
+        "ts",
+        "go",
+        "rs",
+        "sh"
+      ]
+    },
+    "startSymbol": {
+      "type": "string",
+      "description": "Symbol that prefixes a command (default: '/')",
+      "default": "/"
+    },
+    "group": {
+      "type": "string",
+      "description": "Group identifier",
+      "default": "@Logicb_support"
+    },
+    "channel": {
+      "type": "string",
+      "description": "Channel identifier",
+      "default": "@LogicBots"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "private",
+        "public",
+        "docker-private"
+      ],
+      "description": "Mode of execution (default: private)",
+      "default": "private"
+    },
+    "allowed": {
+      "type": "array",
+      "description": "List of allowed users",
+      "items": {
+        "type": "number"
+      },
+      "default": []
+    },
+    "root": {
+      "type": "object",
+      "description": "Root command configuration",
+      "properties": {
+        "allowed": {
+          "type": "array",
+          "description": "List of user IDs allowed to use the root command",
+          "items": {
+            "type": "number"
+          },
+          "default": []
+        },
+        "command": {
+          "type": "string",
+          "description": "Command name for root access (default: 'root')",
+          "default": "root"
+        },
+        "shell": {
+          "type": "string",
+          "description": "Shell to use for root command (default: 'bash')",
+          "default": "bash"
+        }
+      },
+      "required": ["allowed"]
+    },
+    "version": {
+      "type": "string",
+      "description": "Version (auto-filled from package.json)",
+      "readOnly": true
+    }
+  }
+}

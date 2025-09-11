@@ -12,7 +12,7 @@ export interface Config {
   telegram?: Partial<Telegraf.Options<Scenes.SceneContext<Scenes.SceneSessionData>>>;
   mode?: Mode;
   codeLogs?: Chatid;
-  commands?: [ "py", "js", "cc", "cpp", "jv", "ts", "go", "rs", "sh"];
+  commands?: [ "py", "js", "cc", "cpp", "jv", "ts", "go", "rs", "sh", "root"];
   chatLogs?: Chatid;
   errorLogs?: UserId;
   ttl?: number;
@@ -21,6 +21,7 @@ export interface Config {
   version?: string;
   startSymbol?: string;
   owner?: string;
+  root?: {allowed: number[], command?: string, shell?: string};
   group?: Username;
   channel?: Username;
   token?: string;

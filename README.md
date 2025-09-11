@@ -1,158 +1,143 @@
 # Realtime Input/Output Compilers
-**by [@PanditSiddharth](https://telegram.me/PanditSiddharth)**
 
-## How to Setup
-<details>
-<summary>Step 1: Create Your Bot on Telegram</summary>
+**by **[**@PanditSiddharth**](https://telegram.me/PanditSiddharth)
 
-1. Go to [@BotFather](https://t.me/BotFather) on Telegram.
-2. Send the command `/newbot` to create a new bot.
-3. Follow the instructions to name your bot and create a username.
-    - Send Name of your bot.
-    - Now it will ask you to give username for your bot.
-        - Username should endswith "bot" text and unique.
-        - for example: `sidkacompiler12bot` .
+For Docker first:
 
-<p align="center">
-  <img src="https://graph.org/file/08dc3aaf4d31e6d115a6d.jpg">
-</p>
-         
-
-   You will receive a bot token and a bot link after completing these steps.
-
-<p align="center">
-  <img src="https://graph.org/file/b7c8a5736800b13c94bdb.png">
-</p>
-   
-</details>
-<details>
-<summary>Step 2: Get Your telegram id</summary>
-Go to  <a href="https://telegram.me/missrose_bot">@MissRose_bot</a>.  
-Send command /info.  
-You will see your id.  
-
-<p align="center">
-  <img src="https://graph.org/file/b88a94ebc398c9b4c5a82.png">
-</p>
-</details>
-
-## Main Setup Process
-
-<details>
-<summary>For termux</summary>
-
-- Go to fdroid website and <a href="https://f-droid.org/packages/com.termux/">Download</a> latest version of <a href="https://f-droid.org/packages/com.termux/">Termux</a>.
-- In termux Run these bellow written commands.
-```bash
-curl -O https://api.ignoux.in/iocompiler/termux.sh
-
-chmod +x termux.sh
-
-bash termux.sh
-
-cd ~/compiler
-
-node index.js
+```sh
+sudo usermod -aG docker $USER
+newgrp docker
 ```
-- Follow each instructions of said by installer.
-- That's it your bot is running on termux. !Enjoy.
-- It will show you in red color warning ignore it your bot is runnig now.
-
-</details>
-
-<details>
-<summary>For Linux and Windows</summary>
-<b>Pre-requirements</b>
-
-- **Node.js** installed on your system.
-- Optional: Install additional languages like C/C++, Python, Java, etc.   
-
-1. Open PowerShell, Command Prompt, or your terminal.
-2. Create and navigate to a new directory for your project:
-    ```sh
-    mkdir compiler
-    cd compiler
-    ```
-
-3. Initialize a new Node.js project and install IOCompiler:
-    ```sh
-    npm init -y
-    npm install iocompiler
-    ```
-
-4. Create an `index.js` file and paste the following code. Replace `process.env.BOT_TOKEN` with your bot token from BotFather, and `process.env.TELEGRAM_ID` with your Telegram ID:
-    ```js
-    const { compiler } = require('iocompiler');
-
-    // Specify allowed users; without this, all users can access your bot
-    const { bot } = compiler(process.env.BOT_TOKEN, { allowed: [1791106582, process.env.TELEGRAM_ID], mode: "private" });
-    // modes: "private", "public", "docker-private", "api-mode"
-
-    // Launching telegraf bot in polling mode
-    bot.launch({ dropPendingUpdates: true });
-    ```
-For Developers for using this lib in those work:
-```js
-let { compiler } = require('iocompiler');
-let { Telegraf } = require("telegraf")
-
-let bot = new Telegraf(process.env.BOT_TOKEN)
-
-bot.on("message", (ctx, next) => {
-  ctx.reply("I Got your message processing...")
-
-    // Change incomming message for compilation
-    ctx.update.message.text = "/js console.log('lol')"
-
-    // Give update to next handler with updated text
-    next(ctx)
-})
-
-  /*
-  * ttl: max time to execute code, default 60 seconds
-  * allowed: array of telegram ids of users who can execute code on it
-  */
-// allowed users id if you not give this then all users can use your bot
-compiler(bot, { ttl: 60, allowed: [1791106582]});
-
-// launching telegraf bot in polling mode
-bot.launch({ dropPendingUpdates: true });
-```
-
-5. Run the project:
-    ```sh
-    node index.js
-    ```
-
-That's it! You have successfully created your Telegram bot using IOCompiler.
 
 ---
-</details>
+
+## How to Setup
+
+1. Go to [@BotFather](https://t.me/BotFather).
+2. Send `/newbot` to create a new bot.
+3. Follow instructions for name + username (must end with `bot`).
+
+You will get **bot token** and **bot link** after setup.
+
+1. Go to [@MissRose\_bot](https://telegram.me/missrose_bot).
+2. Send `/info`.
+3. You’ll see your **Telegram user ID**.
+
+---
+
+## Main Setup
+
+1. Install [Termux](https://f-droid.org/packages/com.termux/) from F-Droid.
+2. Run these commands:
+   ```bash
+   pkg update && pkg upgrade -y
+   pkg install nodejs git -y
+   git clone https://github.com/PanditSiddharth/compilers.git compiler
+   cd compiler
+   npm install
+   node index.js
+   ```
+
+Ignore red warnings; bot is running.
+
+**Requirements:** Node.js installed, optional compilers (C/C++, Python, Java, etc.)
+
+1. Create project:
+
+   ```sh
+   mkdir compiler && cd compiler
+   npm init -y
+   npm install iocompiler
+   ```
+
+2. Create `index.ts` (or `index.js`):
+
+   ```ts
+   import { config } from "dotenv";
+   config();
+   import { compiler } from "iocompiler";
+   import { Telegraf } from "telegraf";
+   import https from "https";
+
+   const agent = new https.Agent({ family: 4 });
+   const bot = new Telegraf(process.env.BOT_TOKEN as string, {
+     telegram: { agent }
+   });
+
+   bot.launch({ dropPendingUpdates: true });
+   compiler(bot as any);
+   ```
+
+3. Create an `ioconfig.json` in your project root:
+
+   ```jsonc
+   {
+     "$schema": "./node_modules/iocompiler/schema.json",
+     "ttl": 60,
+     "commands": ["py", "js", "cc", "cpp"],
+     "mode": "private",
+     "allowed": [123456789],
+     "root": {
+       "allowed": [123456789],
+       "command": "root",
+       "shell": "bash"
+     }
+   }
+   ```
+
+4. Run the project:
+
+   ```sh
+   node index.js
+   ```
+
+1) Make sure Docker is installed and running.
+2) Clone and run inside a container:
+   ```sh
+   git clone https://github.com/PanditSiddharth/compilers.git compiler
+   cd compiler
+   docker build -t iocompiler .
+   docker run -it --rm \
+     -e BOT_TOKEN=your_bot_token \
+     -e TELEGRAM_ID=your_telegram_id \
+     iocompiler
+   ```
+3) Recommended for safe and isolated execution.
+
+---
+
+## Configuration
+
+All settings are managed in **ioconfig.json**.\
+You get auto-completion in editors (VS Code, WebStorm, etc.) because schema is bundled:
+
+```json
+"$schema": "./node_modules/iocompiler/schema.json"
+```
+
+### Example fields
+
+- **ttl**: Execution timeout in seconds (default 60)
+- **commands**: Languages allowed (default all)
+- **mode**: `"private" | "public" | "docker-private"`
+- **allowed**: Array of allowed user IDs
+- **root**: Root-level config (with command + shell)
+- **group / channel**: Telegram groups/channels
+
+---
 
 ### Useful Commands
 
-- **See all commands:** `/help`
-- **Check if bot is running:** `/ping`
-- **See current version and features of the bot:** `/version`
+- `/help` → see all commands
+- `/ping` → check if bot running
+- `/version` → current version/features
 
-For any queries, join our support groups:
+Support:
+
 - [LogicB Support](https://telegram.me/logicb_support)
 - [Logicbots](https://telegram.me/logicbots)
 
----
-
-**GitHub:** [IOCompiler Repository](https://github.com/Panditsiddharth/compilers)  
-**NPM:** [IOCompiler on NPM](https://npmjs.com/Panditsiddharth/iocompiler)
-
-For any other help:  
-- **Support Group:** [LogicB Support](https://telegram.me/LogicB_support)  
-- **Updates:** [Logicbots](https://telegram.me/Logicbots)  
-- **Bot Owner:** [@PanditSiddharth](https://telegram.me/PanditSiddharth)  
-
-**Testing Group:** [IO_Coding](https://telegram.me/IO_Coding)  
-Contribute to the project or create your own bot—it's open source!
-
-### ⚠️ Please run only in a secure environment
-Using your bot, users can potentially harm your system. Utilize Docker or any secure environment, or specify allowed users via Telegram ID.
+⚠️ Run only in a secure environment (Docker recommended).
 
 ---
+

@@ -1,5 +1,6 @@
 import * as tp from "./interfaces";
-import pjson from "../package.json"
+import pjson from "../package.json";
+import which from "which"
 function safeRequire(configFile: string) {
   try {
     return require(`${process.cwd()}/${configFile}`);
@@ -8,12 +9,34 @@ function safeRequire(configFile: string) {
   }
 }
 
-const userConfig = safeRequire("iocompiler") || safeRequire("main") || safeRequire("index"); // Load user-defined config file if it exists
+const userConfig = safeRequire("ioconfig.json")
+console.log(userConfig)
+let config: tp.Config = { ttl: 60, commands:[ "py", "js", "cc", "cpp", "jv", "ts", "go", "rs", "sh", "root"]};
 
-let config: tp.Config = { ttl: 60, commands:[ "py", "js", "cc", "cpp", "jv", "ts", "go", "rs", "sh"]};
+let exe = (s:string) => {
+try {
+  return which.sync(s, { nothrow: true })
+} catch (error) {
+  return null;
+}
+}
+
+const exes = {
+  js: exe('node'),
+  ts: exe('ts-node'),
+  py: exe('python3') || exe('python'),
+  cc: exe('gcc'),
+  cpp: exe('g++'),
+  jv: exe('java'),
+  go: exe('go'),
+  rs: exe('rustc'),
+  sh: exe('bash') || exe('sh'),
+  root: exe(userConfig.root?.shell || "bash") || exe('sh'),
+  ps: exe('pwsh') || exe('powershell')
+}
 
 if(userConfig){
-  config = {...config,...userConfig?.config}
+  config = {...config,...userConfig, exes}
 }
   // Some default configurations
   config.version = pjson.version;
@@ -33,7 +56,7 @@ if(userConfig){
 
   if (!config.allowed)
     config.allowed = [] as string[];
-  config.commands = [ "py", "js", "cc", "cpp", "jv", "ts", "go", "rs", "sh"]
+  config.commands = [ "py", "js", "cc", "cpp", "jv", "ts", "go", "rs", "sh", userConfig?.root?.command || "root"]
 export default config;
 
 

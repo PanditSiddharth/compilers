@@ -1,1 +1,1 @@
-{"version":3,"file":"mode-check.d.ts","sourceRoot":"","sources":["../src/mode-check.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,IAAI,EAAE,MAAM,cAAc,CAAC;AAGpC,eAAO,MAAM,SAAS,SAAU,IAAI,UAAS,MAAM,EAAE,SAgBpD,CAAA"}
+{"version":3,"file":"mode-check.d.ts","sourceRoot":"","sources":["../src/mode-check.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,IAAI,EAAE,MAAM,cAAc,CAAC;AAGpC,eAAO,MAAM,SAAS,GAAI,MAAM,IAAI,EAAE,QAAO,MAAM,EAAO,SAsBzD,CAAA"}

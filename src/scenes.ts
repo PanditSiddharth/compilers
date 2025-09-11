@@ -48,12 +48,12 @@ const createScene = (sceneName: string) => {
     const scene = new Scenes.BaseScene<Scenes.SceneContext>(sceneName);
     scene.enter(async (ctx: any) => {
         if (startcheck(ctx, sceneName)) return;
-        await starter(ctx, { cmp: sceneName });
+        await starter(ctx, { cmp: sceneName, exe: conf.exes?.[sceneName] });
     });
 
     scene.on("message", async (ctx: any) => {
         if (startcheck(ctx, sceneName)) return;
-        await starter(ctx, { cmp: sceneName });
+        await starter(ctx, { cmp: sceneName, exe: conf.exes?.[sceneName] });
     });
 
     return scene;

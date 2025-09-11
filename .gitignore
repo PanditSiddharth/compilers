@@ -9,3 +9,6 @@ myfile.ts
 .env
 notes
 .devcontainer/
+index.ts
+ioconfig.json
+/file
