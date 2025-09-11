@@ -40,5 +40,5 @@ bot.on('chosen_inline_result', (ctx) => {
     ctx.telegram.sendMessage(chosenResult.from.id, `You selected: ${chosenResult.query}`);
 });
 
-// Start the bot
+// Start the bot 
 bot.launch();
