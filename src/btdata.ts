@@ -5,44 +5,20 @@ export let hcmp = `=========================
 Compilation commands
 =========================
 
-${config.startSymbol}code or ${config.startSymbol}cc for c
-${config.startSymbol}py or ${config.startSymbol}python
-${config.startSymbol}js or ${config.startSymbol}node
-${config.startSymbol}cpp or ${config.startSymbol}cplus
-${config.startSymbol}jv or ${config.startSymbol}java
-${config.startSymbol}rs or ${config.startSymbol}rust
+${config.startSymbol}cc for c
+${config.startSymbol}py for python code
+${config.startSymbol}js for node js code
+${config.startSymbol}cpp fro c++ code
+${config.startSymbol}jv for java code 
+${config.startSymbol}rs for rust code
 ${config.startSymbol}go for golang
-${config.startSymbol}ts or ${config.startSymbol}type for typescript
-${config.startSymbol}sql for sql
-${config.startSymbol}sh for bash
+${config.startSymbol}ts for typescript code
+${config.startSymbol}sql for sql code
+${config.startSymbol}sh for shell script (bash)
 ${config.startSymbol}ps for powershell
 
-
 `
 
-export let hreal = `=========================
-Compilation commands
-=========================
-convert short codes to real code
-example
-short code for js:
-pt "Hi its short code" + (4 + 3)
-
-Real code: 
-console.log( "Hi its short code" + (4 + 3))
-
-${config.startSymbol}rcc for c
-${config.startSymbol}rpy for python
-${config.startSymbol}rjs for node js
-${config.startSymbol}rcpp for c++
-${config.startSymbol}rjv for java
-${config.startSymbol}rgo for golang
-${config.startSymbol}rts for typescript
-
-Reply to short code with these commands to convert them in real code
-For more ${config.channel}
-For queries ${config.group}
-`
 
 export let hAdmin = `=========================
 Bot admin commands
@@ -75,7 +51,7 @@ function ob(text: any, action: any) {
 export let jUtil = {
   reply_markup: {
     inline_keyboard:
-      [[ob("Admin", "admin"), ob("Compiler", "cmp"), ob("toReal", "real")], [
+      [[ob("Admin", "admin"), ob("Compiler", "cmp")], [
         ob("Close", "close")
       ]]
   }
@@ -93,7 +69,7 @@ export let jReal = {
 export let jAdmin = {
   reply_markup: {
     inline_keyboard:
-      [[ob("Utility", "util"), ob("Compiler", "cmp"), ob("toReal", "real")], [
+      [[ob("Utility", "util"), ob("Compiler", "cmp")], [
         ob("Close", "close")
       ]]
   }
@@ -102,7 +78,7 @@ export let jAdmin = {
 export let jcmp = {
   reply_markup: {
     inline_keyboard:
-      [[ob("Utility", "util"), ob("Admin", "admin"), ob("toReal", "real")], [
+      [[ob("Utility", "util"), ob("Admin", "admin")], [
         ob("Close", "close")
       ]]
   }
