@@ -23,7 +23,7 @@ try {
 
 const exes = {
   js: exe('node'),
-  ts: exe('ts-node'),
+  ts: exe('tsc'),
   py: exe('python3') || exe('python'),
   cc: exe('gcc'),
   cpp: exe('g++'),

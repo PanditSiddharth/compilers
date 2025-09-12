@@ -3,7 +3,7 @@ import config from './config'
 import { spawn, spawnSync } from 'child_process';
 import fs from 'fs'
 let which = require("which")
-import {findClass} from './tools';
+import { findClass } from './tools';
 import { CustomCtx } from './types';
 
 let h = new Hlp();
@@ -154,15 +154,21 @@ let cmplr = async (ctx: CustomCtx, obj: any = {}) => {
       "js": ["run", "-i", "--rm", "node:23.4-slim", "node", "-e", newObj.code],
       "sh": ["run", "-i", "--rm", "ubuntu:24.10", "bash", '-c', newObj.code],
       "jv": ["run", "-i", "--rm", "openjdk:25-slim", "sh", "-c",
-        `echo "${newObj?.code?.replace(/"/g, '\\"')}" > ${findClass(newObj.code)}.java && javac ${newObj.code}.java && java ${findClass(newObj.code)}`
+        `echo "${newObj?.code?.replace(/"/g, '\\"')}" > ${findClass(newObj.code)}.java && javac ${findClass(newObj.code)}.java && java ${findClass(newObj.code)}`
       ],
       "cc": ["run", "-i", "--rm", "gcc:14.3.0-trixie", "bash", "-c",
         `echo "${newObj?.code?.replace(/"/g, '\\"')}" > main.c && gcc main.c -o main && stdbuf -o0 ./main`],
-"cpp": ["run", "-i", "--rm", "gcc:14.3.0-trixie", "bash", "-c",
-  `echo "${newObj?.code?.replace(/"/g, '\\"')}" > main.cpp && g++ main.cpp -o main && stdbuf -o0 ./main`],
+      "cpp": ["run", "-i", "--rm", "gcc:14.3.0-trixie", "bash", "-c",
+        `echo "${newObj?.code?.replace(/"/g, '\\"')}" > main.cpp && g++ main.cpp -o main && stdbuf -o0 ./main`],
 
       "rs": ["run", "-i", "--rm", "rust:1.83-slim", "bash", "-c",
         `echo "${newObj?.code?.replace(/"/g, '\\"')}" > main.rs && rustc main.rs && ./main`],
+"go": ["run", "-i", "--rm", "golang:tip-alpine3.22", "sh", "-c",
+  `echo "${newObj?.code?.replace(/"/g, '\\"')}" > main.go && go build -o main main.go && ./main`
+],
+"ts": ["run", "-i", "--rm", "mcr.microsoft.com/devcontainers/typescript-node:22", "bash", "-c",
+  `echo "${newObj?.code?.replace(/"/g, '\\"')}" > main.ts && tsc main.ts && node main.js`
+],
     };
 
     if (!Object.keys(commands).includes(newObj.cmp as keyof typeof commands)) {
