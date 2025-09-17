@@ -31,7 +31,7 @@ const exes = {
   go: exe('go'),
   rs: exe('rustc'),
   sh: exe('bash') || exe('sh'),
-  root: exe(userConfig.root?.shell || "bash") || exe('sh'),
+  root: exe(userConfig?.root?.shell || "bash") || exe('sh'),
   ps: exe('pwsh') || exe('powershell')
 }
 

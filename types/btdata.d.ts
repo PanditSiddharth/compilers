@@ -1,6 +1,5 @@
 export declare let version: string;
 export declare let hcmp: string;
-export declare let hreal: string;
 export declare let hAdmin: string;
 export declare let hUtil: string;
 export declare let jUtil: {
