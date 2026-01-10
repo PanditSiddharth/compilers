@@ -101,6 +101,7 @@ ${dt.hcmp}
   let minf = `bot owner ${config.owner ? config.owner : "@PanditSiddharth"}
 ${config.channel + " " + config.group}`
 
-}
+} 
+
 
 export default bt;

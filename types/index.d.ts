@@ -1,5 +1,5 @@
 import { Scenes, Telegraf } from "telegraf";
-import * as tp from "./interfaces";
+import * as tp from "../src/interfaces";
 type IOConfig = tp.Config;
 export { IOConfig };
 export declare function compiler(telegrafBotByUser: tp.TelegramBotToken | Telegraf<Scenes.SceneContext>): {
